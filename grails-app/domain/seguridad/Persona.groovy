@@ -1,9 +1,9 @@
 package seguridad
 
-//import audita.Auditable
+import audita.Auditable
 
-//class Persona implements Auditable{
-class Persona {
+class Persona implements Auditable{
+//class Persona {
 
     Departamento departamento
     String nombre
