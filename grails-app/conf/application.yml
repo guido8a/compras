@@ -36,8 +36,8 @@ spring:
             max-request-size: 50MB
 server:
     session:
-        #    timeout: 1800 #30 minutos
-        timeout: 60 #1 minuto
+            timeout: 3600 #60 minutos
+#        timeout: 60 #1 minuto
 
 # Spring Actuator Endpoints are Disabled by Default
 endpoints:
