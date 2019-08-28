@@ -1,6 +1,8 @@
 package compras
 
 import org.springframework.dao.DataIntegrityViolationException
+import seguridad.Departamento
+import seguridad.Persona
 
 class CantonController {
 
@@ -423,6 +425,13 @@ class CantonController {
         return tree
     }
 
+
+
+
+
+
+
+
     def infoForTree = {
         redirect(action: 'info' + (params.tipo).capitalize(), params: params)
     }
@@ -451,12 +460,136 @@ class CantonController {
 
     def arbol () {
 
-
-
     }
 
 
+    def loadTreePart_ajax() {
+        render(makeTreeNode(params))
+    }
 
+
+    def makeTreeNode(params) {
+        println "makeTreeNode.. $params"
+        def id = params.id
+
+        if (!params.order) {
+            params.order = "asc"
+        }
+        String tree = "", clase = "", rel = ""
+        def padre
+        def hijos = []
+
+        if (id == "#") {
+            //root
+//            def hh = Departamento.countByPadreIsNull()
+            def hh = Provincia.countByZonaIsNull()
+            if (hh > 0) {
+                clase = "hasChildren jstree-closed"
+            }
+
+            tree = "<li id='root' class='root ${clase}' data-jstree='{\"type\":\"root\"}' data-level='0' >" +
+                    "<a href='#' class='label_arbol'>Estructura Principal</a>" +
+                    "</li>"
+            if (clase == "") {
+                tree = ""
+            }
+        } else if (id == "root") {
+            hijos = Provincia.findAllByZonaIsNull()
+        } else {
+            def parts = id.split("_")
+            def node_id = parts[1].toLong()
+
+            padre = Provincia.get(node_id)
+            if (padre) {
+                hijos = []
+                hijos += Canton.findAllByProvincia(padre)
+            }
+        }
+
+        if (tree == "" && (padre || hijos.size() > 0)) {
+//            tree += "<ul>"
+            def lbl = ""
+
+            hijos.each { hijo ->
+                def tp = ""
+                def data = ""
+                def ico = ", \"icon\":\"fa fa-parking text-success\""
+                if (hijo instanceof Provincia) {
+                    lbl = hijo.nombre
+                    tp = "pro"
+                    rel = "principal"
+
+                    def hijosH = Canton.findAllByProvincia(hijo, [sort: "nombre"])
+
+                    clase = (hijosH.size() > 0) ? "jstree-closed hasChildren" : ""
+                    if (hijosH.size() > 0) {
+                        clase += " ocupado "
+                    }
+
+                    tree += "<ul>"
+                    tree += "<li id='li${tp}_" + hijo.id + "' class='" + clase + "' ${data} data-jstree='{\"type\":\"${rel}\" ${ico}}' >"
+                    tree += "<a href='#' class='label_arbol'>" + lbl + "</a>"
+                    tree += "</li>"
+//                    tree += "</ul>"
+
+                } else if (hijo instanceof Canton) {
+
+                    def icoCanton = ", \"icon\":\"fa fa-copyright text-primary\""
+                    def icoParroquia = ", \"icon\":\"fa fa-registered text-danger\""
+                    def icoComunidad = ", \"icon\":\"fa fa-info-circle text-warning\""
+
+                    lbl = "${hijo.numero} ${" - " + hijo.nombre}"
+
+                    def hijosP = Parroquia.findAllByCanton(hijo)
+                    clase = (hijosP.size() > 0) ? "jstree-closed hasChildren" : ""
+
+                    tp = "can"
+                    rel = "canton"
+                    clase = "usuario"
+
+                    data += "data-usuario='${hijo.nombre}'"
+                    rel += "Inactivo"
+
+                    tree += "<ul>"
+                    tree += "<li id='li${tp}_" + hijo.id + "' class='" + clase + "' ${data} data-jstree='{\"type\":\"${rel}\" ${icoCanton}}' >"
+                    tree += "<a href='#' class='label_arbol'>" + lbl + "</a>"
+
+                    hijosP.each { parroquia->
+
+                        tree += "<ul>"
+                        tree += "<li id='lipa_" + parroquia.id + "' class='" + clase + "' ${data} data-jstree='{\"type\":\"${"parroquia"}\" ${icoParroquia}}' >"
+                        tree += "<a href='#' class='label_arbol'>" + parroquia?.nombre + "</a>"
+
+                        def comunidades = Comunidad.findAllByParroquia(parroquia)
+                        comunidades.each { comunidad->
+
+                            tree += "<ul>"
+                            tree += "<li id='licom_" + comunidad.id + "' class='" + clase + "' ${data} data-jstree='{\"type\":\"${"comunidad"}\" ${icoComunidad}}' >"
+                            tree += "<a href='#' class='label_arbol'>" + comunidad?.nombre + "</a>"
+                            tree += "</li>"//cierre comunidad
+                            tree += "</ul>"
+                        }
+
+                        tree += "</li>"//cierre parroquia
+                        tree += "</ul>"
+
+                    }
+
+                    tree += "</li>" //cierre canton
+                    tree += "</ul>"
+
+                }
+
+//                tree += "<li id='li${tp}_" + hijo.id + "' class='" + clase + "' ${data} data-jstree='{\"type\":\"${rel}\" ${ico}}' >"
+//                tree += "<a href='#' class='label_arbol'>" + lbl + "</a>"
+//                tree += "</li>"
+            }
+
+//            tree += "</ul>"
+        }
+//        println "arbol: $tree"
+        return tree
+    }
 
     def index() {
         redirect(action: "list", params: params)
@@ -466,9 +599,6 @@ class CantonController {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
         [cantonInstanceList: Canton.list(params), cantonInstanceTotal: Canton.count(), params: params]
     } //list
-
-
-
 
     def form_ajax() {
         def cantonInstance = new Canton(params)
