@@ -28,6 +28,6 @@ class Provincia {
         numero(maxSize: 2, blank: false, nullable: false, attributes: [title: 'numero'])
         latitud(blank: true, nullable: true, attributes: [title: 'latitud'])
         longitud(blank: true, nullable: true, attributes: [title: 'longitud'])
-
+        zona(blank: true, nullable: true)
     }
 }

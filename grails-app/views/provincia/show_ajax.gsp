@@ -1,77 +1,58 @@
 
-<%@ page import="janus.Provincia" %>
+<%@ page import="compras.Provincia" %>
 
-<div id="show-provincia" class="span5" role="main">
+<style type="text/css">
+ .tama {
+    font-size: 14px;
+}
+</style>
+
+<div id="show-provincia" class="span5 tama" role="main">
 
     <form class="form-horizontal">
-    
-    <g:if test="${provinciaInstance?.nombre}">
-        <div class="control-group">
-            <div>
-                <span id="nombre-label" class="control-label label label-inverse">
-                    Nombre
-                </span>
-            </div>
-            <div class="controls">
-        
-                <span aria-labelledby="nombre-label">
-                    <g:fieldValue bean="${provinciaInstance}" field="nombre"/>
-                </span>
-        
-            </div>
-        </div>
-    </g:if>
-    
-    <g:if test="${provinciaInstance?.numero}">
-        <div class="control-group">
-            <div>
-                <span id="numero-label" class="control-label label label-inverse">
+
+        <g:if test="${provinciaInstance?.numero}">
+            <div class="row">
+                <div class="col-md-2 text-info">
                     Número
-                </span>
-            </div>
-            <div class="controls">
-        
-                <span aria-labelledby="numero-label">
+                </div>
+                <div class="col-md-3">
                     <g:fieldValue bean="${provinciaInstance}" field="numero"/>
-                </span>
-        
+                </div>
             </div>
-        </div>
-    </g:if>
-    
-    <g:if test="${provinciaInstance?.latitud}">
-        <div class="control-group">
-            <div>
-                <span id="latitud-label" class="control-label label label-inverse">
+        </g:if>
+
+        <g:if test="${provinciaInstance?.nombre}">
+            <div class="row">
+                <div class="col-md-2 text-info">
+                    Nombre
+                </div>
+                <div class="col-md-3">
+                    <g:fieldValue bean="${provinciaInstance}" field="nombre"/>
+                </div>
+            </div>
+        </g:if>
+
+        <g:if test="${provinciaInstance?.latitud}">
+            <div class="row">
+                <div class="col-md-2 text-info">
                     Latitud
-                </span>
-            </div>
-            <div class="controls">
-        
-                <span aria-labelledby="latitud-label">
+                </div>
+                <div class="col-md-3">
                     <g:fieldValue bean="${provinciaInstance}" field="latitud"/>
-                </span>
-        
+                </div>
             </div>
-        </div>
-    </g:if>
-    
-    <g:if test="${provinciaInstance?.longitud}">
-        <div class="control-group">
-            <div>
-                <span id="longitud-label" class="control-label label label-inverse">
+        </g:if>
+
+        <g:if test="${provinciaInstance?.longitud}">
+            <div class="row">
+                <div class="col-md-2 text-info">
                     Longitud
-                </span>
-            </div>
-            <div class="controls">
-        
-                <span aria-labelledby="longitud-label">
+                </div>
+                <div class="col-md-3">
                     <g:fieldValue bean="${provinciaInstance}" field="longitud"/>
-                </span>
-        
+                </div>
             </div>
-        </div>
-    </g:if>
-    
+        </g:if>
     </form>
 </div>

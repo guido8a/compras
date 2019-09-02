@@ -1,111 +1,103 @@
 
-<%@ page import="janus.Parroquia" %>
-
+<%@ page import="compras.Canton; compras.Parroquia" %>
 <div id="create-parroquiaInstance" class="span" role="main">
     <g:form class="form-horizontal" name="frmSave-parroquiaInstance" action="save">
         <g:hiddenField name="id" value="${parroquiaInstance?.id}"/>
-                
-        <div class="control-group">
-            <div>
-                <span class="control-label label label-inverse">
-                    Nombre
-                </span>
-            </div>
 
-            <div class="controls">
-                <g:textField name="nombre" maxlength="63" style="width: 300px" class=" required" value="${parroquiaInstance?.nombre}"/>
-                <span class="mandatory">*</span>
-                <p class="help-block ui-helper-hidden"></p>
-            </div>
-        </div>
-                
-        <div class="control-group">
-            <div>
-                <span class="control-label label label-inverse">
+        <div class="form-group ${hasErrors(bean: parroquiaInstance, field: 'codigo', 'error')} ">
+            <span class="grupo">
+                <label for="codigo" class="col-md-2 control-label text-info">
                     Código
-                </span>
-            </div>
-
-            <div class="controls">
-                <g:textField name="codigo" maxlength="6" style="width: 50px" class=" required" value="${parroquiaInstance?.codigo}"/>
-                <span class="mandatory">*</span>
-                <p class="help-block ui-helper-hidden"></p>
-            </div>
+                </label>
+                <div class="col-md-3">
+                    <g:textField name="codigo" maxlength="6" class="form-control required number" value="${parroquiaInstance?.codigo}"/>
+                    <p class="help-block ui-helper-hidden"></p>
+                </div>
+            </span>
         </div>
-                
-        <div class="control-group">
-            <div>
-                <span class="control-label label label-inverse">
+
+        <div class="form-group ${hasErrors(bean: parroquiaInstance, field: 'nombre', 'error')} ">
+            <span class="grupo">
+                <label for="nombre" class="col-md-2 control-label text-info">
+                    Nombre
+                </label>
+                <div class="col-md-6">
+                    <g:textField name="nombre" maxlength="63" class="form-control required" value="${parroquiaInstance?.nombre}"/>
+                    <p class="help-block ui-helper-hidden"></p>
+                </div>
+            </span>
+        </div>
+
+        <div class="form-group ${hasErrors(bean: parroquiaInstance, field: 'canton', 'error')} ">
+            <span class="grupo">
+                <label for="canton" class="col-md-2 control-label text-info">
                     Cantón
-                </span>
-            </div>
-
-            <div class="controls">
-                <g:select id="canton" name="canton.id" from="${janus.Canton.list()}" optionKey="id" class="many-to-one " value="${parroquiaInstance?.canton?.id}" noSelection="['null': '']"/>
-                
-                <p class="help-block ui-helper-hidden"></p>
-            </div>
+                </label>
+                <div class="col-md-6">
+                    <g:select id="canton" name="canton" from="${compras.Canton.list()}" optionKey="id" optionValue="nombre" disabled="" class="many-to-one form-control" value="${parroquiaInstance?.canton?.id ?: compras.Canton.get(padre)?.id}" noSelection="['null': '']"/>
+                    <p class="help-block ui-helper-hidden"></p>
+                </div>
+            </span>
         </div>
-                
-        <div class="control-group">
-            <div>
-                <span class="control-label label label-inverse">
+
+        <div class="form-group ${hasErrors(bean: parroquiaInstance, field: 'urbana', 'error')} ">
+            <span class="grupo">
+                <label for="urbana" class="col-md-2 control-label text-info">
                     Urbana
-                </span>
-            </div>
-
-            <div class="controls">
-                <g:textField name="urbana" maxlength="1" style="width: 20px" class="" value="${parroquiaInstance?.urbana}"/>
-                
-                <p class="help-block ui-helper-hidden"></p>
-            </div>
+                </label>
+                <div class="col-md-2">
+                    <g:select id="urbana" name="urbana" from="${['0':'SI', '1': 'NO']}" optionValue="value" optionKey="key" class="form-control" value="${parroquiaInstance?.urbana}"/>
+                    <p class="help-block ui-helper-hidden"></p>
+                </div>
+            </span>
         </div>
-                
-        <div class="control-group">
-            <div>
-                <span class="control-label label label-inverse">
+
+        <div class="form-group ${hasErrors(bean: parroquiaInstance, field: 'latitud', 'error')} ">
+            <span class="grupo">
+                <label for="latitud" class="col-md-2 control-label text-info">
                     Latitud
-                </span>
-            </div>
-
-            <div class="controls">
-                <g:field type="number" name="latitud" class=" required" value="${fieldValue(bean: parroquiaInstance, field: 'latitud')}"/>
-                <span class="mandatory">*</span>
-                <p class="help-block ui-helper-hidden"></p>
-            </div>
+                </label>
+                <div class="col-md-3">
+                    <g:textField name="latitud" class="form-control number" value="${parroquiaInstance?.latitud}"/>
+                    <p class="help-block ui-helper-hidden"></p>
+                </div>
+            </span>
         </div>
-                
-        <div class="control-group">
-            <div>
-                <span class="control-label label label-inverse">
-                    Longitud
-                </span>
-            </div>
 
-            <div class="controls">
-                <g:field type="number" name="longitud" class=" required" value="${fieldValue(bean: parroquiaInstance, field: 'longitud')}"/>
-                <span class="mandatory">*</span>
-                <p class="help-block ui-helper-hidden"></p>
-            </div>
+        <div class="form-group ${hasErrors(bean: parroquiaInstance, field: 'longitud', 'error')} ">
+            <span class="grupo">
+                <label for="longitud" class="col-md-2 control-label text-info">
+                    Longitud
+                </label>
+                <div class="col-md-3">
+                    <g:textField name="longitud" class="form-control number" value="${parroquiaInstance?.longitud}"/>
+                    <p class="help-block ui-helper-hidden"></p>
+                </div>
+            </span>
         </div>
                 
     </g:form>
 
 <script type="text/javascript">
-    var url = "${resource(dir:'images', file:'spinner_24.gif')}";
-    var spinner = $("<img style='margin-left:15px;' src='" + url + "' alt='Cargando...'/>")
-
-    $("#frmSave-parroquiaInstance").validate({
+    var validator = $("#frmSave-parroquiaInstance").validate({
+        errorClass     : "help-block",
         errorPlacement : function (error, element) {
-            element.parent().find(".help-block").html(error).show();
+            if (element.parent().hasClass("input-group")) {
+                error.insertAfter(element.parent());
+            } else {
+                error.insertAfter(element);
+            }
+            element.parents(".grupo").addClass('has-error');
         },
         success        : function (label) {
-            label.parent().hide();
-        },
-        errorClass     : "label label-important",
-        submitHandler  : function(form) {
-            $("[name=btnSave-parroquiaInstance]").replaceWith(spinner);
-            form.submit();
+            label.parents(".grupo").removeClass('has-error');
         }
+    });
+    $(".form-control").keydown(function (ev) {
+        if (ev.keyCode == 13) {
+            submitForm();
+            return false;
+        }
+        return true;
     });
 </script>

@@ -344,86 +344,86 @@ class CantonController {
 
 
 
-    String makeBasicTree(tipo, id) {
-        String tree = "", clase = ""
-        switch (tipo) {
-            case "init": //cargo "Division politica"
-                tree += "<ul type='pais'>" // <ul pais
-                clase = ""
-                tree += "<li id='pais_' class='pais jstree-closed' rel='pais'>" // <li pais
-                tree += "<a href='#' class='label_arbol'>División política</a>" // </> a href pais
-                tree += "</ul>"
-                break;
-
-
-            case "provincia": // cargo los cantones de la provincia
-                def provincia = Provincia.get(params.id)
-
-                def cantones = Canton.findAllByProvincia(provincia, [sort: 'nombre'])
-                clase = (cantones.size() > 0) ? "jstree-closed" : ""
-
-                if (cantones.size() > 0) {
-                    tree += "<ul type='canton'>" // < ul cantones
-                    cantones.each { canton ->
-                        def parroquias = Parroquia.findAllByCanton(canton, [sort: 'nombre'])
-
-                        clase = (parroquias.size() > 0) ? "jstree-closed" : ""
-                        tree += "<li id='canton_" + canton.id + "' class='canton " + clase + "' rel='canton'>" // <li canton
-                        tree += "<a href='#' id='link_canton_" + canton.id + "' class='label_arbol'>" + canton.nombre + "</a>" // </> a href canton
-                        tree += "</li>" // </> li canton
-                    }
-                    tree += "</ul>" // </> ul cantones
-                }
-                break;
-            case "canton":
-                def canton = Canton.get(params.id)
-
-                def parroquias = Parroquia.findAllByCanton(canton, [sort: 'nombre'])
-
-                clase = ""
-
-                if (parroquias.size() > 0) {
-                    tree += "<ul type='parroquia'>" // < ul parroquias
-                    parroquias.each { parroquia ->
-
-
-                        def comunidades = Comunidad.countByParroquia(parroquia)
-
-                        clase = (comunidades > 0) ? "jstree-closed" : ""
-
-                        tree += "<li id='parroquia_" + parroquia.id + "' class='parroquia " + clase + "' rel='parroquia'>" // <li parroquia
-                        tree += "<a href='#' id='link_parroquia_" + parroquia.id + "' class='label_arbol'>" + parroquia.nombre + "</a>" // </> a href parroquia
-                        tree += "</li>" // </> li parroquia
-                    }
-                    tree += "</ul>" // </> ul parroquias
-                }
-                break;
-            case "parroquia":
-                def parroquia = Parroquia.get(params.id)
-                def comunidades = Comunidad.findAllByParroquia(parroquia, [sort: 'nombre'])
-
-                clase = ""
-                if (comunidades.size() > 0) {
-
-
-                    tree += "<ul type='comunidad'>" // < ul parroquias
-                    comunidades.each { comunidad ->
-                        tree += "<li id='comunidad_" + comunidad.id + "' class='comunidad " + clase + "' rel='comunidad'>" // <li parroquia
-                        tree += "<a href='#' id='link_comunidad_" + comunidad.id + "' class='label_arbol'>" + comunidad.nombre + "</a>" // </> a href parroquia
-                        tree += "</li>" // </> li parroquia
-
-                    }
-                    tree += "</ul>"
-
-                }
-
-
-                break;
-
-        }
-
-        return tree
-    }
+//    String makeBasicTree(tipo, id) {
+//        String tree = "", clase = ""
+//        switch (tipo) {
+//            case "init": //cargo "Division politica"
+//                tree += "<ul type='pais'>" // <ul pais
+//                clase = ""
+//                tree += "<li id='pais_' class='pais jstree-closed' rel='pais'>" // <li pais
+//                tree += "<a href='#' class='label_arbol'>División política</a>" // </> a href pais
+//                tree += "</ul>"
+//                break;
+//
+//
+//            case "provincia": // cargo los cantones de la provincia
+//                def provincia = Provincia.get(params.id)
+//
+//                def cantones = Canton.findAllByProvincia(provincia, [sort: 'nombre'])
+//                clase = (cantones.size() > 0) ? "jstree-closed" : ""
+//
+//                if (cantones.size() > 0) {
+//                    tree += "<ul type='canton'>" // < ul cantones
+//                    cantones.each { canton ->
+//                        def parroquias = Parroquia.findAllByCanton(canton, [sort: 'nombre'])
+//
+//                        clase = (parroquias.size() > 0) ? "jstree-closed" : ""
+//                        tree += "<li id='canton_" + canton.id + "' class='canton " + clase + "' rel='canton'>" // <li canton
+//                        tree += "<a href='#' id='link_canton_" + canton.id + "' class='label_arbol'>" + canton.nombre + "</a>" // </> a href canton
+//                        tree += "</li>" // </> li canton
+//                    }
+//                    tree += "</ul>" // </> ul cantones
+//                }
+//                break;
+//            case "canton":
+//                def canton = Canton.get(params.id)
+//
+//                def parroquias = Parroquia.findAllByCanton(canton, [sort: 'nombre'])
+//
+//                clase = ""
+//
+//                if (parroquias.size() > 0) {
+//                    tree += "<ul type='parroquia'>" // < ul parroquias
+//                    parroquias.each { parroquia ->
+//
+//
+//                        def comunidades = Comunidad.countByParroquia(parroquia)
+//
+//                        clase = (comunidades > 0) ? "jstree-closed" : ""
+//
+//                        tree += "<li id='parroquia_" + parroquia.id + "' class='parroquia " + clase + "' rel='parroquia'>" // <li parroquia
+//                        tree += "<a href='#' id='link_parroquia_" + parroquia.id + "' class='label_arbol'>" + parroquia.nombre + "</a>" // </> a href parroquia
+//                        tree += "</li>" // </> li parroquia
+//                    }
+//                    tree += "</ul>" // </> ul parroquias
+//                }
+//                break;
+//            case "parroquia":
+//                def parroquia = Parroquia.get(params.id)
+//                def comunidades = Comunidad.findAllByParroquia(parroquia, [sort: 'nombre'])
+//
+//                clase = ""
+//                if (comunidades.size() > 0) {
+//
+//
+//                    tree += "<ul type='comunidad'>" // < ul parroquias
+//                    comunidades.each { comunidad ->
+//                        tree += "<li id='comunidad_" + comunidad.id + "' class='comunidad " + clase + "' rel='comunidad'>" // <li parroquia
+//                        tree += "<a href='#' id='link_comunidad_" + comunidad.id + "' class='label_arbol'>" + comunidad.nombre + "</a>" // </> a href parroquia
+//                        tree += "</li>" // </> li parroquia
+//
+//                    }
+//                    tree += "</ul>"
+//
+//                }
+//
+//
+//                break;
+//
+//        }
+//
+//        return tree
+//    }
 
 
 
@@ -463,13 +463,14 @@ class CantonController {
     }
 
 
+
     def loadTreePart_ajax() {
         render(makeTreeNode(params))
     }
 
 
     def makeTreeNode(params) {
-        println "makeTreeNode.. $params"
+//        println "makeTreeNode.. $params"
         def id = params.id
 
         if (!params.order) {
@@ -481,7 +482,6 @@ class CantonController {
 
         if (id == "#") {
             //root
-//            def hh = Departamento.countByPadreIsNull()
             def hh = Provincia.countByZonaIsNull()
             if (hh > 0) {
                 clase = "hasChildren jstree-closed"
@@ -494,7 +494,7 @@ class CantonController {
                 tree = ""
             }
         } else if (id == "root") {
-            hijos = Provincia.findAllByZonaIsNull()
+            hijos = Provincia.findAllByZonaIsNull().sort{it.nombre}
         } else {
             def parts = id.split("_")
             def node_id = parts[1].toLong()
@@ -507,7 +507,6 @@ class CantonController {
         }
 
         if (tree == "" && (padre || hijos.size() > 0)) {
-//            tree += "<ul>"
             def lbl = ""
 
             hijos.each { hijo ->
@@ -515,22 +514,15 @@ class CantonController {
                 def data = ""
                 def ico = ", \"icon\":\"fa fa-parking text-success\""
                 if (hijo instanceof Provincia) {
-                    lbl = hijo.nombre
-                    tp = "pro"
-                    rel = "principal"
 
                     def hijosH = Canton.findAllByProvincia(hijo, [sort: "nombre"])
-
-                    clase = (hijosH.size() > 0) ? "jstree-closed hasChildren" : ""
-                    if (hijosH.size() > 0) {
-                        clase += " ocupado "
-                    }
+                    clase = (hijosH.size() > 0) ? "jstree-closed hasChildren" : "jstree-closed"
 
                     tree += "<ul>"
-                    tree += "<li id='li${tp}_" + hijo.id + "' class='" + clase + "' ${data} data-jstree='{\"type\":\"${rel}\" ${ico}}' >"
-                    tree += "<a href='#' class='label_arbol'>" + lbl + "</a>"
+                    tree += "<li id='lipro_" + hijo.id + "' class='" + clase + "' ${data} data-jstree='{\"type\":\"${"principal"}\" ${ico}}' >"
+                    tree += "<a href='#' class='label_arbol'>" + hijo?.nombre + "</a>"
                     tree += "</li>"
-//                    tree += "</ul>"
+//                    tree += "<ul>"//cierre provincia
 
                 } else if (hijo instanceof Canton) {
 
@@ -540,18 +532,18 @@ class CantonController {
 
                     lbl = "${hijo.numero} ${" - " + hijo.nombre}"
 
-                    def hijosP = Parroquia.findAllByCanton(hijo)
+                    def hijosP = Parroquia.findAllByCanton(hijo).sort{it.nombre}
                     clase = (hijosP.size() > 0) ? "jstree-closed hasChildren" : ""
 
                     tp = "can"
-                    rel = "canton"
+//                    rel = "canton"
                     clase = "usuario"
 
                     data += "data-usuario='${hijo.nombre}'"
-                    rel += "Inactivo"
+//                    rel += "Inactivo"
 
                     tree += "<ul>"
-                    tree += "<li id='li${tp}_" + hijo.id + "' class='" + clase + "' ${data} data-jstree='{\"type\":\"${rel}\" ${icoCanton}}' >"
+                    tree += "<li id='li${tp}_" + hijo.id + "' class='" + clase + "' ${data} data-jstree='{\"type\":\"${"canton"}\" ${icoCanton}}' >"
                     tree += "<a href='#' class='label_arbol'>" + lbl + "</a>"
 
                     hijosP.each { parroquia->
@@ -560,7 +552,7 @@ class CantonController {
                         tree += "<li id='lipa_" + parroquia.id + "' class='" + clase + "' ${data} data-jstree='{\"type\":\"${"parroquia"}\" ${icoParroquia}}' >"
                         tree += "<a href='#' class='label_arbol'>" + parroquia?.nombre + "</a>"
 
-                        def comunidades = Comunidad.findAllByParroquia(parroquia)
+                        def comunidades = Comunidad.findAllByParroquia(parroquia).sort{it.nombre}
                         comunidades.each { comunidad->
 
                             tree += "<ul>"
@@ -572,20 +564,14 @@ class CantonController {
 
                         tree += "</li>"//cierre parroquia
                         tree += "</ul>"
-
                     }
 
                     tree += "</li>" //cierre canton
                     tree += "</ul>"
-
                 }
-
-//                tree += "<li id='li${tp}_" + hijo.id + "' class='" + clase + "' ${data} data-jstree='{\"type\":\"${rel}\" ${ico}}' >"
-//                tree += "<a href='#' class='label_arbol'>" + lbl + "</a>"
-//                tree += "</li>"
+                tree += "</ul>"
             }
 
-//            tree += "</ul>"
         }
 //        println "arbol: $tree"
         return tree
@@ -601,6 +587,8 @@ class CantonController {
     } //list
 
     def form_ajax() {
+
+
         def cantonInstance = new Canton(params)
         if (params.id) {
             cantonInstance = Canton.get(params.id)
@@ -611,54 +599,52 @@ class CantonController {
                 return
             } //no existe el objeto
         } //es edit
-        return [cantonInstance: cantonInstance]
+        return [cantonInstance: cantonInstance, padre: params.padre ?: cantonInstance?.provincia?.id]
     } //form_ajax
 
     def save() {
+
+        println("params c " + params)
+
+
         def cantonInstance
-        if (params.id) {
+
+        if(params.id) {
             cantonInstance = Canton.get(params.id)
-            if (!cantonInstance) {
-                flash.clase = "alert-error"
-                flash.message = "No se encontró Canton con id " + params.id
-                redirect(action: 'list')
+            if(!cantonInstance) {
+                render "no_No se encontró el cantón"
                 return
             }//no existe el objeto
-            cantonInstance.properties = params
+
+            if(cantonInstance?.numero.toInteger() == params.numero.toInteger()){
+                cantonInstance.properties = params
+            }else{
+                if(Canton.findAllByNumero(params.numero)){
+                    render "no_Ya existe un cantón registrado con este número!"
+                    return
+                }else{
+                    cantonInstance.properties = params
+                }
+            }
         }//es edit
         else {
-            cantonInstance = new Canton(params)
+            if(Canton.findAllByNumero(params.numero)){
+                render "no_Ya existe un cantón registrado con este número!"
+                return
+            }else{
+                cantonInstance = new Canton(params)
+            }
         } //es create
         if (!cantonInstance.save(flush: true)) {
-            flash.clase = "alert-error"
-            def str = "<h4>No se pudo guardar Canton " + (cantonInstance.id ? cantonInstance.id : "") + "</h4>"
-
-            str += "<ul>"
-            cantonInstance.errors.allErrors.each { err ->
-                def msg = err.defaultMessage
-                err.arguments.eachWithIndex {  arg, i ->
-                    msg = msg.replaceAll("\\{" + i + "}", arg.toString())
-                }
-                str += "<li>" + msg + "</li>"
-            }
-            str += "</ul>"
-
-            flash.message = str
-            redirect(action: 'list')
+            render "no_Error al guardar el cantón"
             return
+        }else{
+            if(params.id) {
+                render  "ok_Se ha actualizado correctamente el Cantón "
+            } else {
+                render "ok_Se ha creado correctamente el Cantón "
+            }
         }
-
-        if (params.id) {
-            flash.clase = "alert-success"
-            flash.message = "Se ha actualizado correctamente Canton " + cantonInstance.id
-
-
-
-        } else {
-            flash.clase = "alert-success"
-            flash.message = "Se ha creado correctamente Canton " + cantonInstance.id
-        }
-        redirect(action: 'list')
     } //save
 
     def show_ajax() {
@@ -672,25 +658,16 @@ class CantonController {
         [cantonInstance: cantonInstance]
     } //show
 
-    def delete() {
-        def cantonInstance = Canton.get(params.id)
-        if (!cantonInstance) {
-            flash.clase = "alert-error"
-            flash.message = "No se encontró Canton con id " + params.id
-            redirect(action: "list")
-            return
-        }
+    def borrarCanton_ajax () {
+        def canton = Canton.get(params.id)
 
-        try {
-            cantonInstance.delete(flush: true)
-            flash.clase = "alert-success"
-            flash.message = "Se ha eliminado correctamente Canton " + cantonInstance.id
-            redirect(action: "list")
+        try{
+            canton.delete(flush: true)
+            render "ok"
+        }catch(e){
+            println("error al borrar la canton " + e)
+            render "no"
         }
-        catch (DataIntegrityViolationException e) {
-            flash.clase = "alert-error"
-            flash.message = "No se pudo eliminar Canton " + (cantonInstance.id ? cantonInstance.id : "")
-            redirect(action: "list")
-        }
-    } //delete
+    }
+
 } //fin controller

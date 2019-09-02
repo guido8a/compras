@@ -29,7 +29,7 @@ class ParroquiaController {
                 return
             } //no existe el objeto
         } //es edit
-        return [parroquiaInstance: parroquiaInstance]
+        return [parroquiaInstance: parroquiaInstance, padre: params.padre ?: parroquiaInstance?.canton?.id]
     } //form_ajax
 
     def fixCodigos() {
@@ -94,55 +94,43 @@ class ParroquiaController {
 
     def save() {
         def parroquiaInstance
-        if (params.id) {
-            parroquiaInstance = Parroquia.get(params.id)
-            if (!parroquiaInstance) {
-                flash.clase = "alert-error"
-                flash.message = "No se encontró Parroquia con id " + params.id
-                redirect(action: 'list')
-                return
-            }//no existe el objeto
-            parroquiaInstance.properties = params
-        }//es edit
-        else {
-            parroquiaInstance = new Parroquia(params)
-            def existe = Parroquia.findByCodigo(params.codigo)
-            if (!existe)
-                parroquiaInstance = new Parroquia(params)
-            else {
-                flash.clase = "alert-error"
-                flash.message = "No se pudo guardar el código ya existe."
-                redirect(action: 'list')
-                return
-            }
-        } //es create
-        if (!parroquiaInstance.save(flush: true)) {
-            flash.clase = "alert-error"
-            def str = "<h4>No se pudo guardar Parroquia " + (parroquiaInstance.id ? parroquiaInstance.id : "") + "</h4>"
 
-            str += "<ul>"
-            parroquiaInstance.errors.allErrors.each { err ->
-                def msg = err.defaultMessage
-                err.arguments.eachWithIndex { arg, i ->
-                    msg = msg.replaceAll("\\{" + i + "}", arg.toString())
+            if(params.id) {
+                parroquiaInstance = Parroquia.get(params.id)
+                if(!parroquiaInstance) {
+                    render "no_No se encontró la parroquia"
+                    return
+                }//no existe el objeto
+
+                if(parroquiaInstance?.codigo.toInteger() == params.codigo.toInteger()){
+                    parroquiaInstance.properties = params
+                }else{
+                    if(Parroquia.findAllByCodigo(params.codigo)){
+                        render "no_Ya existe una parroquia registrada con este código!"
+                        return
+                    }else{
+                        parroquiaInstance.properties = params
+                    }
                 }
-                str += "<li>" + msg + "</li>"
+            }//es edit
+            else {
+                if(Parroquia.findAllByCodigo(params.codigo)){
+                    render "no_Ya existe una parroquia registrada con este código!"
+                    return
+                }else{
+                    parroquiaInstance = new Parroquia(params)
+                }
+            } //es create
+            if (!parroquiaInstance.save(flush: true)) {
+                render "no_Error al guardar la parroquia"
+                return
+            }else{
+                if(params.id) {
+                    render  "ok_Se ha actualizado correctamente la parroquia "
+                } else {
+                    render "ok_Se ha creado correctamente la parroquia "
+                }
             }
-            str += "</ul>"
-
-            flash.message = str
-            redirect(action: 'list')
-            return
-        }
-
-        if (params.id) {
-            flash.clase = "alert-success"
-            flash.message = "Se ha actualizado correctamente Parroquia " + parroquiaInstance.id
-        } else {
-            flash.clase = "alert-success"
-            flash.message = "Se ha creado correctamente Parroquia " + parroquiaInstance.id
-        }
-        redirect(action: 'list')
     } //save
 
     def show_ajax() {
@@ -156,25 +144,16 @@ class ParroquiaController {
         [parroquiaInstance: parroquiaInstance]
     } //show
 
-    def delete() {
-        def parroquiaInstance = Parroquia.get(params.id)
-        if (!parroquiaInstance) {
-            flash.clase = "alert-error"
-            flash.message = "No se encontró Parroquia con id " + params.id
-            redirect(action: "list")
-            return
-        }
+    def borrarParroquia_ajax() {
 
-        try {
-            parroquiaInstance.delete(flush: true)
-            flash.clase = "alert-success"
-            flash.message = "Se ha eliminado correctamente Parroquia " + parroquiaInstance.id
-            redirect(action: "list")
+        def parroquia = Parroquia.get(params.id)
+
+        try{
+            parroquia.delete(flush: true)
+            render "ok"
+        }catch(e){
+            println("error al borrar la parroquia " + e)
+            render "no"
         }
-        catch (DataIntegrityViolationException e) {
-            flash.clase = "alert-error"
-            flash.message = "No se pudo eliminar Parroquia " + (parroquiaInstance.id ? parroquiaInstance.id : "")
-            redirect(action: "list")
-        }
-    } //delete
+    }
 } //fin controller

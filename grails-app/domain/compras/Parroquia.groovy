@@ -6,6 +6,7 @@ class Parroquia {
     String nombre
     double longitud
     double latitud
+    String urbana
 
     static mapping = {
         table 'parr'
@@ -20,6 +21,7 @@ class Parroquia {
             nombre column: 'parrnmbr'
             longitud column: 'parrlong'
             latitud column: 'parrlatt'
+            urbana column: 'parrurbn'
         }
     }
     static constraints = {
@@ -28,6 +30,7 @@ class Parroquia {
         canton(blank: true, nullable: true, attributes: [title: 'canton'])
         latitud(blank: true, nullable: true, attributes: [title: 'latitud'])
         longitud(blank: true, nullable: true, attributes: [title: 'longitud'])
+        urbana(blank: true, nullable: true, attributes: [title: 'urbana'])
     }
 
     String toString() {

@@ -1,83 +1,81 @@
 
-<%@ page import="janus.Provincia" %>
+%{--<%@ page import="compras.Provincia" %>--}%
 
-<div id="create-provinciaInstance" class="span" role="main">
-    <g:form class="form-horizontal" name="frmSave-provinciaInstance" action="save">
-        <g:hiddenField name="id" value="${provinciaInstance?.id}"/>
-                
-        <div class="control-group">
-            <div>
-                <span class="control-label label label-inverse">
-                    Nombre
-                </span>
-            </div>
+%{--<div id="create-provinciaInstance" class="span" role="main">--}%
+<g:form class="form-horizontal" name="frmSave-provinciaInstance" action="save">
+    <g:hiddenField name="id" value="${provinciaInstance?.id}"/>
 
-            <div class="controls">
-                <g:textField name="nombre" maxlength="63" style="width: 310px" class=" required" value="${provinciaInstance?.nombre}"/>
-                <span class="mandatory">*</span>
+    <div class="form-group ${hasErrors(bean: provinciaInstance, field: 'numero', 'error')} ">
+        <span class="grupo">
+            <label for="numero" class="col-md-2 control-label text-info">
+                Número
+            </label>
+            <div class="col-md-4">
+                <g:textField name="numero" maxlength="2" class="numeroV form-control required number" value="${provinciaInstance?.numero}"/>
                 <p class="help-block ui-helper-hidden"></p>
             </div>
-        </div>
-                
-        <div class="control-group">
-            <div>
-                <span class="control-label label label-inverse">
-                    Número
-                </span>
-            </div>
+        </span>
+    </div>
 
-            <div class="controls">
-                <g:textField name="numero" maxlength="2" style="width: 20px" class=" required" value="${provinciaInstance?.numero}"/>
-                <span class="mandatory">*</span>
+    <div class="form-group ${hasErrors(bean: provinciaInstance, field: 'nombre', 'error')} ">
+        <span class="grupo">
+            <label for="nombre" class="col-md-2 control-label text-info">
+                Nombre
+            </label>
+            <div class="col-md-8">
+                <g:textField name="nombre" maxlength="63" class="form-control required" value="${provinciaInstance?.nombre}"/>
                 <p class="help-block ui-helper-hidden"></p>
             </div>
-        </div>
-                
-        <div class="control-group">
-            <div>
-                <span class="control-label label label-inverse">
-                    Latitud
-                </span>
-            </div>
+        </span>
+    </div>
 
-            <div class="controls">
-                <g:field type="number" name="latitud" class=" required" value="${fieldValue(bean: provinciaInstance, field: 'latitud')}"/>
-                <span class="mandatory">*</span>
+    <div class="form-group ${hasErrors(bean: provinciaInstance, field: 'latitud', 'error')} ">
+        <span class="grupo">
+            <label for="latitud" class="col-md-2 control-label text-info">
+                Latitud
+            </label>
+            <div class="col-md-4">
+                <g:textField name="latitud" class="form-control number" value="${provinciaInstance?.latitud}"/>
                 <p class="help-block ui-helper-hidden"></p>
             </div>
-        </div>
-                
-        <div class="control-group">
-            <div>
-                <span class="control-label label label-inverse">
-                    Longitud
-                </span>
-            </div>
+        </span>
+    </div>
 
-            <div class="controls">
-                <g:field type="number" name="longitud" class=" required" value="${fieldValue(bean: provinciaInstance, field: 'longitud')}"/>
-                <span class="mandatory">*</span>
+    <div class="form-group ${hasErrors(bean: provinciaInstance, field: 'longitud', 'error')} ">
+        <span class="grupo">
+            <label for="longitud" class="col-md-2 control-label text-info">
+                Longitud
+            </label>
+            <div class="col-md-4">
+                <g:textField name="longitud" class="form-control number" value="${provinciaInstance?.longitud}"/>
                 <p class="help-block ui-helper-hidden"></p>
             </div>
-        </div>
-                
-    </g:form>
+        </span>
+    </div>
+
+</g:form>
+
 
 <script type="text/javascript">
-    var url = "${resource(dir:'images', file:'spinner_24.gif')}";
-    var spinner = $("<img style='margin-left:15px;' src='" + url + "' alt='Cargando...'/>")
-
-    $("#frmSave-provinciaInstance").validate({
+    var validator = $("#frmSave-provinciaInstance").validate({
+        errorClass     : "help-block",
         errorPlacement : function (error, element) {
-            element.parent().find(".help-block").html(error).show();
+            if (element.parent().hasClass("input-group")) {
+                error.insertAfter(element.parent());
+            } else {
+                error.insertAfter(element);
+            }
+            element.parents(".grupo").addClass('has-error');
         },
         success        : function (label) {
-            label.parent().hide();
-        },
-        errorClass     : "label label-important",
-        submitHandler  : function(form) {
-            $("[name=btnSave-provinciaInstance]").replaceWith(spinner);
-            form.submit();
+            label.parents(".grupo").removeClass('has-error');
         }
+    });
+    $(".form-control").keydown(function (ev) {
+        if (ev.keyCode == 13) {
+            submitForm();
+            return false;
+        }
+        return true;
     });
 </script>

@@ -1,97 +1,94 @@
 
-<%@ page import="janus.Canton" %>
+<%@ page import="compras.Provincia; compras.Canton" %>
 
 <div id="create-cantonInstance" class="span" role="main">
     <g:form class="form-horizontal" name="frmSave-cantonInstance" action="save">
         <g:hiddenField name="id" value="${cantonInstance?.id}"/>
-                
-        <div class="control-group">
-            <div>
-                <span class="control-label label label-inverse">
-                    Nombre
-                </span>
-            </div>
 
-            <div class="controls">
-                <g:textField style="width: 310px" name="nombre" maxlength="63" class=" required" value="${cantonInstance?.nombre}"/>
-                <span class="mandatory">*</span>
-                <p class="help-block ui-helper-hidden"></p>
-            </div>
-        </div>
-                
-        <div class="control-group">
-            <div>
-                <span class="control-label label label-inverse">
+
+
+        <div class="form-group ${hasErrors(bean: cantonInstance, field: 'numero', 'error')} ">
+            <span class="grupo">
+                <label for="numero" class="col-md-2 control-label text-info">
                     Número
-                </span>
-            </div>
-
-            <div class="controls">
-                <g:textField name="numero" maxlength="4" style="width: 50px" class=" required" value="${cantonInstance?.numero}"/>
-                <span class="mandatory">*</span>
-                <p class="help-block ui-helper-hidden"></p>
-            </div>
+                </label>
+                <div class="col-md-4">
+                    <g:textField name="numero" maxlength="4" class="numeroV form-control required number" value="${cantonInstance?.numero}"/>
+                    <p class="help-block ui-helper-hidden"></p>
+                </div>
+            </span>
         </div>
-                
-        <div class="control-group">
-            <div>
-                <span class="control-label label label-inverse">
+
+        <div class="form-group ${hasErrors(bean: cantonInstance, field: 'nombre', 'error')} ">
+            <span class="grupo">
+                <label for="nombre" class="col-md-2 control-label text-info">
+                    Nombre
+                </label>
+                <div class="col-md-8">
+                    <g:textField name="nombre" maxlength="63" class="form-control required" value="${cantonInstance?.nombre}"/>
+                    <p class="help-block ui-helper-hidden"></p>
+                </div>
+            </span>
+        </div>
+
+        <div class="form-group ${hasErrors(bean: cantonInstance, field: 'provincia', 'error')} ">
+            <span class="grupo">
+                <label for="nombre" class="col-md-2 control-label text-info">
                     Provincia
-                </span>
-            </div>
-
-            <div class="controls">
-                <g:select id="provincia" name="provincia.id" from="${janus.Provincia.list()}" optionKey="id" class="many-to-one " value="${cantonInstance?.provincia?.id}" noSelection="['null': '']"/>
-                
-                <p class="help-block ui-helper-hidden"></p>
-            </div>
+                </label>
+                <div class="col-md-6">
+                    <g:select id="provincia" name="provincia" from="${compras.Provincia.list()}" optionKey="id" optionValue="nombre" disabled="" class="many-to-one form-control" value="${cantonInstance?.provincia?.id ?: Provincia.get(padre)?.id}" noSelection="['null': '']"/>
+                    <p class="help-block ui-helper-hidden"></p>
+                </div>
+            </span>
         </div>
-                
-        <div class="control-group">
-            <div>
-                <span class="control-label label label-inverse">
+
+        <div class="form-group ${hasErrors(bean: cantonInstance, field: 'latitud', 'error')} ">
+            <span class="grupo">
+                <label for="latitud" class="col-md-2 control-label text-info">
                     Latitud
-                </span>
-            </div>
-
-            <div class="controls">
-                <g:field type="number" name="latitud" class=" required" value="${fieldValue(bean: cantonInstance, field: 'latitud')}"/>
-                <span class="mandatory">*</span>
-                <p class="help-block ui-helper-hidden"></p>
-            </div>
+                </label>
+                <div class="col-md-4">
+                    <g:textField name="latitud" class="form-control number" value="${cantonInstance?.latitud}"/>
+                    <p class="help-block ui-helper-hidden"></p>
+                </div>
+            </span>
         </div>
-                
-        <div class="control-group">
-            <div>
-                <span class="control-label label label-inverse">
-                    Longitud
-                </span>
-            </div>
 
-            <div class="controls">
-                <g:field type="number" name="longitud" class=" required" value="${fieldValue(bean: cantonInstance, field: 'longitud')}"/>
-                <span class="mandatory">*</span>
-                <p class="help-block ui-helper-hidden"></p>
-            </div>
+        <div class="form-group ${hasErrors(bean: provinciaInstance, field: 'longitud', 'error')} ">
+            <span class="grupo">
+                <label for="longitud" class="col-md-2 control-label text-info">
+                    Longitud
+                </label>
+                <div class="col-md-4">
+                    <g:textField name="longitud" class="form-control number" value="${cantonInstance?.longitud}"/>
+                    <p class="help-block ui-helper-hidden"></p>
+                </div>
+            </span>
         </div>
                 
     </g:form>
 
 <script type="text/javascript">
-    var url = "${resource(dir:'images', file:'spinner_24.gif')}";
-    var spinner = $("<img style='margin-left:15px;' src='" + url + "' alt='Cargando...'/>")
-
-    $("#frmSave-cantonInstance").validate({
+    var validator = $("#frmSave-cantonInstance").validate({
+        errorClass     : "help-block",
         errorPlacement : function (error, element) {
-            element.parent().find(".help-block").html(error).show();
+            if (element.parent().hasClass("input-group")) {
+                error.insertAfter(element.parent());
+            } else {
+                error.insertAfter(element);
+            }
+            element.parents(".grupo").addClass('has-error');
         },
         success        : function (label) {
-            label.parent().hide();
-        },
-        errorClass     : "label label-important",
-        submitHandler  : function(form) {
-            $("[name=btnSave-cantonInstance]").replaceWith(spinner);
-            form.submit();
+            label.parents(".grupo").removeClass('has-error');
         }
+    });
+    $(".form-control").keydown(function (ev) {
+        if (ev.keyCode == 13) {
+            submitForm();
+            return false;
+        }
+        return true;
     });
 </script>

@@ -25,7 +25,7 @@ class Canton {
     static constraints = {
         nombre(size: 1..63, blank: false, attributes: [title: 'nombre'])
         numero(size: 1..4, blank: false, attributes: [title: 'numero'])
-        provincia(blank: true, nullable: true, attributes: [title: 'provincia'])
+        provincia(blank: false, nullable: false, attributes: [title: 'provincia'])
         latitud(blank: true, nullable: true, attributes: [title: 'latitud'])
         longitud(blank: true, nullable: true, attributes: [title: 'longitud'])
     }
