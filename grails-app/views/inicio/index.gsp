@@ -83,7 +83,7 @@
 
     <div style="text-align: center;"><h2 class="titl">
             <p class="text-warning">${inst.institucion}</p>
-            <p class="text-warning">Base de Conocimiento y Agenda Empresarial</p>
+            <p class="text-warning">XXXXXXXXXXXXXXXXXXXXXXXXX</p>
         </h2>
     </div>
 
@@ -119,16 +119,16 @@
         </a>
 
 
-        <a href= "${createLink(controller:'actividad', action: 'list')}" style="text-decoration: none">
+        <a href= "${createLink(controller:'canton', action: 'arbol')}" style="text-decoration: none">
             <div class="ui-corner-all item2 fuera">
                 <div class="ui-corner-all item2">
                     <div class="imagen2">
-                        <asset:image src="apli/actividades.png" alt="Buscar en la Base de Conocimiento"  width="100%" height="100%"/>
+                        <asset:image src="apli/actividades.png" alt="División Geográfica"  width="100%" height="100%"/>
                     </div>
 
                     <div style="margin-top: 50px; margin-left: 140px;">
-                        <span class="text-success" style="font-size: large"><strong>Mis Actividades</strong></span></div>
-                        <span class="text-success" style="margin-top: 20px; margin-left: 30px; width: 400px; display: block"><strong>Actividades en las que estoy involucrado o pertenecen a mi grupo de trabajo</strong></span></div>
+                        <span class="text-success" style="font-size: large"><strong>División Geográfica</strong></span></div>
+%{--                        <span class="text-success" style="margin-top: 20px; margin-left: 30px; width: 400px; display: block"><strong>Actividades en las que estoy involucrado o pertenecen a mi grupo de trabajo</strong></span></div>--}%
                 </div>
             </div>
         </a>
