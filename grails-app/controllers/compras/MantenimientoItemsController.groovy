@@ -4,6 +4,7 @@ package compras
 //import janus.pac.CodigoComprasPublicas
 //import janus.seguridad.Shield
 import org.springframework.dao.DataIntegrityViolationException
+import seguridad.Persona
 
 import java.text.DecimalFormat
 
@@ -68,7 +69,7 @@ class MantenimientoItemsController {
                         }
                     }
                 } else if(vae){
-                    hijos = VaeItems.findAllByItem(Item.get(params.id),[max:1])
+//                    hijos = VaeItems.findAllByItem(Item.get(params.id),[max:1])
                 }
                 break;
         }
@@ -161,8 +162,9 @@ class MantenimientoItemsController {
                             rel = "lugar"
                             liId = "lg_" + id + "_" + hijo.id
 
-                            def obras = Obra.countByLugar(hijo)
-                            extra = "data-obras='${obras}'"
+//                            def obras = Obra.countByLugar(hijo)
+//                            extra = "data-obras='${obras}'"
+                            extra =""
                         }
                     } else if(vae && hijo){
                         hijosH = []
@@ -188,8 +190,10 @@ class MantenimientoItemsController {
                             rel = "lugar"
                             liId = "lg_" + id + "_" + hijo.id
 
-                            def obras = Obra.countByLugar(hijo)
-                            extra = "data-obras='${obras}'"
+//                            def obras = Obra.countByLugar(hijo)
+//                            def obras = ''
+//                            extra = "data-obras='${obras}'"
+                            extra = ''
                         }
                     }  else if(vae){
                         hijosH = []
@@ -539,7 +543,7 @@ class MantenimientoItemsController {
     }
 
     def loadTreePart() {
-        println "loadTreePart ----"
+//        println "loadTreePart ----"
         render(makeBasicTree(params))
     }
 
@@ -725,65 +729,321 @@ class MantenimientoItemsController {
         if (params.id) {
             subgrupoItemsInstance = SubgrupoItems.get(params.id)
         }
-        return [grupo: grupo, subgrupoItemsInstance: subgrupoItemsInstance]
+        return [grupo: grupo, subgrupoItemsInstance: subgrupoItemsInstance, ]
     }
 
-    def checkDsSg_ajax() {
+
+    def formSubGrupo_ajax() {
+
+        def subgrupoItemsInstance = new SubgrupoItems()
         if (params.id) {
-            def subgrupo = SubgrupoItems.get(params.id)
-            if (params.descripcion == subgrupo.descripcion) {
-                render true
-            } else {
-                def subgrupos = SubgrupoItems.findAllByDescripcion(params.descripcion)
-                if (subgrupos.size() == 0) {
-                    render true
-                } else {
-                    render false
+            subgrupoItemsInstance = SubgrupoItems.get(params.id)
+        }
+        return [subgrupoItemsInstance: subgrupoItemsInstance, padre: params.padre ?: subgrupoItemsInstance?.grupo?.id]
+    }
+
+
+    def formDepartamento_ajax () {
+//        println("params fd " + params)
+
+        def departamentoItemInstance = new DepartamentoItem()
+        if (params.id) {
+            departamentoItemInstance = DepartamentoItem.get(params.id)
+        }
+        return [departamentoItemInstance: departamentoItemInstance, padre: params.padre ?: departamentoItemInstance?.subgrupo?.id]
+    }
+
+
+    def formItem_ajax () {
+        println("params fd " + params)
+
+        def itemInstance = new Item()
+        if (params.id) {
+            itemInstance = Item.get(params.id)
+            if(itemInstance.tipoItem.codigo == 'I'){
+                if(itemInstance.tipoLista.codigo == 'MQ'){
+                    itemInstance.codigo = itemInstance.codigo.toString().split("\\.")[1]
+                }else{
+                    itemInstance.codigo = itemInstance.codigo.toString().split("\\.")[2]
                 }
             }
-        } else {
-            def subgrupos = SubgrupoItems.findAllByDescripcion(params.descripcion)
-            if (subgrupos.size() == 0) {
-                render true
+        }
+
+
+        def tipoLista = TipoLista.findAllByCodigoNotIlike("MQ")
+        def tipoLista2 = TipoLista.findAllByCodigoLike("MQ")
+
+        return [itemInstance: itemInstance, padre: params.padre ?: itemInstance?.departamento?.id, tipoLista: tipoLista, tipo: params.tipo, lista2: tipoLista2]
+    }
+
+
+    def saveItem_ajax () {
+//        println("params sitem " + params)
+
+        def item
+
+        params.nombre = params.nombre.toUpperCase()
+        params.codigo = params.codigo.toString().padLeft(3, '0')
+        params.fechaModificacion = new Date()
+        params.fecha = new Date().parse("dd-MM-yyyy", params.fecha)
+        params.tipoItem = TipoItem.findByCodigo("I")
+
+        def codigoSinForm = params.codigo
+
+        if(params.tipoLista == '6'){
+            params.codigo = params.codigo2 + "." +  params.codigo
+        }else{
+            params.codigo = params.codigo1 + "." + params.codigo2 + "." + params.codigo
+        }
+
+        def departamento = DepartamentoItem.get(params.departamento)
+
+        if(revisarCodigo(params.id, codigoSinForm, params.departamento, "item")){
+
+            if (params.id) {
+                item = Item.get(params.id)
+                if (params.nombre.toUpperCase() == item.nombre.toUpperCase()) {
+                    item.properties = params
+                } else {
+                    def items = Item.findAllByNombreIlikeAndDepartamento(params.nombre, departamento)
+                    if (items) {
+                        render "no_Ya existe un Item creado con esta descripción"
+                    } else {
+                        item.properties = params
+                    }
+                }
             } else {
-                render false
+                def items = Item.findAllByNombreIlikeAndDepartamento(params.nombre, departamento)
+                if (items) {
+                    render "no_Ya existe un Item creado con esta descripción"
+                } else {
+                    item = new Item()
+                    item.properties = params
+                }
+            }
+
+//            try{
+//                item.save(flush: true)
+//                println("item " + item.errors)
+//                render "ok_Item guardado correctamente"
+//            }catch(e){
+//                println("error al guardar el item " + e + " " + item.errors)
+//                render "no_Error al guardar el Item"
+//            }
+
+            if(!item.save(flush: true)){
+                println("error al guardar el item " + " " + item.errors)
+                render "no_Error al guardar el Item"
+            }else{
+                render "ok_Item guardado correctamente"
+            }
+        }else{
+            render "no_Ya existe un Item creado con este código!"
+        }
+    }
+
+    def saveSubGrupo_ajax () {
+//        println("params ssg " + params)
+
+        def subgrupo
+
+        params.descripcion = params.descripcion.toUpperCase()
+        params.codigo = params.codigo.toString().padLeft(3, '0')
+
+        if(revisarCodigo(params.id, params.codigo, params.grupo, "subgrupo")){
+            if (params.id) {
+                subgrupo = SubgrupoItems.get(params.id)
+                if (params.descripcion.toUpperCase() == subgrupo.descripcion.toUpperCase()) {
+                    subgrupo.properties = params
+                } else {
+                    def subgrupos = SubgrupoItems.findAllByDescripcionIlike(params.descripcion)
+                    if (subgrupos) {
+                        render "no_Ya existe un Grupo creado con esta descripción"
+                    } else {
+                        subgrupo.properties = params
+                    }
+                }
+            } else {
+                def subgrupos = SubgrupoItems.findAllByDescripcionIlike(params.descripcion)
+                if (subgrupos) {
+                    render "no_Ya existe un Grupo creado con esta descripción"
+                } else {
+                    subgrupo = new SubgrupoItems()
+                    subgrupo.properties = params
+                }
+            }
+
+            try{
+                subgrupo.save(flush: true)
+                render "ok_Grupo guardado correctamente"
+            }catch(e){
+                println("error al guardar el grupo " + e + " " + subgrupo.errors)
+                render "no_Error al guardar el grupo"
+            }
+        }else{
+            render "no_Ya existe un Grupo creado con este código!"
+        }
+    }
+
+
+    def saveDepartamento_ajax () {
+//        println("params sdp " + params)
+
+        def departamento
+
+        params.descripcion = params.descripcion.toUpperCase()
+        params.codigo = params.codigo.toString().padLeft(3, '0')
+
+        if(revisarCodigo(params.id, params.codigo, params.subgrupo, "departamento")){
+            if (params.id) {
+                departamento = DepartamentoItem.get(params.id)
+                if (params.descripcion.toUpperCase() == departamento.descripcion.toUpperCase()) {
+                    departamento.properties = params
+                } else {
+                    def departamentos = DepartamentoItem.findAllByDescripcionIlike(params.descripcion)
+                    if (departamentos) {
+                        render "no_Ya existe un subgrupo creado con esta descripción"
+                    } else {
+                        departamento.properties = params
+                    }
+                }
+            } else {
+                def departamentos = DepartamentoItem.findAllByDescripcionIlike(params.descripcion)
+                if (departamentos) {
+                    render "no_Ya existe un subgrupo creado con esta descripción"
+                } else {
+                    departamento = new DepartamentoItem()
+                    departamento.properties = params
+                }
+            }
+
+            try{
+                departamento.save(flush: true)
+                render "ok_Subgrupo guardado correctamente"
+            }catch(e){
+                println("error al guardar el subgrupo " + e + " " + departamento.errors)
+                render "no_Error al guardar el subgrupo"
+            }
+        }else{
+            render "no_Ya existe un subgrupo creado con este código!"
+        }
+    }
+
+    def revisarCodigo (id, codigo, padre, tipo) {
+
+        def ent
+        def lista
+        def pa
+
+        switch (tipo) {
+            case "grupo":
+                if(id){
+                    ent = Grupo.get(id)
+                }
+                def n1 = codigo.toString().padLeft(3, '0')
+                lista = Grupo.findAllByCodigo(n1)
+                break;
+            case "subgrupo":
+                if(id){
+                    ent = SubgrupoItems.get(id)
+                }
+                pa = Grupo.get(padre)
+                lista = SubgrupoItems.findAllByCodigoIlikeAndGrupo(codigo, pa)
+                break;
+            case "departamento":
+                if(id){
+                    ent = DepartamentoItem.get(id)
+                }
+                pa = SubgrupoItems.get(padre)
+                lista = DepartamentoItem.findAllByCodigoIlikeAndSubgrupo(codigo, pa)
+                break;
+            case "item":
+                pa = DepartamentoItem.get(padre)
+
+                if(id){
+                    ent = Item.get(id)
+                    lista = Item.findAllByCodigoIlikeAndDepartamento(ent.codigo, pa)
+                    if(ent.tipoItem.codigo == 'I'){
+                        if(ent.tipoLista.codigo == 'MQ'){
+                            ent.codigo = params.codigo?.toString()?.split("\\.")[1]
+                        }else{
+                            ent.codigo = params.codigo?.toString()?.split("\\.")[2]
+                        }
+                    }
+                }else{
+                    def codFormateado = pa.subgrupo.codigo + "." + pa.codigo + "." + codigo
+                    lista = Item.findAllByCodigoIlikeAndDepartamento(codFormateado, pa)
+                }
+                break;
+        }
+
+        if(id){
+            if(codigo.toInteger() == ent.codigo.toInteger()){
+                return true
+            }else{
+                if(lista){
+                    return false
+                }else{
+                    return true
+                }
+            }
+        }else{
+            if(lista){
+                return false
+            }else{
+                return true
             }
         }
     }
 
-    def saveSg_ajax() {
-        def accion = "create"
-        def subgrupo = new SubgrupoItems()
-        if (params.codigo) {
-            params.codigo = params.codigo.toString().toUpperCase()
-        }
-        if (params.descripcion) {
-            params.descripcion = params.descripcion.toString().toUpperCase()
-        }
-        if (params.id) {
-            subgrupo = SubgrupoItems.get(params.id)
-            accion = "edit"
-        }
-        subgrupo.properties = params
-        if (subgrupo.save(flush: true)) {
-            render "OK_" + accion + "_" + subgrupo.id + "_" + subgrupo.codigo + " " + subgrupo.descripcion
-        } else {
-            def errores = g.renderErrors(bean: subgrupo)
-            render "NO_" + errores
+
+    def borrarSubGrupo_ajax () {
+        def subGrupo = SubgrupoItems.get(params.id)
+        try{
+            subGrupo.delete(flush: true)
+            render "ok"
+        }catch(e){
+            println("Error a borrar el grupo")
+            render "no"
         }
     }
 
-    def deleteSg_ajax() {
-        def subgrupo = SubgrupoItems.get(params.id)
-        try {
-            subgrupo.delete(flush: true)
-            render "OK"
-        }
-        catch (DataIntegrityViolationException e) {
-            println "mantenimiento items controller l 524: " + e
-            render "NO"
+
+    def borrarDepartamento_ajax () {
+        def departamento = DepartamentoItem.get(params.id)
+        try{
+            departamento.delete(flush: true)
+            render "ok"
+        }catch(e){
+            println("Error a borrar el subgrupo")
+            render "no"
         }
     }
+
+    def borrarItem_ajax () {
+        def item = Item.get(params.id)
+        try{
+            item.delete(flush: true)
+            render "ok"
+        }catch(e){
+            println("Error a borrar el item ")
+            render "no"
+        }
+    }
+
+
+
+//    def deleteSg_ajax() {
+//        def subgrupo = SubgrupoItems.get(params.id)
+//        try {
+//            subgrupo.delete(flush: true)
+//            render "OK"
+//        }
+//        catch (DataIntegrityViolationException e) {
+//            println "mantenimiento items controller l 524: " + e
+//            render "NO"
+//        }
+//    }
 
     def showDp_ajax() {
         def departamentoItemInstance = DepartamentoItem.get(params.id)
@@ -801,94 +1061,94 @@ class MantenimientoItemsController {
         return [subgrupo: subgrupo, departamentoItemInstance: departamentoItemInstance, mos: mos]
     }
 
-    def checkCdDp_ajax() {
-//        println params
-        if (params.id) {
-            def departamento = DepartamentoItem.get(params.id)
-//            println params.codigo
-//            println params.codigo.class
-//            println departamento.codigo
-//            println departamento.codigo.class
-            if (params.codigo == departamento.codigo.toString()) {
-                render true
-            } else {
-                def departamentos = DepartamentoItem.findAllByCodigoAndSubgrupo(params.codigo, SubgrupoItems.get(params.sg))
-                if (departamentos.size() == 0) {
-                    render true
-                } else {
-                    render false
-                }
-            }
-        } else {
-            def departamentos = DepartamentoItem.findAllByCodigoAndSubgrupo(params.codigo, SubgrupoItems.get(params.sg))
-            if (departamentos.size() == 0) {
-                render true
-            } else {
-                render false
-            }
-        }
-    }
+//    def checkCdDp_ajax() {
+////        println params
+//        if (params.id) {
+//            def departamento = DepartamentoItem.get(params.id)
+////            println params.codigo
+////            println params.codigo.class
+////            println departamento.codigo
+////            println departamento.codigo.class
+//            if (params.codigo == departamento.codigo.toString()) {
+//                render true
+//            } else {
+//                def departamentos = DepartamentoItem.findAllByCodigoAndSubgrupo(params.codigo, SubgrupoItems.get(params.sg))
+//                if (departamentos.size() == 0) {
+//                    render true
+//                } else {
+//                    render false
+//                }
+//            }
+//        } else {
+//            def departamentos = DepartamentoItem.findAllByCodigoAndSubgrupo(params.codigo, SubgrupoItems.get(params.sg))
+//            if (departamentos.size() == 0) {
+//                render true
+//            } else {
+//                render false
+//            }
+//        }
+//    }
 
-    def checkDsDp_ajax() {
-        if (params.id) {
-            def departamento = DepartamentoItem.get(params.id)
-            if (params.descripcion == departamento.descripcion) {
-                render true
-            } else {
-                def departamentos = DepartamentoItem.findAllByDescripcion(params.descripcion)
-                if (departamentos.size() == 0) {
-                    render true
-                } else {
-                    render false
-                }
-            }
-        } else {
-            def departamentos = DepartamentoItem.findAllByDescripcion(params.descripcion)
-            if (departamentos.size() == 0) {
-                render true
-            } else {
-                render false
-            }
-        }
-    }
+//    def checkDsDp_ajax() {
+//        if (params.id) {
+//            def departamento = DepartamentoItem.get(params.id)
+//            if (params.descripcion == departamento.descripcion) {
+//                render true
+//            } else {
+//                def departamentos = DepartamentoItem.findAllByDescripcion(params.descripcion)
+//                if (departamentos.size() == 0) {
+//                    render true
+//                } else {
+//                    render false
+//                }
+//            }
+//        } else {
+//            def departamentos = DepartamentoItem.findAllByDescripcion(params.descripcion)
+//            if (departamentos.size() == 0) {
+//                render true
+//            } else {
+//                render false
+//            }
+//        }
+//    }
 
-    def saveDp_ajax() {
-//        println params
-        def accion = "create"
-        def departamento = new DepartamentoItem()
-        if (params.codigo) {
-            params.codigo = params.codigo.toString().toUpperCase()
-        }
-        if (params.descripcion) {
-            params.descripcion = params.descripcion.toString().toUpperCase()
-        }
-        if (params.id) {
-//            println "EDIT!!!!"
-            departamento = DepartamentoItem.get(params.id)
-//            println "\t\t" + departamento.codigo
-            accion = "edit"
-        }
-        departamento.properties = params
-        if (departamento.save(flush: true)) {
-            render "OK_" + accion + "_" + departamento.id + "_" + departamento.subgrupo.codigo + "." + departamento.codigo + " " + departamento.descripcion
-        } else {
-            println "mantenimiento items controller l 617: " + departamento.errors
-            def errores = g.renderErrors(bean: departamento)
-            render "NO_" + errores
-        }
-    }
+//    def saveDp_ajax() {
+////        println params
+//        def accion = "create"
+//        def departamento = new DepartamentoItem()
+//        if (params.codigo) {
+//            params.codigo = params.codigo.toString().toUpperCase()
+//        }
+//        if (params.descripcion) {
+//            params.descripcion = params.descripcion.toString().toUpperCase()
+//        }
+//        if (params.id) {
+////            println "EDIT!!!!"
+//            departamento = DepartamentoItem.get(params.id)
+////            println "\t\t" + departamento.codigo
+//            accion = "edit"
+//        }
+//        departamento.properties = params
+//        if (departamento.save(flush: true)) {
+//            render "OK_" + accion + "_" + departamento.id + "_" + departamento.subgrupo.codigo + "." + departamento.codigo + " " + departamento.descripcion
+//        } else {
+//            println "mantenimiento items controller l 617: " + departamento.errors
+//            def errores = g.renderErrors(bean: departamento)
+//            render "NO_" + errores
+//        }
+//    }
 
-    def deleteDp_ajax() {
-        def departamento = DepartamentoItem.get(params.id)
-        try {
-            departamento.delete(flush: true)
-            render "OK"
-        }
-        catch (DataIntegrityViolationException e) {
-            println "mantenimiento items controller l 630: " + e
-            render "NO"
-        }
-    }
+//    def deleteDp_ajax() {
+//        def departamento = DepartamentoItem.get(params.id)
+//        try {
+//            departamento.delete(flush: true)
+//            render "OK"
+//        }
+//        catch (DataIntegrityViolationException e) {
+//            println "mantenimiento items controller l 630: " + e
+//            render "NO"
+//        }
+//    }
 
     def showIt_ajax() {
 //        println "showIt_ajax" + params
@@ -1033,7 +1293,7 @@ class MantenimientoItemsController {
     def copiarOferentes() {
         def item = Item.get(params.id)
         def res=null
-        res = oferentesService.exportDominio(janus.Item, "itemjnid", item, null, "ofrt__id",null, "ofrt__id","select * from item where itemcdgo='${item.codigo}'")
+        res = oferentesService.exportDominio(Item, "itemjnid", item, null, "ofrt__id",null, "ofrt__id","select * from item where itemcdgo='${item.codigo}'")
 
 //        render "NO_Ha ocurrido un error"
         if(res)
@@ -1107,7 +1367,6 @@ class MantenimientoItemsController {
     def formPrecio_ajax() {
         def item = Item.get(params.item)
         def lugar = null
-//        println "formPrecio_ajax" + params
         if (params.lugar != "all") {
             lugar = Lugar.get(params.lugar)
         }
@@ -1152,11 +1411,8 @@ class MantenimientoItemsController {
                 render "NO"
             }
         } else {
-//            def tipo = ["C"]
             if (params.ignore == "true") {
-//                if (params.all == "true") {
-//                    tipo.add("V")
-//                }
+
                 def error = 0
                 Lugar.findAllByTipoLista(item.tipoLista).each { lugar ->
                     def precios = PrecioRubrosItems.withCriteria {
@@ -1208,6 +1464,31 @@ class MantenimientoItemsController {
                 println "mantenimiento items controller l 903: " + e
                 render "No se pudo eliminar el precio."
             }
+        }
+    }
+
+
+    def borrarPrecio_ajax () {
+//        println("params bp " + params)
+
+        def usuario = Persona.get(session.usuario.id)
+        def precio = PrecioRubrosItems.get(params.id);
+
+        if(params.codigo){
+            if(params.codigo.toString().encodeAsMD5() != usuario.autorizacion){
+                render "er_<i class='fa fa-exclamation-triangle text-danger'></i> El código de autorización ingresado no es correcto"
+            }else{
+                try{
+                    precio.delete(flush: true)
+                    render "ok_Precio borrado correctamente"
+                }catch(e){
+                    println("error al borrar el precio " + e + precio.errors)
+                    render "no_Error al borrar el precio"
+                }
+            }
+        }else{
+            render "er_<i class='fa fa-exclamation-triangle text-warning'></i> Ingrese su código de autorización"
+            return false
         }
     }
 
@@ -1359,7 +1640,7 @@ class MantenimientoItemsController {
     }
 
     def showLg_ajax() {
-//        println "showLg_ajax... params: $params"
+        println "showLg_ajax... params: $params"
 //        params.operador = "<"
         if (params.fecha == "all") {
             params.todasLasFechas = "true"
@@ -1494,63 +1775,126 @@ class MantenimientoItemsController {
         }
     }
 
-    def saveLg_ajax() {
-        def accion = "create"
-        def lugar = new Lugar()
-        params.descripcion = params.descripcion.toString().toUpperCase()
-        if (params.id) {
+//    def saveLg_ajax() {
+//        def accion = "create"
+//        def lugar = new Lugar()
+//        params.descripcion = params.descripcion.toString().toUpperCase()
+//        if (params.id) {
+//            lugar = Lugar.get(params.id)
+//            accion = "edit"
+//        }
+//        lugar.properties = params
+//        if (lugar.save(flush: true)) {
+//            render "OK_" + accion + "_" + lugar.id + "_" + (lugar.descripcion + (params.all.toString().toBoolean() ? " (" + lugar.tipo + ")" : "")) + "_c"
+//        } else {
+//            println "mantenimiento items controller l 1158: " + lugar.errors
+//            def errores = g.renderErrors(bean: lugar)
+//            render "NO_" + errores
+//        }
+//    }
+
+
+    def guardarListaPrecios_ajax () {
+//        println("params slp" + params)
+
+        def lugar
+        def descripciones = Lugar.findAllByDescripcionIlike(params.descripcion)
+
+        params.descripcion = params.descripcion.toUpperCase();
+
+        if(params.id){
             lugar = Lugar.get(params.id)
-            accion = "edit"
-        }
-        lugar.properties = params
-        if (lugar.save(flush: true)) {
-            render "OK_" + accion + "_" + lugar.id + "_" + (lugar.descripcion + (params.all.toString().toBoolean() ? " (" + lugar.tipo + ")" : "")) + "_c"
-        } else {
-            println "mantenimiento items controller l 1158: " + lugar.errors
-            def errores = g.renderErrors(bean: lugar)
-            render "NO_" + errores
-        }
-    }
-
-    def deleteLg_ajax() {
-//        println "DELETE LUGAR "
-//        println params
-        def lugar = Lugar.get(params.id)
-
-        def seUsa = Obra.countByListaPeso1(lugar)
-        seUsa += Obra.countByListaVolumen0(lugar)
-        seUsa += Obra.countByListaVolumen1(lugar)
-        seUsa += Obra.countByListaVolumen2(lugar)
-        seUsa += Obra.countByListaManoObra(lugar)
-
-//        println "esta lis si se usa... $seUsa"
-        if (seUsa > 0) {
-//            render "NO_No esposible borrar la lista, ya está utilizada en Obras"
-            render "NO_No esposible borrar la lista, ya está utilizada en Obras"
-        } else {
-
-            def precios = PrecioRubrosItems.findAllByLugar(lugar)
-            def cant = 0
-            precios.each { p ->
-                try {
-                    p.delete(flush: true)
-//                println "p deleted " + p.id
-                    cant++
-                } catch (DataIntegrityViolationException e) {
-                    println "mantenimiento items controller l 1177: " + e
-                    println "\tp not deleted " + p.id
+            if(params.descripcion == lugar.descripcion){
+                lugar.properties = params
+            }else{
+                if(descripciones){
+                    render "er_Ya existe una lista con esta descripción"
+                }else{
+                    lugar.properties = params
                 }
             }
-
-            try {
-                lugar.delete(flush: true)
-                render "OK"
-            } catch (DataIntegrityViolationException e) {
-                println "mantenimiento items controller l 1186: " + e
-                render "NO"
+        }else{
+            lugar = new Lugar()
+            if(descripciones){
+                render "er_Ya existe una lista con esta descripción"
+            }else{
+                lugar.properties = params
             }
         }
+
+        if(!lugar.save(flush:true)){
+            render "no_Error al guardar la lista"
+        }else{
+
+            render "ok_Lista guardada correctamente"
+        }
     }
+
+    def borrarListaPrecios_ajax () {
+
+        println("params blp " + params)
+
+        def lugar = Lugar.get(params.id)
+
+
+        /*TODO revisar que al borrar el lugar no perteneza a un proyecto*/
+        def proyectos = true
+
+        if(proyectos){
+              render "er_No se puede borrar la lista, existen proyectos asociados a ella"
+        }else{
+            try{
+                lugar.delete(flush: true)
+                render "ok_Lista borrada correctamente"
+            }catch(e){
+                println("error al borrar la lista " + e + " " + lugar.errors)
+                render "no_Error al borrar la lista"
+            }
+        }
+
+
+
+    }
+
+//    def deleteLg_ajax() {
+////        println "DELETE LUGAR "
+////        println params
+//        def lugar = Lugar.get(params.id)
+//
+//        def seUsa = Obra.countByListaPeso1(lugar)
+//        seUsa += Obra.countByListaVolumen0(lugar)
+//        seUsa += Obra.countByListaVolumen1(lugar)
+//        seUsa += Obra.countByListaVolumen2(lugar)
+//        seUsa += Obra.countByListaManoObra(lugar)
+//
+////        println "esta lis si se usa... $seUsa"
+//        if (seUsa > 0) {
+////            render "NO_No esposible borrar la lista, ya está utilizada en Obras"
+//            render "NO_No esposible borrar la lista, ya está utilizada en Obras"
+//        } else {
+//
+//            def precios = PrecioRubrosItems.findAllByLugar(lugar)
+//            def cant = 0
+//            precios.each { p ->
+//                try {
+//                    p.delete(flush: true)
+////                println "p deleted " + p.id
+//                    cant++
+//                } catch (DataIntegrityViolationException e) {
+//                    println "mantenimiento items controller l 1177: " + e
+//                    println "\tp not deleted " + p.id
+//                }
+//            }
+//
+//            try {
+//                lugar.delete(flush: true)
+//                render "OK"
+//            } catch (DataIntegrityViolationException e) {
+//                println "mantenimiento items controller l 1186: " + e
+//                render "NO"
+//            }
+//        }
+//    }
 
     def vae() {
         //<!--grpo--><!--sbgr -> Grupo--><!--dprt -> Subgrupo--><!--item-->
@@ -1660,5 +2004,103 @@ class MantenimientoItemsController {
         }
     }
 
+
+    def formEditarPrecios_ajax () {
+        def precio = PrecioRubrosItems.get(params.id)
+        return [precio: precio]
+    }
+
+    def guardarPrecio_ajax () {
+//        println("params save " + params)
+
+        def precio = PrecioRubrosItems.get(params.id)
+        precio.precioUnitario = params.precio.toDouble()
+
+        if(!precio.save(flush: true)){
+            println("error al guardar el precio")
+            render "no"
+        }else{
+            render "ok"
+        }
+    }
+
+    def registrar_ajax () {
+//        println("params reg " + params)
+        def precio = PrecioRubrosItems.get(params.id)
+        precio.registrado = (params.reg == 'N' ? 'R' : 'N')
+
+        if(!precio.save(flush: true)){
+            render "no_Error al guardar"
+        }else{
+            if(params.reg == 'N'){
+                render "ok_Precio registrado correctamente"
+            }else{
+                render "ok_Quitado el registro del precio correctamente"
+            }
+        }
+    }
+
+    def savePrecioNuevo_ajax () {
+//        println("params gp"  + params)
+
+        if (!params.lugar) {
+            render "er_No tiene una lista asociada"
+        } else {
+            def precios = PrecioRubrosItems.withCriteria {
+                and {
+                    eq("lugar", Lugar.get(params.lugar))
+                    eq("fecha", new Date().parse("dd-MM-yyyy", params.fecha))
+                    eq("item", Item.get(params.item))
+                }
+            }
+            if (precios.size() == 0) {
+
+                params.fecha = new Date().parse("dd-MM-yyyy", params.fecha)
+
+                def precio = new PrecioRubrosItems()
+                precio.properties = params
+
+                if(!precio.save(flush:true)){
+                    render  "no_Error al guardar el precio"
+                }else{
+                    render "ok_Precio guardado correctamente"
+                }
+            } else {
+                render "er_Ya existe un precio asignado a esta fecha"
+            }
+        }
+    }
+
+
+    def formListaPrecios_ajax () {
+
+        println("params lp " + params)
+
+        def lugarInstance = new Lugar()
+        def tipo = "C"
+        if (params.id) {
+            lugarInstance = Lugar.get(params.id)
+            tipo = lugarInstance.tipo
+        }
+        def codigos = []
+
+        def sql
+
+        sql = "select lgarcdgo from lgar "
+        sql += "order by lgarcdgo"
+
+        def cn = dbConnectionService.getConnection()
+
+        cn.eachRow(sql.toString()) {row->
+            codigos += row[0]
+        }
+
+        def ultimo = codigos.last()
+
+        def padre = Item.get(params.padre)
+        def tipoLista = TipoLista.findByCodigo(padre.tipoLista.codigo)
+
+        return [lugarInstance: lugarInstance, all: params.all, tipo: tipo, ultimo: ultimo, lista: tipoLista ?: TipoLista.list().sort{it.descripcion}]
+    }
 
 }

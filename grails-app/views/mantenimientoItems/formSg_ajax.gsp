@@ -1,4 +1,4 @@
-<%@ page import="janus.SubgrupoItems" %>
+<%@ page import="compras.SubgrupoItems" %>
 
 <div id="create" class="span" role="main">
     <g:form class="form-horizontal" name="frmSave" action="saveSg_ajax">
@@ -12,8 +12,8 @@
             </div>
 
             <div class="controls">
-                ${grupo.descripcion}
-                <g:hiddenField name="grupo.id" value="${grupo.id}"/>
+                ${grupo?.descripcion}
+                <g:hiddenField name="grupo.id" value="${grupo?.id}"/>
             </div>
         </div>
 
@@ -25,7 +25,7 @@
             </div>
 
             <div class="controls">
-                <g:if test="${subgrupoItemsInstance.id}">
+                <g:if test="${subgrupoItemsInstance?.id}">
                     ${subgrupoItemsInstance.codigo.toString().padLeft(3, '0')}
                 </g:if>
                 <g:else>

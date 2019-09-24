@@ -29,6 +29,7 @@ class CodigoComprasPublicas {
         numero(nullable: false,blank: false,size: 1..32)
         descripcion(nullable: true,blank: true,size: 1..64)
         fecha(nullable: true,blank:true)
+        padre(nullable: true,blank:true)
     }
 
 }

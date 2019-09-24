@@ -1,4 +1,4 @@
-<%@ page import="janus.DepartamentoItem" %>
+<%@ page import="compras.DepartamentoItem" %>
 
 <div id="create" class="span" role="main">
     <g:form class="form-horizontal" name="frmSave" action="saveDp_ajax">

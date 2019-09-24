@@ -637,13 +637,13 @@
                                     id: nodeId
                                 },
                                 success: function (msg) {
+                                    dialog.modal('hide');
                                     if(msg == 'ok'){
                                         log("Provincia borrado correctamente","success");
                                         setTimeout(function () {
                                             location.reload(true);
                                         }, 1000);
                                     }else{
-                                        dialog.modal('hide');
                                         log("Error al borrar la provincia", "error")
                                     }
                                 }
@@ -683,13 +683,13 @@
                                     id: nodeId
                                 },
                                 success: function (msg) {
+                                    dialog.modal('hide');
                                     if(msg == 'ok'){
                                         log("Cantón borrado correctamente","success");
                                         setTimeout(function () {
                                             location.reload(true);
                                         }, 1000);
                                     }else{
-                                        dialog.modal('hide');
                                         log("Error al borrar el canton", "error")
                                     }
                                 }
@@ -729,13 +729,13 @@
                                     id: nodeId
                                 },
                                 success: function (msg) {
+                                    dialog.modal('hide');
                                     if(msg == 'ok'){
                                         log("Parroquia borrada correctamente","success");
                                         setTimeout(function () {
                                             location.reload(true);
                                         }, 1000);
                                     }else{
-                                        dialog.modal('hide');
                                         log("Error al borrar la parroquia", "error")
                                     }
                                 }
@@ -774,13 +774,13 @@
                                     id: nodeId
                                 },
                                 success: function (msg) {
+                                    dialog.modal('hide');
                                     if(msg == 'ok'){
                                         log("Comunidad borrada correctamente","success");
                                         setTimeout(function () {
                                             location.reload(true);
                                         }, 1000);
                                     }else{
-                                        dialog.modal('hide');
                                         log("Error al borrar la comunidad", "error")
                                     }
                                 }

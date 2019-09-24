@@ -5,7 +5,7 @@
   Time: 11:53 AM
 --%>
 
-<%@ page import="janus.Lugar" %>
+<%@ page import="compras.Lugar" %>
 
 <div id="create" class="span" role="main">
     <g:form class="form-horizontal" name="frmSave" action="saveVa_ajax">

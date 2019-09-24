@@ -90,7 +90,7 @@
     <div class="body ui-corner-all" style="width: 680px;position: relative;margin: auto;margin-top: 40px;height: 280px; ">
 
 
-        <a href= "${createLink(controller:'buscarBase', action: 'busquedaBase')}" style="text-decoration: none">
+        <a href= "${createLink(controller:'mantenimientoItems', action: 'registro')}" style="text-decoration: none">
         <div class="ui-corner-all item fuera">
             <div class="ui-corner-all item">
                 <div class="imagen">
@@ -99,12 +99,12 @@
                 </div>
 
                 <div class="texto">
-                    <span class="text-success"><strong>Base de conocimiento</strong></span></div>
+                    <span class="text-success"><strong>Items</strong></span></div>
             </div>
         </div>
         </a>
 
-        <a href= "${createLink(controller:'buscarActividad', action: 'busquedaActividad')}" style="text-decoration: none">
+        <a href= "${createLink(controller:'mantenimientoItems', action: 'precios')}" style="text-decoration: none">
         <div class="ui-corner-all item fuera">
             <div class="ui-corner-all item">
                 <div class="imagen">
@@ -113,7 +113,7 @@
                 </div>
 
                 <div class="texto">
-                    <span class="text-success"><strong>Buscar actividades</strong></span></div>
+                    <span class="text-success"><strong>Precios</strong></span></div>
             </div>
         </div>
         </a>

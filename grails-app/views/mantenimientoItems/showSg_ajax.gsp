@@ -1,42 +1,27 @@
-<%@ page import="janus.SubgrupoItems" %>
+<%@ page import="compras.SubgrupoItems" %>
+
 
 
 <form class="form-horizontal">
-    <div class="tituloTree">${subgrupoItemsInstance.descripcion}</div>
-%{--<g:if test="${subgrupoItemsInstance?.descripcion}">--}%
-%{--<div class="control-group">--}%
-%{--<div>--}%
-%{--<span id="descripcion-label" class="control-label label label-inverse">--}%
-%{--Descripción--}%
-%{--</span>--}%
-%{--</div>--}%
-
-%{--<div class="controls">--}%
-
-%{--<span aria-labelledby="descripcion-label">--}%
-%{--<g:fieldValue bean="${subgrupoItemsInstance}" field="descripcion"/>--}%
-%{--</span>--}%
-
-%{--</div>--}%
-%{--</div>--}%
-%{--</g:if>--}%
-
-    <g:if test="${subgrupoItemsInstance?.codigo}">
+    <g:if test="${subgrupoItemsInstance?.descripcion}">
         <div class="control-group">
-            <div>
-                <span id="codigo-label" class="control-label label label-inverse">
-                    Código
-                </span>
-            </div>
-
-            <div class="controls">
-
-                <span aria-labelledby="codigo-label">
-                    ${subgrupoItemsInstance?.codigo.toString().padLeft(3,'0')}
-                </span>
-
-            </div>
+            <table class="table-bordered table-condensed table-hover" width="100%">
+                <tr>
+                    <td style="width: 35%" class="alert-warning">DESCRIPCIÓN</td>
+                    <td style="width: 65%" class="alert-success">${subgrupoItemsInstance?.descripcion}</td>
+                </tr>
+            </table>
         </div>
     </g:if>
-
+    <g:if test="${subgrupoItemsInstance?.codigo}">
+        <div class="control-group">
+            <table class="table-bordered table-condensed table-hover" width="100%">
+                <tr>
+                    <td style="width: 35%" class="alert-warning">CÓDIGO</td>
+                    <td style="width: 65%" class="alert-success"> ${subgrupoItemsInstance?.codigo?.toString().padLeft(3,'0')}</td>
+                </tr>
+            </table>
+        </div>
+    </g:if>
 </form>
+

@@ -72,7 +72,7 @@ class Item  {
     static constraints = {
         responsable(nullable: true,blank:true)
         nombre(size: 1..160, blank: false, attributes: [title: 'nombre'])
-        codigo(size: 1..30, blank: false, unique: true, attributes: [title: 'numero'])
+        codigo(size: 1..20, blank: false, unique: true, attributes: [title: 'numero'])
         unidad(blank: true, nullable: true, attributes: [title: 'unidad'])
         tipoItem(blank: true, nullable: true, attributes: [title: 'tipoItem'])
         peso(blank: true, nullable: true, attributes: [title: 'peso'])

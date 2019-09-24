@@ -13,7 +13,6 @@ class Grupo {
             id column: 'grpo__id'
             codigo column: 'grpocdgo'
             descripcion column: 'grpodscr'
-            direccion column: 'dire__id'
         }
     }
     static constraints = {

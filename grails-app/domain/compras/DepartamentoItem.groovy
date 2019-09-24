@@ -21,7 +21,7 @@ class DepartamentoItem  {
         }
     }
     static constraints = {
-        descripcion(size: 1..63, blank: false, attributes: [title: 'descripcion'])
+        descripcion(size: 1..50, blank: false, attributes: [title: 'descripcion'])
         transporte(blank: true, nullable: true)
         codigo(size: 1..20, blank: false, attributes: [title: 'numero'])
         subgrupo(blank: false)
