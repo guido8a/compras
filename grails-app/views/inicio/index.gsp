@@ -83,7 +83,7 @@
 
     <div style="text-align: center;"><h2 class="titl">
             <p class="text-warning">${inst.institucion}</p>
-            <p class="text-warning">XXXXXXXXXXXXXXXXXXXXXXXXX</p>
+            <p class="text-warning">Sistema de Adquisiciones</p>
         </h2>
     </div>
 

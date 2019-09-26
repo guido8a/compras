@@ -26,7 +26,7 @@
     <div class="dialog ui-corner-all" style="height: 295px;padding: 10px;width: 910px;margin: auto;margin-top: 5px">
         <div>
 %{--            <img src="${resource(dir: 'images/bitacora', file: 'bitacora.png')}" style="padding: 40px;"/>--}%
-            <asset:image src="apli/bitacora.png" style="padding: 40px;"/>
+            <asset:image src="apli/compras.png" style="padding: 40px;"/>
         </div>
 
         <div style="width: 100%;height: 40px;float: left;margin-top: 30px; margin-bottom:30px; text-align: center">
