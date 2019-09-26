@@ -36,10 +36,14 @@
 
     <style type="text/css">
 
-    li.jstree-open > a .jstree-icon {background:url('<asset:image src="/tree/edit.png"/>') 0px 0px no-repeat !important;}
+    %{--li.jstree-open > a .jstree-icon {background:url('<asset:image src="/tree/edit.png"/>') 0px 0px no-repeat !important;}--}%
+    li.jstree-open > a .jstree-icon {background-image:url("../../assets/images/tree/carpeta2.png") !important;}
+    /*li.jstree-open > a .jstree-icon {background:url("/assets/images/tree/carpeta2.png") 0px 0px no-repeat !important;}*/
     /*li.jstree-open > a .jstree-icon {"icon":"fa fa-user fa-2x"  0px 0px no-repeat !important;}*/
-    li.jstree-closed > a .jstree-icon {background:url('<asset:image src="/tree/edit.png"/>') 0px 0px no-repeat !important;}
-    li.jstree-leaf > a .jstree-icon { display: none; }
+    %{--li.jstree-closed > a .jstree-icon {background:url('<asset:image src="/tree/edit.png"/>') 0px 0px no-repeat !important;}--}%
+    li.jstree-closed > a .jstree-icon {background:url("../../assets/images/tree/carpeta.png") 0px 0px no-repeat !important;}
+    li.jstree-leaf > a .jstree-icon {background:url("../../assets/images/tree/carpeta.png") 0px 0px no-repeat !important;}
+    /*li.jstree-leaf > a .jstree-icon { display: none; }*/
 
     </style>
 
@@ -860,12 +864,15 @@
                 $("#info").html("");
             }
         });
+
+
         $(".toggleTipo").click(function () {
             var tipo = $(this).attr("id");
             if (!$(this).hasClass("active")) {
                 showLugar[tipo] = true;
             } else {
                 showLugar[tipo] = false;
+
             }
             initTree(current);
             $("#info").html("");

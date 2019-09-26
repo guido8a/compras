@@ -3,6 +3,7 @@ package compras
 class TipoLista {
     String codigo
     String descripcion
+    String unidad
 
     static mapping = {
         table 'tpls'
@@ -14,10 +15,12 @@ class TipoLista {
             id column: 'tpls__id'
             codigo column: 'tplscdgo'
             descripcion column: 'tplsdscr'
+            unidad column: 'tplsundd'
         }
     }
     static constraints = {
         codigo(blank: false, attributes: [title: 'codigo'], size: 1..2)
         descripcion(size: 1..63, blank: false, attributes: [title: 'descripcion'])
+        unidad(blank: true, nullable: true, attributes: [title: 'unidad'])
     }
 }

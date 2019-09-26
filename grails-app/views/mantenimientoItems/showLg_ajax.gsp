@@ -26,21 +26,23 @@
 <div style="height: 35px; width: 100%; margin-top: 5px;">
     <div class="btn-group pull-left" style="">
         %{--        <g:if test="${session.perfil.codigo == 'CSTO'}">--}%
-        <a href="#" class="btn btn-info btn-ajax" id="btnNew">
+
+
+        <a href="#" class="btn btn-info btn-ajax btnNP" id="btnNew">
             <i class="fa fa-money-check-alt"></i>
             Nuevo Precio
         </a>
-    %{--            <a href="#" class="btn btn-success btn-ajax" id="btnSave">--}%
-    %{--                <i class="fa fa-save"></i>--}%
-    %{--                Guardar--}%
-    %{--            </a>--}%
-%{--        <g:if test="${item.departamento.subgrupo.grupoId == 2 || item.departamento.subgrupo.grupoId == 3}">--}%
-%{--            <a href="#" class="btn btn-warning btn-ajax" id="btnCalc${item.departamento.subgrupo.grupoId}">--}%
-%{--                <i class="fa fa-money"></i>--}%
-%{--                Calcular precio--}%
-%{--            </a>--}%
-%{--        --}%%{--            </g:if>--}%
-%{--        </g:if>--}%
+        %{--            <a href="#" class="btn btn-success btn-ajax" id="btnSave">--}%
+        %{--                <i class="fa fa-save"></i>--}%
+        %{--                Guardar--}%
+        %{--            </a>--}%
+        %{--        <g:if test="${item.departamento.subgrupo.grupoId == 2 || item.departamento.subgrupo.grupoId == 3}">--}%
+        %{--            <a href="#" class="btn btn-warning btn-ajax" id="btnCalc${item.departamento.subgrupo.grupoId}">--}%
+        %{--                <i class="fa fa-money"></i>--}%
+        %{--                Calcular precio--}%
+        %{--            </a>--}%
+        %{--        --}%%{--            </g:if>--}%
+        %{--        </g:if>--}%
     </div>
 
     <g:if test="${item.departamento.subgrupo.grupoId == 2 || item.departamento.subgrupo.grupoId == 3}">
@@ -185,6 +187,16 @@
 
 
 <script type="text/javascript">
+
+    revisarBtn();
+
+    function revisarBtn () {
+        if(!$(".toggleTipo").hasClass("active")){
+            $(".btnNP").removeClass('hidden')
+        }else{
+           $(".btnNP").addClass('hidden')
+        }
+    }
 
     $(".btnRegistrar").click(function () {
         var reg = $(this).data("reg");
@@ -810,7 +822,7 @@
     %{--});--}%
 
     // $("#btnPrint").click(function () {
-        // $("#imprimirDialog").dialog("open");
+    // $("#imprimirDialog").dialog("open");
     // });
 
     %{--$("#imprimirDialog").dialog({--}%
