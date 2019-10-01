@@ -33,20 +33,6 @@
     <asset:stylesheet src="/apli/treeV2.css"/>
     <asset:stylesheet src="/apli/tableHandler.css"/>
 
-
-    <style type="text/css">
-
-    %{--li.jstree-open > a .jstree-icon {background:url('<asset:image src="/tree/edit.png"/>') 0px 0px no-repeat !important;}--}%
-    li.jstree-open > a .jstree-icon {background-image:url("../../assets/images/tree/carpeta2.png") !important;}
-    /*li.jstree-open > a .jstree-icon {background:url("/assets/images/tree/carpeta2.png") 0px 0px no-repeat !important;}*/
-    /*li.jstree-open > a .jstree-icon {"icon":"fa fa-user fa-2x"  0px 0px no-repeat !important;}*/
-    %{--li.jstree-closed > a .jstree-icon {background:url('<asset:image src="/tree/edit.png"/>') 0px 0px no-repeat !important;}--}%
-    li.jstree-closed > a .jstree-icon {background:url("../../assets/images/tree/carpeta.png") 0px 0px no-repeat !important;}
-    li.jstree-leaf > a .jstree-icon {background:url("../../assets/images/tree/carpeta.png") 0px 0px no-repeat !important;}
-    /*li.jstree-leaf > a .jstree-icon { display: none; }*/
-
-    </style>
-
 </head>
 
 <body>
@@ -234,35 +220,30 @@
     };
 
     var icons = {
-        edit                     : '<asset:image src="/tree/edit.png"/>',
-        delete                   : '<asset:image src="/tree/delete.gif"/>',
-        info                     : '<asset:image src="/tree/info.png"/>',
-        copiar                   : '<asset:image src="/tree/copiar.png"/>',
+        grupo_material           : '${assetPath(src: 'tree/carpeta2.png')}',
+        grupo_manoObra           : '${assetPath(src: 'tree/carpeta5.png')}',
+        grupo_equipo             : '${assetPath(src: 'tree/carpeta6.png')}',
+        grupo_consultoria        : '${assetPath(src: 'tree/carpeta5.png')}',
 
-        grupo_material           : '<asset:image src="/tree/carpeta2.png"/>',
-        grupo_manoObra           : '<asset:image src="/tree/carpeta5.png"/>',
-        grupo_equipo             : '<asset:image src="/tree/carpeta6.png"/>',
-        grupo_consultoria        : '<asset:image src="/tree/carpeta5.png"/>',
+        subgrupo_material        : '${assetPath(src: 'tree/carpeta.png')}',
+        subgrupo_manoObra        : '${assetPath(src: 'tree/grupo_manoObra.png')}',
+        subgrupo_equipo          : '${assetPath(src: 'tree/item_equipo.png')}',
+        subgrupo_consultoria     : '${assetPath(src: 'tree/grupo_manoObra.png')}',
 
-        subgrupo_material        : '<asset:image src="tree/carpeta.png"/>',
-        subgrupo_manoObra        : '<asset:image src="/tree/subgrupo_manoObra.png"/>',
-        subgrupo_equipo          : '<asset:image src="/tree/item_equipo.png"/>',
-        subgrupo_consultoria     : '<asset:image src="/tree/subgrupo_manoObra.png"/>',
+        departamento_material    : '${assetPath(src: 'tree/carpeta3.png')}',
+        departamento_manoObra    : '${assetPath(src: 'tree/departamento_manoObra.png')}',
+        departamento_equipo      : '${assetPath(src: 'tree/departamento_equipo.png')}',
+        departamento_consultoria : '${assetPath(src: 'tree/departamento_manoObra.png')}',
 
-        departamento_material    : '<asset:image src="/tree/carpeta3.png"/>',
-        departamento_manoObra    : '<asset:image src="/tree/departamento_manoObra.png"/>',
-        departamento_equipo      : '<asset:image src="/tree/departamento_equipo.png"/>',
-        departamento_consultoria : '<asset:image src="/tree/departamento_manoObra.png"/>',
+        item_material            : '${assetPath(src: 'tree/item_material.png')}',
+        item_manoObra            : '${assetPath(src: 'tree/item_manoObra.png')}',
+        item_equipo              : '${assetPath(src: 'tree/item_equipo.png')}',
+        item_consultoria         : '${assetPath(src: 'tree/item_material.png')}',
 
-        item_material            : '<asset:image src="/tree/item_material.png"/>',
-        item_manoObra            : '<asset:image src="/tree/item_manoObra.png"/>',
-        item_equipo              : '<asset:image src="/tree/item_equipo.png"/>',
-        item_consultoria         : '<asset:image src="/tree/item_material.png"/>',
-
-        %{--lugar     : "${resource(dir: 'images/tree', file: 'lugar_c.png')}",--}%
-        %{--lugar_c   : "${resource(dir: 'images/tree', file: 'lugar_c.png')}",--}%
-        %{--lugar_v   : "${resource(dir: 'images/tree', file: 'lugar_v.png')}",--}%
-        %{--lugar_all : "${resource(dir: 'images/tree', file: 'lugar_all.png')}"--}%
+        lugar     : '${assetPath(src: 'tree/lugar_c.png')}',
+        lugar_c     : '${assetPath(src: 'tree/lugar_c.png')}',
+        lugar_v     : '${assetPath(src: 'tree/lugar_v.png')}',
+        lugar_all     : '${assetPath(src: 'tree/lugar_all.png')}'
     };
 
     function cambiaFecha(dateText, inst) {
@@ -630,13 +611,13 @@
                 "types"          : {
                     "grupo_material" : {
                         "icon"           : {
-                            // "image" : icons.grupo_material
+                            "image" : icons.grupo_material
                         },
                         "valid_children" : [ "subgrupo_material" ]
                     },
                     "grupo_manoObra" : {
                         "icon"           : {
-                            // "image" : icons.grupo_manoObra
+                            "image" : icons.grupo_manoObra
                         },
                         "valid_children" : [ "subgrupo_manoObra" ]
                     },
@@ -649,13 +630,13 @@
 
                     "subgrupo_manoObra" : {
                         "icon"           : {
-                            // "image" : icons.subgrupo_manoObra
+                            "image" : icons.subgrupo_manoObra
                         },
                         "valid_children" : [ "departamento_manoObra" ]
                     },
                     "subgrupo_material" : {
                         "icon"           : {
-                            // "image" : icons.subgrupo_material
+                            "image" : icons.subgrupo_material
                         },
                         "valid_children" : [ "departamento_material" ]
                     },

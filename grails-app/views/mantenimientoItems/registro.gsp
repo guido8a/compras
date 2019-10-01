@@ -128,30 +128,25 @@
     var current = "1";
 
     var icons = {
-        edit                     : '<asset:image src="/tree/edit.png"/>',
-        delete                   : '<asset:image src="/tree/delete.gif"/>',
-        info                     : '<asset:image src="/tree/info.png"/>',
-        copiar                   : '<asset:image src="/tree/copiar.png"/>',
+        grupo_material           : '${assetPath(src: 'tree/carpeta2.png')}',
+        grupo_manoObra           : '${assetPath(src: 'tree/carpeta5.png')}',
+        grupo_equipo             : '${assetPath(src: 'tree/carpeta6.png')}',
+        grupo_consultoria        : '${assetPath(src: 'tree/carpeta5.png')}',
 
-        grupo_material           : '<asset:image src="/tree/carpeta2.png"/>',
-        grupo_manoObra           : '<asset:image src="/tree/carpeta5.png"/>',
-        grupo_equipo             : '<asset:image src="/tree/carpeta6.png"/>',
-        grupo_consultoria        : '<asset:image src="/tree/carpeta5.png"/>',
+        subgrupo_material        : '${assetPath(src: 'tree/carpeta.png')}',
+        subgrupo_manoObra        : '${assetPath(src: 'tree/grupo_manoObra.png')}',
+        subgrupo_equipo          : '${assetPath(src: 'tree/item_equipo.png')}',
+        subgrupo_consultoria     : '${assetPath(src: 'tree/grupo_manoObra.png')}',
 
-        subgrupo_material        : '<asset:image src="/tree/carpeta.png"/>',
-        subgrupo_manoObra        : '<asset:image src="/tree/subgrupo_manoObra.png"/>',
-        subgrupo_equipo          : '<asset:image src="/tree/item_equipo.png"/>',
-        subgrupo_consultoria     : '<asset:image src="/tree/subgrupo_manoObra.png"/>',
+        departamento_material    : '${assetPath(src: 'tree/carpeta3.png')}',
+        departamento_manoObra    : '${assetPath(src: 'tree/departamento_manoObra.png')}',
+        departamento_equipo      : '${assetPath(src: 'tree/departamento_equipo.png')}',
+        departamento_consultoria : '${assetPath(src: 'tree/departamento_manoObra.png')}',
 
-        departamento_material    : '<asset:image src="/tree/carpeta3.png"/>',
-        departamento_manoObra    : '<asset:image src="/tree/departamento_manoObra.png"/>',
-        departamento_equipo      : '<asset:image src="/tree/departamento_equipo.png"/>',
-        departamento_consultoria : '<asset:image src="/tree/departamento_manoObra.png"/>',
-
-        item_material            : '<asset:image src="/tree/item_material.png"/>',
-        item_manoObra            : '<asset:image src="/tree/item_manoObra.png"/>',
-        item_equipo              : '<asset:image src="/tree/item_equipo.png"/>',
-        item_consultoria         : '<asset:image src="/tree/item_material.png"/>'
+        item_material            : '${assetPath(src: 'tree/item_material.png')}',
+        item_manoObra            : '${assetPath(src: 'tree/item_manoObra.png')}',
+        item_equipo              : '${assetPath(src: 'tree/item_equipo.png')}',
+        item_consultoria         : '${assetPath(src: 'tree/item_material.png')}'
     };
 
 
@@ -172,9 +167,11 @@
 
         var url = "";
 
+        console.log(nodeNivel, icons.grupo_material);
+
         switch (nodeNivel) {
             case "grupo":
-//                        console.log(nodeTipo);
+                // console.log(nodeTipo);
                 url = "${createLink(action:'showGr_ajax')}";
                 if (nodeTipo == "manoObra") {
                     url = "${createLink(action:'showSg_ajax')}";
@@ -839,7 +836,12 @@
                                         label: '<i class="fa fa-trash"></i> Borrar',
                                         className: 'btn-danger'
                                     }
-                                },
+                                },        edit                     : '<asset:image src="/tree/edit.png"/>',
+        delete                   : '<asset:image src="/tree/delete.gif"/>',
+        info                     : '<asset:image src="/tree/info.png"/>',
+        copiar                   : '<asset:image src="/tree/copiar.png"/>',
+
+
                                 callback: function (result) {
                                     if(result){
                                         var dialog = cargarLoader("Borrando...");
@@ -1119,11 +1121,12 @@
     function initTree(tipo) {
         var id, rel, label;
         var li = "";
+
         switch (tipo) {
             case "1":
                 id = "materiales_1";
                 rel = "grupo_material";
-                label = "<i class='fa fa-box-open'></i> MATERIALES";
+                label = " MATERIALES";
                 li = "<li id='" + id + "' class='root hasChildren jstree-closed' rel='" + rel + "' ><a href='#' class='label_arbol'>" + label + "</a></li>";
                 break;
             case "2":
@@ -1179,26 +1182,27 @@
                 "valid_children" : [ "grupo_material", "grupo_manoObra", "grupo_equipo"  ],
                 "types"          : {
                     "grupo_material"        : {
-                        "icon"           : {
-                            "image" : icons.grupo_material
+                        "icon" : {
+                            // 'image' : "/assets/tree/carpeta.png",
+                            'image' : icons.grupo_material,
                         },
                         "valid_children" : [ "subgrupo_material" ]
                     },
                     "subgrupo_material"     : {
-                        "icon"           : {
-                            "image" : icons.subgrupo_material
+                        "icon" : {
+                            'image' : icons.subgrupo_material,
                         },
                         "valid_children" : [ "departamento_material" ]
                     },
                     "departamento_material" : {
-                        "icon"           : {
-                            "image" : icons.departamento_material
+                        "icon" : {
+                            'image': icons.departamento_material,
                         },
                         "valid_children" : [ "item_material" ]
                     },
                     "item_material"         : {
-                        "icon"           : {
-                            "image" : icons.item_material
+                        "icon" : {
+                            'image': icons.item_material,
                         },
                         "valid_children" : [ "" ]
                     },
