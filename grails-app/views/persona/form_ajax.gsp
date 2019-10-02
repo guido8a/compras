@@ -1,6 +1,5 @@
 <%@ page import="seguridad.Departamento; seguridad.Prfl; seguridad.Persona" %>
 
-%{--<asset:javascript src="/jquery/ui.js"/>--}%
 <g:if test="${!personaInstance}">
     <elm:notFound elem="Persona" genero="o"/>
 </g:if>
@@ -70,7 +69,7 @@
 
                         <div class="col-md-8">
                             <div class="input-group input-group-sm"><span class="input-group-addon"><i class="fa fa-envelope"></i>
-                            </span><g:field type="email" name="mail" maxlength="40" class="form-control input-sm unique noEspacios required" value="${personaInstance?.mail}"/>
+                            </span><g:field type="email" name="mail" maxlength="40" class="form-control input-sm unique noEspacios" value="${personaInstance?.mail}"/>
                             </div>
                         </div>
                     </span>
@@ -83,13 +82,11 @@
                         </label>
 
                         <div class="col-md-8">
-                            <g:textField name="telefono" maxlength="10" class="form-control input-sm required" value="${personaInstance?.telefono}"/>
+                            <g:textField name="telefono" maxlength="10" class="form-control input-sm" value="${personaInstance?.telefono}"/>
                         </div>
-
                     </span>
                 </div>
             </div>
-
             <div class="form-group keeptogether ${hasErrors(bean: personaInstance, field: 'departamento', 'error')} ${hasErrors(bean: personaInstance, field: 'cargoPersonal', 'error')}">
                 <div class="col-md-12">
                     <span class="grupo">
@@ -98,7 +95,7 @@
                         </label>
 
                         <div class="col-md-10">
-                            <g:select id="departamento" name="departamento.id" from="${Departamento.list([sort:'nombre'])}" optionKey="id" value="${departamento ? departamento?.id : personaInstance?.departamento?.id}" class="many-to-one form-control input-sm" noSelection="['null': '']"/>
+                            <g:select id="departamento" name="departamento.id" from="${Departamento.list([sort:'nombre'])}" optionKey="id" value="${departamento ? departamento?.id : personaInstance?.departamento?.id}" class="many-to-one form-control input-sm" noSelection="['-1': 'Seleccione...']"/>
                         </div>
 
                     </span>
@@ -120,8 +117,6 @@
                     </span>
                 </div>
             </div>
-
-
             <div class="form-group keeptogether ${hasErrors(bean: personaInstance, field: 'login', 'error')} ${hasErrors(bean: personaInstance, field: 'sigla', 'error')}">
                 <div class="col-md-12">
                     <span class="grupo">
@@ -145,52 +140,50 @@
                         </div>
                     </span>
                 </div>
-
             </div>
+%{--            <div class="form-group keeptogether ${hasErrors(bean: personaInstance, field: 'perfil', 'error')} ">--}%
+%{--                <div class="col-md-12">--}%
+%{--                    <span class="grupo">--}%
+%{--                        <label for="perfil" class="col-md-2 control-label">--}%
+%{--                            Perfiles--}%
+%{--                        </label>--}%
 
-            <div class="form-group keeptogether ${hasErrors(bean: personaInstance, field: 'perfil', 'error')} ">
-                <div class="col-md-12">
-                    <span class="grupo">
-                        <label for="perfil" class="col-md-2 control-label">
-                            Perfiles
-                        </label>
+%{--                        <div class="col-md-10">--}%
+%{--                            <div class="row">--}%
+%{--                                    <div class="col-md-8">--}%
+%{--                                        <g:select name="perfil" from="${Prfl.list([sort: 'nombre'])}" class="form-control input-sm"--}%
+%{--                                                  optionKey="id" optionValue="nombre"/>--}%
+%{--                                    </div>--}%
 
-                        <div class="col-md-10">
-                            <div class="row">
-                                    <div class="col-md-8">
-                                        <g:select name="perfil" from="${Prfl.list([sort: 'nombre'])}" class="form-control input-sm"
-                                                  optionKey="id" optionValue="nombre"/>
-                                    </div>
+%{--                                    <div class="col-md-2">--}%
+%{--                                        <a href="#" class="btn btn-success btn-sm" id="btn-addPerfil" title="Agregar perfil">--}%
+%{--                                            <i class="fa fa-plus"></i> Agregar perfil--}%
+%{--                                        </a>--}%
+%{--                                    </div>--}%
+%{--                            </div>--}%
 
-                                    <div class="col-md-2">
-                                        <a href="#" class="btn btn-success btn-sm" id="btn-addPerfil" title="Agregar perfil">
-                                            <i class="fa fa-plus"></i> Agregar perfil
-                                        </a>
-                                    </div>
-                            </div>
-
-                            <div class="row" style="margin-top: 5px">
-                                <div class="col-md-6">
-                                    <table id="tblPerfiles" class="table table-hover table-bordered table-condensed">
-                                        <g:each in="${perfiles.perfil}" var="perfil">
-                                            <tr class="perfiles" data-id="${perfil.id}">
-                                                <td>
-                                                    ${perfil?.nombre}
-                                                </td>
-                                                <td width="35">
-                                                    <a href="#" class="btn btn-danger btn-xs btn-deletePerfil">
-                                                        <i class="fa fa-trash"></i>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        </g:each>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </span>
-                </div>
-            </div>
+%{--                            <div class="row" style="margin-top: 5px">--}%
+%{--                                <div class="col-md-6">--}%
+%{--                                    <table id="tblPerfiles" class="table table-hover table-bordered table-condensed">--}%
+%{--                                        <g:each in="${perfiles.perfil}" var="perfil">--}%
+%{--                                            <tr class="perfiles" data-id="${perfil.id}">--}%
+%{--                                                <td>--}%
+%{--                                                    ${perfil?.nombre}--}%
+%{--                                                </td>--}%
+%{--                                                <td width="35">--}%
+%{--                                                    <a href="#" class="btn btn-danger btn-xs btn-deletePerfil">--}%
+%{--                                                        <i class="fa fa-trash"></i>--}%
+%{--                                                    </a>--}%
+%{--                                                </td>--}%
+%{--                                            </tr>--}%
+%{--                                        </g:each>--}%
+%{--                                    </table>--}%
+%{--                                </div>--}%
+%{--                            </div>--}%
+%{--                        </div>--}%
+%{--                    </span>--}%
+%{--                </div>--}%
+%{--            </div>--}%
         </g:form>
     </div>
 
@@ -247,45 +240,45 @@
             return true;
         });
 
-        $("#btn-addPerfil").click(function () {
-            var $perfil = $("#perfil");
-            var idPerfilAdd = $perfil.val();
-            $(".perfiles").each(function () {
-                if ($(this).data("id") == idPerfilAdd) {
-                    $(this).remove();
-                }
-            });
-            var $tabla = $("#tblPerfiles");
-
-            var $tr = $("<tr>");
-            $tr.addClass("perfiles");
-            $tr.data("id", idPerfilAdd);
-            var $tdNombre = $("<td>");
-            $tdNombre.text($perfil.find("option:selected").text());
-            var $tdBtn = $("<td>");
-            $tdBtn.attr("width", "35");
-            var $btnDelete = $("<a>");
-            $btnDelete.addClass("btn btn-danger btn-xs");
-            $btnDelete.html("<i class='fa fa-trash-o'></i> ");
-            $tdBtn.append($btnDelete);
-
-            $btnDelete.click(function () {
-                $tr.remove();
-                return false;
-            });
-
-            $tr.append($tdNombre).append($tdBtn);
-
-            $tabla.prepend($tr);
-            $tr.effect("highlight");
-
-            return false;
-        });
-
-        $(".btn-deletePerfil").click(function () {
-            $(this).parents("tr").remove();
-            return false;
-        });
+        // $("#btn-addPerfil").click(function () {
+        //     var $perfil = $("#perfil");
+        //     var idPerfilAdd = $perfil.val();
+        //     $(".perfiles").each(function () {
+        //         if ($(this).data("id") == idPerfilAdd) {
+        //             $(this).remove();
+        //         }
+        //     });
+        //     var $tabla = $("#tblPerfiles");
+        //
+        //     var $tr = $("<tr>");
+        //     $tr.addClass("perfiles");
+        //     $tr.data("id", idPerfilAdd);
+        //     var $tdNombre = $("<td>");
+        //     $tdNombre.text($perfil.find("option:selected").text());
+        //     var $tdBtn = $("<td>");
+        //     $tdBtn.attr("width", "35");
+        //     var $btnDelete = $("<a>");
+        //     $btnDelete.addClass("btn btn-danger btn-xs");
+        //     $btnDelete.html("<i class='fa fa-trash-o'></i> ");
+        //     $tdBtn.append($btnDelete);
+        //
+        //     $btnDelete.click(function () {
+        //         $tr.remove();
+        //         return false;
+        //     });
+        //
+        //     $tr.append($tdNombre).append($tdBtn);
+        //
+        //     $tabla.prepend($tr);
+        //     $tr.effect("highlight");
+        //
+        //     return false;
+        // });
+        //
+        // $(".btn-deletePerfil").click(function () {
+        //     $(this).parents("tr").remove();
+        //     return false;
+        // });
 
     </script>
 

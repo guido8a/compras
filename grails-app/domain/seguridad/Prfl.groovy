@@ -29,6 +29,7 @@ class Prfl {
 
     static constraints = {
         padre(blank: true, nullable: true)
+        observaciones(blank: true, nullable: true)
     }
 
     String toString() {

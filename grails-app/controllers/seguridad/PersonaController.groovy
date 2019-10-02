@@ -11,6 +11,7 @@ import javax.imageio.ImageIO
 //import happy.utilitarios.Parametros
 
 import java.awt.image.BufferedImage
+import java.lang.reflect.Array
 
 import static java.awt.RenderingHints.KEY_INTERPOLATION
 import static java.awt.RenderingHints.VALUE_INTERPOLATION_BICUBIC
@@ -26,7 +27,7 @@ class PersonaController {
     } //index
 
     def getLista(params, all) {
-        println "getLista: " + params
+//        println "getLista: " + params
         params.offset = params.offset ?: 0
         if (params.search) {
             def tx = params.search.toList()
@@ -50,10 +51,10 @@ class PersonaController {
             prms.remove("offset")
             prms.remove("max")
         }
-//        def permisoAdmin = Permiso.findByCodigo("P013")
         def lista
 
         def c = Persona.createCriteria()
+
         lista = c.list(prms) {
             and {
                 if (prms.search) {
@@ -73,6 +74,7 @@ class PersonaController {
                         eq("perfil", Prfl.get(params.perfil.toLong()))
                     }
                 }
+
                 if (params.estado) {
                     if (params.estado == "jefe") {
                         eq("jefe", 1)
@@ -87,6 +89,7 @@ class PersonaController {
             }
         }
 
+        lista.unique()
 
         if (params.estado == "usuario") {
             lista = lista.findAll { it.estaActivo }
@@ -105,6 +108,7 @@ class PersonaController {
                 lista = lista.subList(init, fin)
             }
         }
+
         return lista
     }
 
@@ -434,6 +438,7 @@ class PersonaController {
                 pers.add(it.perfil.id)
             }
         }
+
         def permisosUsu = PermisoUsuario.findAllByPersona(usu).permisoTramite.id
         return [usuario: usu, perfilesUsu: pers, permisosUsu: permisosUsu]
     }
@@ -768,19 +773,25 @@ class PersonaController {
     }
 
     def list() {
-        println "list: $params"
+//        println "list: $params"
 //        if (session.usuario.puedeAdmin) {
-            params.max = Math.min(params.max ? params.max.toInteger() : 15, 100)
-            params.sort = params.sort ?: "apellido"
-            params.perfil = params.perfil ?: ''
-            params.estado = params.estado ?: ''
-            def personaInstanceList = getLista(params, false)
-            def personaInstanceCount = getLista(params, true).size()
-            if (personaInstanceList.size() == 0 && params.offset && params.max) {
-                params.offset = params.offset - params.max
-                personaInstanceList = getLista(params, false)
-            }
-            return [personaInstanceList: personaInstanceList, personaInstanceCount: personaInstanceCount, params: params]
+        params.max = Math.min(params.max ? params.max.toInteger() : 15, 100)
+        params.sort = params.sort ?: "apellido"
+        params.perfil = params.perfil ?: ''
+        params.estado = params.estado ?: ''
+        def personaInstanceList = getLista(params, false)
+        def personaInstanceCount = getLista(params, true).size()
+        if (personaInstanceList.size() == 0 && params.offset && params.max) {
+            params.offset = params.offset - params.max
+            personaInstanceList = getLista(params, false)
+        }
+
+
+//        println("p " + personaInstanceList)
+//        println("p2 " + personaInstanceCount)
+
+
+        return [personaInstanceList: personaInstanceList, personaInstanceCount: personaInstanceCount, params: params]
 //        } else {
 //            flash.message = "Está tratando de ingresar a un pantalla restringida para su perfil. Está acción será registrada."
 //            response.sendError(403)
@@ -800,12 +811,8 @@ class PersonaController {
                 notFound_ajax()
                 return
             }
-            def perfiles = Sesn.withCriteria {
-                eq("usuario", personaInstance)
-                perfil {
-                    order("nombre", "asc")
-                }
-            }
+
+            def perfiles = Sesn.findAllByUsuarioAndFechaFinIsNull(personaInstance).sort{it.perfil.descripcion}
 
             return [personaInstance: personaInstance, perfiles: perfiles]
         } else {
@@ -980,12 +987,12 @@ class PersonaController {
 
     def save_ajax() {
 //        println "save_ajx: $params"
+
         params.mail = params.mail.toString().toLowerCase()
         def personaInstance = new Persona()
         if (params.id) {
             personaInstance = Persona.get(params.id)
             if (!personaInstance) {
-//                render "ERROR*No se encontró Persona."
                 notFound_ajax()
                 return
             }
@@ -996,55 +1003,55 @@ class PersonaController {
         personaInstance.properties = params
 
         if (!personaInstance.save(flush: true)) {
-            println "************ error"
+            println "error al guardar la persona"
             render "ERROR*Ha ocurrido un error al guardar Persona: " + renderErrors(bean: personaInstance)
-            return
+        }else{
+            render "SUCCESS*${params.id ? 'Actualización' : 'Creación'} de Persona exitosa."
         }
 
-        def perfiles = params.perfilUsuario
-
-        if (perfiles) {
-            def perfilesOld = Sesn.findAllByUsuario(personaInstance)
-            def perfilesSelected = []
-            def perfilesInsertar = []
-            (perfiles.split("_")).each { perfId ->
-                def perf = Prfl.get(perfId.toLong())
-                if (!perfilesOld.perfil.id.contains(perf.id)) {
-                    perfilesInsertar += perf
-                } else {
-                    perfilesSelected += perf
-                }
-            }
-            def commons = perfilesOld.perfil.intersect(perfilesSelected)
-            def perfilesDelete = perfilesOld.perfil.plus(perfilesSelected)
-            perfilesDelete.removeAll(commons)
-
-            def errores = ""
-
-            perfilesInsertar.each { perfil ->
-                def sesion = new Sesn()
-                sesion.usuario = personaInstance
-                sesion.perfil = perfil
-                if (!sesion.save(flush: true)) {
-                    errores += renderErrors(bean: sesion)
-                    println "error al guardar sesion: " + sesion.errors
-                }
-            }
-            perfilesDelete.each { perfil ->
-                def sesion = Sesn.findAllByPerfilAndUsuario(perfil, personaInstance)
-                try {
-                    if (sesion.size() == 1) {
-                        sesion.first().delete(flush: true)
-                    } else {
-                        errores += "Existen ${sesion.size()} registros del permiso " + perfil.nombre
-                    }
-                } catch (Exception e) {
-                    errores += "Ha ocurrido un error al eliminar el perfil " + perfil.nombre
-                    println "error al eliminar perfil: " + e
-                }
-            }
-        }
-        render "SUCCESS*${params.id ? 'Actualización' : 'Creación'} de Persona exitosa."
+//        def perfiles = params.perfilUsuario
+//
+//        if (perfiles) {
+//            def perfilesOld = Sesn.findAllByUsuario(personaInstance)
+//            def perfilesSelected = []
+//            def perfilesInsertar = []
+//            (perfiles.split("_")).each { perfId ->
+//                def perf = Prfl.get(perfId.toLong())
+//                if (!perfilesOld.perfil.id.contains(perf.id)) {
+//                    perfilesInsertar += perf
+//                } else {
+//                    perfilesSelected += perf
+//                }
+//            }
+//            def commons = perfilesOld.perfil.intersect(perfilesSelected)
+//            def perfilesDelete = perfilesOld.perfil.plus(perfilesSelected)
+//            perfilesDelete.removeAll(commons)
+//
+//            def errores = ""
+//
+//            perfilesInsertar.each { perfil ->
+//                def sesion = new Sesn()
+//                sesion.usuario = personaInstance
+//                sesion.perfil = perfil
+//                if (!sesion.save(flush: true)) {
+//                    errores += renderErrors(bean: sesion)
+//                    println "error al guardar sesion: " + sesion.errors
+//                }
+//            }
+//            perfilesDelete.each { perfil ->
+//                def sesion = Sesn.findAllByPerfilAndUsuario(perfil, personaInstance)
+//                try {
+//                    if (sesion.size() == 1) {
+//                        sesion.first().delete(flush: true)
+//                    } else {
+//                        errores += "Existen ${sesion.size()} registros del permiso " + perfil.nombre
+//                    }
+//                } catch (Exception e) {
+//                    errores += "Ha ocurrido un error al eliminar el perfil " + perfil.nombre
+//                    println "error al eliminar perfil: " + e
+//                }
+//            }
+//        }
     } //save para grabar desde ajax
 
 
@@ -1189,5 +1196,121 @@ class PersonaController {
         }
     }
 
+    def guardarPerfiles_ajax () {
+//        println("params prfl " + params)
+
+        def personaInstance = Persona.get(params.id)
+        def perfilActual = Prfl.get(session.perfil.id)
+        def sesionActual = Sesn.findByPerfilAndUsuarioAndFechaFinIsNull(perfilActual, personaInstance)
+        def perfilesOld = Sesn.findAllByUsuarioAndFechaFinIsNull(personaInstance)
+
+//        println("old " + perfilesOld)
+//        println("perfiles " + perfiles)
+//        println("<<<< " + perfiles?.size())
+//        println("se ac " + sesionActual.perfil.descripcion)
+
+//        if (perfiles?.size() > 0) {
+        if (params.perfiles) {
+
+            def perfiles = params.perfiles.split("_")
+            def perfilesSelected = []
+            def perfilesInsertar = []
+
+            perfiles.each { perfId ->
+                def perf = Prfl.get(perfId.toLong())
+                if (!perfilesOld.perfil.id.contains(perf.id)) {
+                    perfilesInsertar += perf
+                } else {
+                    perfilesSelected += perf
+                }
+            }
+            def commons = perfilesOld.perfil.intersect(perfilesSelected)
+            def perfilesDelete = perfilesOld.perfil.plus(perfilesSelected)
+            perfilesDelete.removeAll(commons)
+
+            def errores = ''
+
+//            println("p i " + perfilesInsertar)
+//            println("p b " + perfilesDelete)
+
+            if(perfilesInsertar){
+                perfilesInsertar.each { perfil ->
+                    def sesion = new Sesn()
+                    sesion.usuario = personaInstance
+                    sesion.perfil = perfil
+                    sesion.fechaInicio = new Date();
+                    if (!sesion.save(flush: true)) {
+                        errores += sesion.errors
+                        println "error al guardar sesion: " + sesion.errors
+                        render "no"
+                    }
+                }
+            }
+
+            def bandera = false
+
+            if(errores == ''){
+                if(perfilesDelete){
+                    if(perfilesDelete.contains(sesionActual.perfil)){
+                        bandera = true
+                    }else{
+                        perfilesDelete.each { perfil ->
+                            def perfilB = Sesn.findByPerfilAndUsuarioAndFechaFinIsNull(perfil, personaInstance)
+
+                            if(perfilB){
+                                perfilB.fechaFin = new Date()
+
+                                if(!perfilB.save(flush: true)){
+                                errores += "Ha ocurrido un error al eliminar el perfil " + perfilB.errors
+                                println "error al eliminar perfil: " + perfilB.errors
+                                }
+                            }
+                        }
+                    }
+
+                    if(bandera){
+                        render "er_No puede borrar el perfil ${sesionActual}, está actualmente en uso"
+                    }else{
+                        if(errores != ''){
+                            render "no"
+                        }else{
+                            render "ok"
+                        }
+                    }
+                }else{
+                    render "ok"
+                }
+            }else{
+                render "no"
+            }
+        }else{
+            if(sesionActual.usuario == personaInstance){
+                render "er_No puede borrar el perfil ${sesionActual}, está actualmente en uso"
+            }else{
+
+                def perfilesBorrar = Sesn.findAllByUsuario(personaInstance)
+
+                perfilesBorrar.each { perfil ->
+                    def perfilB = Sesn.findByPerfilAndUsuarioAndFechaFinIsNull(perfil, personaInstance)
+
+                    if(perfilB){
+                        perfilB.fechaFin = new Date()
+
+                        if(!perfilB.save(flush: true)){
+                            errores += "Ha ocurrido un error al eliminar el perfil " + perfilB.errors
+                            println "error al eliminar perfil: " + perfilB.errors
+                        }
+                    }
+                }
+
+                if(errores != ''){
+                    render "no"
+                }else{
+                    render "ok"
+                }
+
+            }
+        }
+    }
 
 }

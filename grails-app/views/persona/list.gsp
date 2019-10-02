@@ -27,7 +27,7 @@
 <div class="btn-toolbar toolbar" style="margin-bottom: 15px">
     <div class="btn-group">
         <g:link action="form" class="btn btn-primary btnCrear">
-            <i class="fa fa-file"></i> Crear
+            <i class="fa fa-user"></i> Nuevo Usuario
         </g:link>
     </div>
 
@@ -125,7 +125,7 @@
         }}"/>
 
         <tr data-id="${personaInstance.id}" data-tramites="0"
-            class="${personaInstance.activo == 1 ? 'activo' : 'inactivo'} ${del ? 'eliminar' : ''}" id="trPersona">
+            class="${personaInstance.activo == 1 ? 'activo' : 'inactivo'} ${del ? 'eliminar' : ''}" id="trPersona" style="font-size: 10px">
             <td class="text-center">
                 <i class="fa fa-user text-${!personaInstance.estaActivo ? 'muted' : 'info'}"></i>
             </td>
@@ -133,12 +133,12 @@
             <td><elm:textoBusqueda texto='${fieldValue(bean: personaInstance, field: "nombre")}' search='${params.search}'/></td>
             <td><elm:textoBusqueda texto='${fieldValue(bean: personaInstance, field: "apellido")}' search='${params.search}'/></td>
             <td><elm:textoBusqueda texto='${personaInstance.departamento?.nombre}' search='${params.search}'/></td>
-            <td>
+            <td style="font-size: 10px">
                 <g:each in="${perfiles}" var="per" status="p">
                     ${p > 0 ? ', ' : ''}<strong>${per.perfil.nombre}</strong>
-                    <g:if test="${per.fechaInicio || per.fechaFin}">
-                        (${per.fechaInicio?.format("dd-MM-yyyy")} a ${per.fechaFin?.format("dd-MM-yyyy")})
-                    </g:if>
+%{--                    <g:if test="${per.fechaInicio || per.fechaFin}">--}%
+%{--                        (${per.fechaInicio?.format("dd-MM-yyyy")} a ${per.fechaFin?.format("dd-MM-yyyy")})--}%
+%{--                    </g:if>--}%
                 </g:each>
             </td>
         </tr>
@@ -157,9 +157,8 @@
         var $btn = $("#dlgCreateEdit").find("#btnSave");
         var idPersona = $("#trPersona").data("id");
         if ($form.valid()) {
-            // $btn.replaceWith(spinner);
 
-           cargarLoader("Guardando...");
+          var dialog = cargarLoader("Guardando...");
 
             $.ajax({
                 type    : "POST",
@@ -412,7 +411,7 @@
 
         var editar = {
             label           : 'Editar',
-            icon            : "fa fa-pen",
+            icon            : "fa fa-pen text-success",
             separator_after : true,
             action          : function (e) {
                 createEditRow(id, "persona");
@@ -421,15 +420,14 @@
 
         var config = {
             label           : 'Perfiles',
-            icon            : "fa fa-address-card",
+            icon            : "fa fa-address-card text-info",
             separator_after : true,
             url             : "${createLink(controller: 'persona', action: 'config')}/" + id
         };
 
         var eliminar = {
             label            : 'Eliminar Usuario',
-            icon             : "fa fa-times-circle",
-            separator_before : true,
+            icon             : "fa fa-times-circle text-danger",
             action           : function (e) {
                 deleteRow(id);
             }
