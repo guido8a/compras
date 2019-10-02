@@ -872,7 +872,7 @@
             },
             state       : {
                 key : "unidades",
-                // opened: false
+                opened: false
             },
             search      : {
                 fuzzy             : false,
