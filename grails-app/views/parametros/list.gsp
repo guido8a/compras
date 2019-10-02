@@ -1,220 +1,254 @@
-<%@ page import="utilitarios.Parametros" %>
-<!DOCTYPE html>
+<%@ page contentType="text/html" %>
+
 <html>
-    <head>
-        <meta name="layout" content="main">
-        <title>Lista de Parámetros</title>
-    </head>
-    <body>
+<head>
+    <meta name="layout" content="main"/>
+    <title>Parámetros</title>
 
-%{--    <div class="btn-toolbar toolbar">--}%
-%{--        <div class="btn-group">--}%
-%{--            <g:link controller="inicio" action="parametros" class="btn btn-primary">--}%
-%{--                <i class="fa fa-arrow-left"></i> Regresar--}%
-%{--            </g:link>--}%
-%{--        </div>--}%
-%{--    </div>--}%
+    <style type="text/css">
 
-    <h3> Parámetros del Sistema</h3>
+    .tab-content, .left, .right {
+        height : 600px;
+    }
 
-    <elm:flashMessage tipo="${flash.tipo}" clase="${flash.clase}">${flash.message}</elm:flashMessage>
+    .tab-content {
+        /*background  : #EFE4D1;*/
+        background    : #EEEEEE;
+        border-left   : solid 1px #DDDDDD;
+        border-bottom : solid 1px #DDDDDD;
+        border-right  : solid 1px #DDDDDD;
+        padding-top   : 10px;
+    }
 
-        <table class="table table-condensed table-bordered table-striped">
-            <thead>
-                <tr>
-                    
-                    <g:sortableColumn property="horaInicio" title="Hora Inicio jornada " />
-                    
-                    <g:sortableColumn property="horaFin" title="Hora Fin jornada" />
+    .descripcion {
+        /*margin-left : 20px;*/
+        font-size : 12px;
+        border    : solid 2px cadetblue;
+        padding   : 0 10px;
+        margin    : 0 10px 0 0;
+    }
 
-                    <g:sortableColumn property="institución" title="Institución o empresa" />
-                    
-%{--                    <g:sortableColumn property="ouPrincipal" title="Imágenes" />--}%
-                    
-                </tr>
-            </thead>
-            <tbody>
-                <g:each in="${parametrosInstanceList}" status="i" var="parametrosInstance">
-                    <tr data-id="${parametrosInstance.id}">
+    .info {
+        font-style : italic;
+        color      : navy;
+    }
 
-                        <td>${parametrosInstance.horaInicio.toString().padLeft(2,'0')}:${parametrosInstance.minutoInicio.toString().padLeft(2,'0')}</td>
-                        <td>${parametrosInstance.horaFin.toString().padLeft(2,'0')}:${parametrosInstance.minutoFin.toString().padLeft(2,'0')}</td>
-                        
-                        <td>${fieldValue(bean: parametrosInstance, field: "institucion")}</td>
-                        
-%{--                        <td>${fieldValue(bean: parametrosInstance, field: "imagenes")}</td>--}%
-                        
-                    </tr>
-                </g:each>
-            </tbody>
-        </table>
+    .descripcion h4 {
+        color      : cadetblue;
+        text-align : center;
+    }
 
-        <elm:pagination total="${parametrosInstanceCount}" params="${params}"/>
+    .left {
+        width : 600px;
+        text-align: justify;
+        /*background : red;*/
+    }
 
-        <script type="text/javascript">
-            var id = null;
-            function submitForm() {
-                var $form = $("#frmParametros");
-                var $btn = $("#dlgCreateEdit").find("#btnSave");
-                if ($form.valid()) {
-                $btn.replaceWith(spinner);
-                    $.ajax({
-                        type    : "POST",
-                        url     : '${createLink(action:'save_ajax')}',
-                        data    : $form.serialize(),
-                            success : function (msg) {
-                        var parts = msg.split("_");
-                        log(parts[1], parts[0] == "OK" ? "success" : "error"); // log(msg, type, title, hide)
-                        if (parts[0] == "OK") {
-                            location.reload(true);
-                        } else {
-                            spinner.replaceWith($btn);
-                            return false;
-                        }
-                    }
-                });
-            } else {
-                return false;
-            } //else
-            }
-            function deleteRow(itemId) {
-                bootbox.dialog({
-                    title   : "Alerta",
-                    message : "<i class='fa fa-trash-o fa-3x pull-left text-danger text-shadow'></i><p>¿Está seguro que desea eliminar el Parámetro seleccionado? Esta acción no se puede deshacer.</p>",
-                    buttons : {
-                        cancelar : {
-                            label     : "Cancelar",
-                            className : "btn-primary",
-                            callback  : function () {
-                            }
-                        },
-                        eliminar : {
-                            label     : "<i class='fa fa-trash-o'></i> Eliminar",
-                            className : "btn-danger",
-                            callback  : function () {
-                                $.ajax({
-                                    type    : "POST",
-                                    url     : '${createLink(action:'delete_ajax')}',
-                                    data    : {
-                                        id : itemId
-                                    },
-                                    success : function (msg) {
-                                        var parts = msg.split("_");
-                                        log(parts[1], parts[0] == "OK" ? "success" : "error"); // log(msg, type, title, hide)
-                                        if (parts[0] == "OK") {
-                                            location.reload(true);
-                                        }
-                                    }
-                                });
-                            }
-                        }
-                    }
-                });
-            }
-            function createEditRow(id) {
-                var title = id ? "Editar" : "Crear";
-                var data = id ? { id: id } : {};
-                $.ajax({
-                    type    : "POST",
-                    url     : "${createLink(action:'form_ajax')}",
-                    data    : data,
-                    success : function (msg) {
-                        var b = bootbox.dialog({
-                            id      : "dlgCreateEdit",
-                            title   : title + " Parametros",
-                            message : msg,
-                            buttons : {
-                                cancelar : {
-                                    label     : "Cancelar",
-                                    className : "btn-primary",
-                                    callback  : function () {
-                                    }
-                                },
-                                guardar  : {
-                                    id        : "btnSave",
-                                    label     : "<i class='fa fa-save'></i> Guardar",
-                                    className : "btn-success",
-                                    callback  : function () {
-                                        return submitForm();
-                                    } //callback
-                                } //guardar
-                            } //buttons
-                        }); //dialog
-                        setTimeout(function () {
-                            b.find(".form-control").first().focus()
-                        }, 500);
-                    } //success
-                }); //ajax
-            } //createEdit
+    .right {
+        width       : 300px;
+        margin-left : 20px;
+        padding: 20px;
+        /*background  : blue;*/
+    }
 
-            $(function () {
+    .fa-ul li {
+        margin-bottom : 10px;
+    }
 
-                $(".btnCrear").click(function() {
-                    createEditRow();
-                    return false;
-                });
+    </style>
 
-                $("tr").contextMenu({
-                    items  : {
-                        header   : {
-                            label  : "Acciones",
-                            header : true
-                        },
-                        ver      : {
-                            label  : "Ver",
-                            icon   : "fa fa-search",
-                            action : function ($element) {
-                                var id = $element.data("id");
-                                $.ajax({
-                                    type    : "POST",
-                                    url     : "${createLink(action:'show_ajax')}",
-                                    data    : {
-                                        id : id
-                                    },
-                                    success : function (msg) {
-                                        bootbox.dialog({
-                                            title   : "Ver Parámetros",
-                                            message : msg,
-                                            buttons : {
-                                                ok : {
-                                                    label     : "Aceptar",
-                                                    className : "btn-primary",
-                                                    callback  : function () {
-                                                    }
-                                                }
-                                            }
-                                        });
-                                    }
-                                });
-                            }
-                        },
-                        editar   : {
-                            label  : "Editar",
-                            icon   : "fa fa-pen",
-                            action : function ($element) {
-                                var id = $element.data("id");
-                                createEditRow(id);
-                            }
-                        }/*,
-                        eliminar : {
-                            label            : "Eliminar",
-                            icon             : "fa fa-trash-o",
-                            separator_before : true,
-                            action           : function ($element) {
-                                var id = $element.data("id");
-                                deleteRow(id);
-                            }
-                        }*/
-                    },
-                    onShow : function ($element) {
-                        $element.addClass("trHighlight");
-                    },
-                    onHide : function ($element) {
-                        $(".trHighlight").removeClass("trHighlight");
-                    }
-                });
-            });
-        </script>
+</head>
 
-    </body>
+<body>
+
+<g:set var="iconGen" value="fa fa-cog"/>
+<g:set var="iconEmpr" value="fa fa-building-o"/>
+
+<!-- Nav tabs -->
+<ul class="nav nav-tabs">
+    <li class="active"><a href="#generales" data-toggle="tab">Generales</a></li>
+    %{--<li><a href="#condominio" data-toggle="tab">Condominio</a></li>--}%
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content ui-corner-bottom">
+    <div class="tab-pane active" id="generales">
+        <div class="left pull-left">
+            <ul class="fa-ul">
+                <li>
+                    <i class="fa-li ${iconGen}"></i>
+                    <span id="tpoc">
+                        <g:link controller="tipoOcupacion" action="list">Tipo de Ocupación</g:link> de la vivienda puede
+                        ser el propietario o un arrendatario.
+                    </span>
+
+                    <div class="descripcion hide">
+                        <h4>Tipo de Ocupación</h4>
+
+                        <p>Tipo de ocupación de la vivienda: puede ser el propietario o un arrendatario.</p>
+                    </div>
+                </li>
+
+                <li>
+                    <i class="fa-li ${iconGen}"></i>
+                    <span id="edif">
+                        <g:link controller="edificio" action="list">Edificio</g:link> o grupo de viviendas dentro del condominio.
+                        Se usa para diferenciar la zona a la cual pertenece una determinada vivienda dentro del condominio.
+                    </span>
+
+                    <div class="descripcion hide">
+                        <h4>Edificio</h4>
+
+                        <p>Edificio, torre o grupo de viviendas dentro del condominio.
+                        Se usa para diferenciar la zona a la cual pertenece una determinada vivienda dentro del condominio</p>
+                    </div>
+                </li>
+
+                <li>
+                    <i class="fa-li ${iconGen}"></i>
+                    <span id="tpgs">
+                        <g:link controller="tipoGasto" action="list">Tipo de gasto</g:link> en el que se incurre en la
+                        administración del condominio
+                    </span>
+
+                    <div class="descripcion hide">
+                        <h4>Tipo de Gasto</h4>
+
+                        <p>Clasificación de los gastos del condominio para diferenciar los distintos egresos
+                        que se hacen en la administración del condominio</p>
+
+                    </div>
+                </li>
+
+                <li>
+                    <i class="fa-li ${iconGen}"></i>
+                    <span id="tpob">
+                        <g:link controller="tipoObra" action="list">Tipo de Obra</g:link> para
+                        el registro de las mejoras y reportes de daños o mal funcionamiento de los recursos del condominio.
+                    </span>
+
+                    <div class="descripcion hide">
+                        <h4>Tipo de Obra o Acción</h4>
+
+                        <p>Para el registro de las mejoras y reportes de daños o mal funcionamiento de los
+                        recursos del condominio.</p>
+                    </div>
+                </li>
+                <li>
+                    <i class="fa-li ${iconGen}"></i>
+                    <span id="cndm">
+                        <g:link controller="condominio" action="list">Condominio</g:link> para
+                        el registro y edición de datos del condominio.
+                    </span>
+
+                    <div class="descripcion hide">
+                        <h4>Condominio</h4>
+
+                        <p>Para el registro y edicion de datos del condominio.</p>
+                    </div>
+                </li>
+                <li>
+                    <i class="fa-li ${iconGen}"></i>
+                    <span id="cntn">
+                        <g:link controller="canton" action="list">Cantón</g:link> para
+                        el registro y edición de datos del cantón.
+                    </span>
+
+                    <div class="descripcion hide">
+                        <h4>Cantón</h4>
+                        <p>Para el registro y edicion de datos del cantón.</p>
+                    </div>
+                </li>
+                <li>
+                    <i class="fa-li ${iconGen}"></i>
+                    <span id="oblg">
+                        <g:link controller="obligacion" action="list">Obligación</g:link>
+                    </span>
+
+                    <div class="descripcion hide">
+                        <h4>Obligación</h4>
+                        <p></p>
+                    </div>
+                </li>
+                <li>
+                    <i class="fa-li ${iconGen}"></i>
+                    <span id="apt">
+                        <g:link controller="tipoAporte" action="list">Tipo de Aporte</g:link>
+                    </span>
+
+                    <div class="descripcion hide">
+                        <h4>Tipo de Aporte</h4>
+                        <p></p>
+                    </div>
+                </li>
+                <li>
+                    <i class="fa-li ${iconGen}"></i>
+                    <span id="tpc">
+                        <g:link controller="tipoCondominio" action="list">Tipo de Condominio</g:link>
+                    </span>
+
+                    <div class="descripcion hide">
+                        <h4>Tipo de Condominio</h4>
+                        <p></p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="generales right pull-right">
+        </div>
+    </div>
+
+    %{--<div class="tab-pane" id="condominio">--}%
+    %{--<div class="left pull-left">--}%
+    %{--<ul class="fa-ul">--}%
+    %{--<li>--}%
+    %{--<i class="fa-li ${iconEmpr}"></i>--}%
+    %{--<span id="paramsEmp">--}%
+    %{--<g:link controller="empresa" action="list">Parámetros del Condominio</g:link> para definir la forma de--}%
+    %{--funcionamiento del sistema.--}%
+    %{--</span>--}%
+
+    %{--<div class="descripcion hide">--}%
+    %{--<h4>Parámetros del Condominio</h4>--}%
+
+    %{--<p>Parámetros de funcionamiento del sistema,</p>--}%
+    %{--</div>--}%
+    %{--</li>--}%
+    %{--</ul>--}%
+    %{--</div>--}%
+
+    %{--<div class="empresa right pull-right">--}%
+    %{--</div>--}%
+    %{--</div>--}%
+
+</div>
+
+<script type="text/javascript">
+
+    $("#btnCR").click(function () {
+        location.href='${createLink(controller: 'conceptoRetencionImpuestoRenta', action: 'list')}?max=' + 10 + "&offset=" + 0
+    });
+
+    function prepare() {
+        $(".fa-ul li span").each(function () {
+            var id = $(this).parents(".tab-pane").attr("id");
+            var thisId = $(this).attr("id");
+            $(this).siblings(".descripcion").addClass(thisId).addClass("ui-corner-all").appendTo($(".right." + id));
+        });
+    }
+
+    $(function () {
+        prepare();
+        $(".fa-ul li span").hover(function () {
+            var thisId = $(this).attr("id");
+            $("." + thisId).removeClass("hide");
+        }, function () {
+            var thisId = $(this).attr("id");
+            $("." + thisId).addClass("hide");
+        });
+    });
+</script>
+
+</body>
 </html>

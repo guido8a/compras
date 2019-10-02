@@ -855,7 +855,7 @@
                     stripes : true
                 },
                 data           : {
-                    async : false,
+                    // async : false,
                     url   : '${createLink(controller: 'canton' , action:"loadTreePart_ajax")}',
                     data  : function (node) {
                         return {
@@ -871,7 +871,8 @@
                 items        : createContextMenu
             },
             state       : {
-                key : "unidades"
+                key : "unidades",
+                // opened: false
             },
             search      : {
                 fuzzy             : false,
