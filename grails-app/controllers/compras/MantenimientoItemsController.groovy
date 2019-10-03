@@ -28,6 +28,7 @@ class MantenimientoItemsController {
         def all = params.all ? params.all.toBoolean() : false
         def ignore = params.ignore ? params.ignore.toBoolean() : false
         def vae = params.vae
+        def nodos = 0
 
         def hijos = []
 
@@ -212,8 +213,11 @@ class MantenimientoItemsController {
             tree += "<li id='" + liId + "' class='" + clase + "' rel='" + rel + "' " + extra + ">"
             tree += "<a href='#' class='label_arbol'>" + desc + "</a>"
             tree += "</li>"
+
+            nodos++
         }
         tree += "</ul>"
+        println"total de nodos del árbol: $nodos,  hijos: ${hijos.size()}"
         return tree
     }
 

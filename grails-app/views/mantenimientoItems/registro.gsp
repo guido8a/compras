@@ -1258,8 +1258,10 @@
                     }
                 }
             },
-            "themes"      : {
-                "theme" : "default"
+            themes         : {
+                variant : "small",
+                dots    : true,
+                stripes : true
             },
             "search"      : {
                 "case_insensitive" : true,

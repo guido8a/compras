@@ -860,7 +860,7 @@
                     data  : function (node) {
                         return {
                             id    : node.id,
-                            sort  : "${params.sort?:'apellido'}",
+                            sort  : "${params.sort?:'nombre'}",
                             order : "${params.order?:'asc'}"
                         };
                     }

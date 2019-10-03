@@ -470,15 +470,26 @@ class CantonController {
 
 
     def makeTreeNode(params) {
-//        println "makeTreeNode.. $params"
+        println "makeTreeNode.. $params"
         def id = params.id
+        def tipo = ""
+        def liId = ""
+        def ico = ""
+
+        if(id.contains("_")) {
+            id = params.id.split("_")[1]
+            tipo = params.id.split("_")[0]
+        }
 
         if (!params.order) {
             params.order = "asc"
         }
+
         String tree = "", clase = "", rel = ""
         def padre
         def hijos = []
+
+//        println "---> id: $id, tipo: $tipo, es #: ${id == '#'}"
 
         if (id == "#") {
             //root
@@ -493,84 +504,68 @@ class CantonController {
             if (clase == "") {
                 tree = ""
             }
-        } else if (id == "root") {
+            println "clase: $clase, hh: $hh"
             hijos = Provincia.findAllByZonaIsNull().sort{it.nombre}
-        } else {
-            def parts = id.split("_")
-            def node_id = parts[1].toLong()
-
-            padre = Provincia.get(node_id)
-            if (padre) {
-                hijos = []
-                hijos += Canton.findAllByProvincia(padre)
-            }
-        }
-
-        if (tree == "" && (padre || hijos.size() > 0)) {
-            def lbl = ""
-
+            def data = ""
+            ico = ", \"icon\":\"fa fa-parking text-success\""
             hijos.each { hijo ->
-                def tp = ""
-                def data = ""
-                def ico = ", \"icon\":\"fa fa-parking text-success\""
-                if (hijo instanceof Provincia) {
+                println "procesa ${hijo.nombre}"
+                    clase = Canton.findByProvincia(hijo) ? "jstree-closed hasChildren" : "jstree-closed"
 
-                    def hijosH = Canton.findAllByProvincia(hijo, [sort: "nombre"])
-                    clase = (hijosH.size() > 0) ? "jstree-closed hasChildren" : "jstree-closed"
-
-                    tree += "<ul>"
-                    tree += "<li id='lipro_" + hijo.id + "' class='" + clase + "' ${data} data-jstree='{\"type\":\"${"principal"}\" ${ico}}' >"
+//                    tree += "<ul>"
+                    tree += "<li id='prov_" + hijo.id + "' class='" + clase + "' ${data} data-jstree='{\"type\":\"${"principal"}\" ${ico}}' >"
                     tree += "<a href='#' class='label_arbol'>" + hijo?.nombre + "</a>"
                     tree += "</li>"
-//                    tree += "<ul>"//cierre provincia
-
-                } else if (hijo instanceof Canton) {
-
-                    def icoCanton = ", \"icon\":\"fa fa-copyright text-primary\""
-                    def icoParroquia = ", \"icon\":\"fa fa-registered text-danger\""
-                    def icoComunidad = ", \"icon\":\"fa fa-info-circle text-warning\""
-
-                    lbl = "${hijo.numero} ${" - " + hijo.nombre}"
-
-                    def hijosP = Parroquia.findAllByCanton(hijo).sort{it.nombre}
-                    clase = (hijosP.size() > 0) ? "jstree-closed hasChildren" : ""
-
-                    tp = "can"
-//                    rel = "canton"
-                    clase = "usuario"
-
-                    data += "data-usuario='${hijo.nombre}'"
-//                    rel += "Inactivo"
-
-                    tree += "<ul>"
-                    tree += "<li id='li${tp}_" + hijo.id + "' class='" + clase + "' ${data} data-jstree='{\"type\":\"${"canton"}\" ${icoCanton}}' >"
-                    tree += "<a href='#' class='label_arbol'>" + lbl + "</a>"
-
-                    hijosP.each { parroquia->
-
-                        tree += "<ul>"
-                        tree += "<li id='lipa_" + parroquia.id + "' class='" + clase + "' ${data} data-jstree='{\"type\":\"${"parroquia"}\" ${icoParroquia}}' >"
-                        tree += "<a href='#' class='label_arbol'>" + parroquia?.nombre + "</a>"
-
-                        def comunidades = Comunidad.findAllByParroquia(parroquia).sort{it.nombre}
-                        comunidades.each { comunidad->
-
-                            tree += "<ul>"
-                            tree += "<li id='licom_" + comunidad.id + "' class='" + clase + "' ${data} data-jstree='{\"type\":\"${"comunidad"}\" ${icoComunidad}}' >"
-                            tree += "<a href='#' class='label_arbol'>" + comunidad?.nombre + "</a>"
-                            tree += "</li>"//cierre comunidad
-                            tree += "</ul>"
-                        }
-
-                        tree += "</li>"//cierre parroquia
-                        tree += "</ul>"
-                    }
-
-                    tree += "</li>" //cierre canton
-                    tree += "</ul>"
-                }
-                tree += "</ul>"
             }
+
+        } else {
+//            println "---- no es raiz... procesa: $tipo"
+            switch(tipo) {
+                case "prov":
+                    hijos = Canton.findAllByProvincia(Provincia.get(id), [sort: params.sort])
+                    liId = "cntn_"
+//                    println "tipo: $tipo, ${hijos.size()}"
+                    ico = ", \"icon\":\"fa fa-parking text-success\""
+                    hijos.each { h ->
+//                        println "procesa $h"
+                        clase = Parroquia.findByCanton(h)? "jstree-closed hasChildren" : ""
+                        tree += "<li id='" + liId + h.id + "' class='" + clase + "' data-jstree='{\"type\":\"${"canton"}\" ${ico}}'>"
+                        tree += "<a href='#' class='label_arbol'>" + h.nombre + "</a>"
+                        tree += "</li>"
+                    }
+                    break
+                case "cntn":
+                    hijos = Parroquia.findAllByCanton(Canton.get(id), [sort: params.sort])
+                    liId = "parr_"
+//                    println "tipo: $tipo, ${hijos.size()}"
+                    ico = ", \"icon\":\"fa fa-parking text-success\""
+                    hijos.each { h ->
+//                        println "procesa $h"
+                        clase = Comunidad.findByParroquia(h)? "jstree-closed hasChildren" : ""
+                        tree += "<li id='" + liId + h.id + "' class='" + clase + "' data-jstree='{\"type\":\"${"parroquia"}\" ${ico}}'>"
+                        tree += "<a href='#' class='label_arbol'>" + h.nombre + "</a>"
+                        tree += "</li>"
+                    }
+                    break
+                case "parr":
+                    hijos = Comunidad.findAllByParroquia(Parroquia.get(id), [sort: params.sort])
+                    liId = "cmnd_"
+//                    println "tipo: $tipo, ${hijos.size()}"
+                    ico = ", \"icon\":\"fa fa-parking text-success\""
+                    hijos.each { h ->
+//                        println "procesa $h"
+                        clase = ""
+                        tree += "<li id='" + liId + h.id + "' class='" + clase + "' data-jstree='{\"type\":\"${"comunidad"}\" ${ico}}'>"
+                        tree += "<a href='#' class='label_arbol'>" + h.nombre + "</a>"
+                        tree += "</li>"
+                    }
+                    break
+            }
+
+        }
+
+//        println "---> tipo: $tipo"
+        switch (tipo) {
 
         }
 //        println "arbol: $tree"
