@@ -2,7 +2,6 @@ package seguridad
 
 class Direccion {
     String nombre
-    String jefatura
     static auditable = true
     static mapping = {
         table 'dire'
@@ -18,7 +17,6 @@ class Direccion {
     }
     static constraints = {
         nombre(size: 1..63, blank: false, attributes: [title: 'Nombre de la Dirección'])
-        jefatura(size: 1..63, blank: false, attributes: [title: 'Nombre del cargo del Jefe'])
     }
 
     String toString() {

@@ -9,7 +9,7 @@
 <html>
 <head>
     <meta name="layout" content="main">
-    <title>Unidades de Medida</title>
+    <title>Direcciones</title>
 
     <style type="text/css">
 
@@ -41,63 +41,60 @@
 
     <div class="btn-group">
         <a href="#" class="btn btn-primary btnCrear">
-            <i class="fa fa-file"></i> Nuevo Unidad
+            <i class="fa fa-file"></i> Nueva Dirección
         </a>
 
     </div>
 </div>
 
-
 <div style="margin-top: 30px; min-height: 400px" class="vertical-container">
-    <p class="css-vertical-text">Unidad de Medida</p>
+    <p class="css-vertical-text">Direcciones</p>
 
     <div class="linea"></div>
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;background-color: #a39e9e">
         <thead>
         <tr>
-            <th class="alinear" style="width: 35%">Código</th>
-            <th class="alinear" style="width: 65%">Descripción</th>
+            <th class="alinear" style="width: 100%">Dirección</th>
         </tr>
         </thead>
     </table>
 
-    <div id="tablaUnidad">
+    <div id="tablaDireccion">
     </div>
 </div>
-
 
 <script type="text/javascript">
 
     $(".btnCrear").click(function () {
-        createEditUnidad(null)
+        createEditDireccion(null)
     });
 
-    cargarTablaUnidad();
+    cargarDireccion();
 
-    function cargarTablaUnidad (){
+    function cargarDireccion(){
         $.ajax({
             type: 'POST',
-            url: '${createLink(controller: 'unidad', action: 'tablaUnidad')}',
+            url: '${createLink(controller: 'direccion', action: 'tablaDireccion')}',
             data:{
 
             },
             success: function (msg) {
-                $("#tablaUnidad").html(msg)
+                $("#tablaDireccion").html(msg)
             }
         });
     }
 
-    function createEditUnidad(id) {
+    function createEditDireccion(id) {
         var title = id ? "Editar" : "Crear";
         var data = id ? {id : id} : {};
         $.ajax({
             type    : "POST",
-            url     : "${createLink(controller: 'unidad', action:'form_ajax')}",
+            url     : "${createLink(controller: 'direccion', action:'form_ajax')}",
             data    : data,
             success : function (msg) {
                 var b = bootbox.dialog({
-                    id    : "dlgCreateEditUnidad",
-                    title : title + " Unidad",
+                    id    : "dlgCreateEditDireccion",
+                    title : title + " Dirección",
                     // class : "modal-lg",
                     message : msg,
                     buttons : {
@@ -112,7 +109,7 @@
                             label     : "<i class='fa fa-save'></i> Guardar",
                             className : "btn-success",
                             callback  : function () {
-                                return submitFormUnidad();
+                                return submitFormDireccion();
                             } //callback
                         } //guardar
                     } //buttons
@@ -125,9 +122,9 @@
     } //createEdit
 
 
-    function submitFormUnidad() {
-        var $form = $("#frmSaveUnidad");
-        var $btn = $("#dlgCreateEditUnidad").find("#btnSave");
+    function submitFormDireccion() {
+        var $form = $("#frmSaveDireccion");
+        var $btn = $("#dlgCreateEditDireccion").find("#btnSave");
         if ($form.valid()) {
             var data = $form.serialize();
             $btn.replaceWith(spinner);
@@ -142,7 +139,7 @@
                     if(parts[0] == 'ok'){
                         log(parts[1], "success");
                         setTimeout(function () {
-                            cargarTablaUnidad()
+                            cargarDireccion()
                         }, 1000);
                     }else{
                         bootbox.alert('<i class="fa fa-exclamation-triangle text-danger fa-3x"></i> ' + '<strong style="font-size: 14px">' + parts[1] + '</strong>');
@@ -167,21 +164,21 @@
         var id = $tr.data("id");
 
         var editar = {
-            label: 'Editar Unidad',
+            label: 'Editar',
             icon: "fa fa-pen text-info",
             action : function () {
-                createEditUnidad(id);
+                createEditDireccion(id);
             }
         };
 
-        var borrarUnidad = {
-            label            : "Borrar Unidad",
+        var borrarDireccion = {
+            label            : "Borrar",
             icon             : "fa fa-trash text-danger",
             separator_before : true,
             action           : function () {
                 bootbox.confirm({
-                    title: "Borrar Unidad",
-                    message: "Está seguro de borrar esta unidad? Esta acción no puede deshacerse.",
+                    title: "Borrar Dirección",
+                    message: "Está seguro de borrar esta dirección? Esta acción no puede deshacerse.",
                     buttons: {
                         cancel: {
                             label: '<i class="fa fa-times"></i> Cancelar',
@@ -197,19 +194,19 @@
                             var dialog = cargarLoader("Borrando...");
                             $.ajax({
                                 type: 'POST',
-                                url: '${createLink(controller: 'unidad', action: 'borrarUnidad_ajax')}',
+                                url: '${createLink(controller: 'direccion', action: 'borrarDireccion_ajax')}',
                                 data:{
                                     id: id
                                 },
                                 success: function (msg) {
                                     dialog.modal('hide');
                                     if(msg == 'ok'){
-                                        log("Unidad borrada correctamente","success");
+                                        log("Dirección borrada correctamente","success");
                                         setTimeout(function () {
-                                            cargarTablaUnidad();
+                                            cargarDireccion();
                                         }, 1000);
                                     }else{
-                                        log("Error al borrar la Unidad", "error")
+                                        log("Error al borrar la dirección", "error")
                                     }
                                 }
                             });
@@ -220,7 +217,7 @@
         };
 
         items.editar = editar;
-        items.borrar = borrarUnidad
+        items.borrar = borrarDireccion;
 
         return items
     }

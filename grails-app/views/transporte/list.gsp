@@ -9,7 +9,7 @@
 <html>
 <head>
     <meta name="layout" content="main">
-    <title>Unidades de Medida</title>
+    <title>Transporte</title>
 
     <style type="text/css">
 
@@ -41,15 +41,14 @@
 
     <div class="btn-group">
         <a href="#" class="btn btn-primary btnCrear">
-            <i class="fa fa-file"></i> Nuevo Unidad
+            <i class="fa fa-file"></i> Nuevo Transporte
         </a>
 
     </div>
 </div>
 
-
 <div style="margin-top: 30px; min-height: 400px" class="vertical-container">
-    <p class="css-vertical-text">Unidad de Medida</p>
+    <p class="css-vertical-text">Transporte</p>
 
     <div class="linea"></div>
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;background-color: #a39e9e">
@@ -61,7 +60,7 @@
         </thead>
     </table>
 
-    <div id="tablaUnidad">
+    <div id="tablaTransporte">
     </div>
 </div>
 
@@ -69,35 +68,35 @@
 <script type="text/javascript">
 
     $(".btnCrear").click(function () {
-        createEditUnidad(null)
+        createEditTransporte(null)
     });
 
-    cargarTablaUnidad();
+    cargarTransporte();
 
-    function cargarTablaUnidad (){
+    function cargarTransporte(){
         $.ajax({
             type: 'POST',
-            url: '${createLink(controller: 'unidad', action: 'tablaUnidad')}',
+            url: '${createLink(controller: 'transporte', action: 'tablaTransporte')}',
             data:{
 
             },
             success: function (msg) {
-                $("#tablaUnidad").html(msg)
+                $("#tablaTransporte").html(msg)
             }
         });
     }
 
-    function createEditUnidad(id) {
+    function createEditTransporte(id) {
         var title = id ? "Editar" : "Crear";
         var data = id ? {id : id} : {};
         $.ajax({
             type    : "POST",
-            url     : "${createLink(controller: 'unidad', action:'form_ajax')}",
+            url     : "${createLink(controller: 'transporte', action:'form_ajax')}",
             data    : data,
             success : function (msg) {
                 var b = bootbox.dialog({
-                    id    : "dlgCreateEditUnidad",
-                    title : title + " Unidad",
+                    id    : "dlgCreateEditTransporte",
+                    title : title + " Transporte",
                     // class : "modal-lg",
                     message : msg,
                     buttons : {
@@ -112,7 +111,7 @@
                             label     : "<i class='fa fa-save'></i> Guardar",
                             className : "btn-success",
                             callback  : function () {
-                                return submitFormUnidad();
+                                return submitFormTransporte();
                             } //callback
                         } //guardar
                     } //buttons
@@ -125,9 +124,9 @@
     } //createEdit
 
 
-    function submitFormUnidad() {
-        var $form = $("#frmSaveUnidad");
-        var $btn = $("#dlgCreateEditUnidad").find("#btnSave");
+    function submitFormTransporte() {
+        var $form = $("#frmSaveTransporte");
+        var $btn = $("#dlgCreateEditTransporte").find("#btnSave");
         if ($form.valid()) {
             var data = $form.serialize();
             $btn.replaceWith(spinner);
@@ -142,7 +141,7 @@
                     if(parts[0] == 'ok'){
                         log(parts[1], "success");
                         setTimeout(function () {
-                            cargarTablaUnidad()
+                            cargarTransporte()
                         }, 1000);
                     }else{
                         bootbox.alert('<i class="fa fa-exclamation-triangle text-danger fa-3x"></i> ' + '<strong style="font-size: 14px">' + parts[1] + '</strong>');
@@ -167,21 +166,21 @@
         var id = $tr.data("id");
 
         var editar = {
-            label: 'Editar Unidad',
+            label: 'Editar',
             icon: "fa fa-pen text-info",
             action : function () {
-                createEditUnidad(id);
+                createEditTransporte(id);
             }
         };
 
-        var borrarUnidad = {
-            label            : "Borrar Unidad",
+        var borrarTransporte = {
+            label            : "Borrar",
             icon             : "fa fa-trash text-danger",
             separator_before : true,
             action           : function () {
                 bootbox.confirm({
-                    title: "Borrar Unidad",
-                    message: "Está seguro de borrar esta unidad? Esta acción no puede deshacerse.",
+                    title: "Borrar Transporte",
+                    message: "Está seguro de borrar este transporte? Esta acción no puede deshacerse.",
                     buttons: {
                         cancel: {
                             label: '<i class="fa fa-times"></i> Cancelar',
@@ -197,19 +196,19 @@
                             var dialog = cargarLoader("Borrando...");
                             $.ajax({
                                 type: 'POST',
-                                url: '${createLink(controller: 'unidad', action: 'borrarUnidad_ajax')}',
+                                url: '${createLink(controller: 'transporte', action: 'borrarTransporte_ajax')}',
                                 data:{
                                     id: id
                                 },
                                 success: function (msg) {
                                     dialog.modal('hide');
                                     if(msg == 'ok'){
-                                        log("Unidad borrada correctamente","success");
+                                        log("Transporte borrado correctamente","success");
                                         setTimeout(function () {
-                                            cargarTablaUnidad();
+                                            cargarTransporte();
                                         }, 1000);
                                     }else{
-                                        log("Error al borrar la Unidad", "error")
+                                        log("Error al borrar el transporte", "error")
                                     }
                                 }
                             });
@@ -220,7 +219,7 @@
         };
 
         items.editar = editar;
-        items.borrar = borrarUnidad
+        items.borrar = borrarTransporte
 
         return items
     }

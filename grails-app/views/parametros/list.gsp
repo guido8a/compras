@@ -81,7 +81,7 @@
         text-decoration: none;
         background: #ffffff;
         padding: 20px;
-        border: 4px solid #78b665 !important;
+        border: 4px solid #f6b93b !important;
         display: inline-block;
         transition: all 0.4s ease 0s;
     }
@@ -93,397 +93,192 @@
 
 <body>
 
+
 <g:set var="iconGen" value="fa fa-cog"/>
 <g:set var="iconEmpr" value="fa fa-building-o"/>
 
-<ul class="nav nav-tabs">
-    <li class="active"><a href="#generales" data-toggle="tab">Generales</a></li>
-    <li class="active"><a href="#obra" data-toggle="tab">Obras</a></li>
-    <li class="active"><a href="#cntr" data-toggle="tab">Contratación</a></li>
-    <li class="active"><a href="#ejec" data-toggle="tab">Ejecución</a></li>
+%{--<ul class="nav nav-tabs">--}%
+<ul class="nav nav-pills">
+    <li class="active"><a data-toggle="pill" href="#generales">Generales</a></li>
+    <li><a data-toggle="pill" href="#obra">Obras</a></li>
+    <li><a data-toggle="pill" href="#cont">Contratación</a></li>
 </ul>
 
-<!-- Tab panes -->
-<div class="tab-content ui-corner-bottom">
-    <div class="tab-pane active" id="generales">
-        %{--        <div class="left pull-left">--}%
-        <div class="">
+<div class="tab-content">
+    <div id="generales" class="tab-pane fade in active">
 
-            <div class="row">
-                <div class="col-md-12 col-xs-5">
-                    <p>
-                        <g:link class="link btn btn-success btn-ajax example_c item" texto="admn" controller="administracion" action="list">
-                            <i class="fa fa-building fa-4x"></i>
-                            <br/> Administración
-                        </g:link>
+        <div class="row">
+            <div class="col-md-12 col-xs-5">
+                <p>
+                    <g:link class="link btn btn-success btn-ajax example_c item disabled" texto="admn" controller="administracion" action="list">
+                        <i class="fa fa-building fa-4x"></i>
+                        <br/> Administración
+                    </g:link>
 
-                        <g:link class="link btn btn-info btn-ajax example_c item" texto="grgf"  controller="canton" action="arbol">
-                            <i class="fa fa-building fa-4x"></i>
-                            <br/> Divisi&oacute;n geogr&aacute;fica del Pa&iacute;s
-                        </g:link>
-
-                        <g:link class="link btn btn-success btn-ajax example_c item" texto="tpit" controller="tipoItem" action="list">
-                            <i class="fa fa-building fa-4x"></i>
-                            <br/> Tipo de Item
-                        </g:link>
-
-                        <g:link class="link btn btn-success btn-ajax example_c item" texto="undd" controller="unidad" action="list">
-                            <i class="fa fa-building fa-4x"></i>
-                            <br/> Unidad
-                        </g:link>
-                        <g:link class="link btn btn-success btn-ajax example_c item" texto="trnp" controller="transporte" action="list">
-                            <i class="fa fa-building fa-4x"></i>
-                            <br/> Transporte
-                        </g:link>
-                        <g:link class="link btn btn-success btn-ajax example_c item" texto="dire" controller="transporte" action="list">
-                            <i class="fa fa-building fa-4x"></i>
-                            <br/> Direcciones del Personal
-                        </g:link>
-
-                    </p>
-                </div>
+                    <g:link class="link btn btn-info btn-ajax example_c item" texto="grgf"  controller="canton" action="arbol">
+                        <i class="fa fa-map-marked-alt fa-4x text-success"></i>
+                        <br/> Divisi&oacute;n geogr&aacute;fica del Pa&iacute;s
+                    </g:link>
+                    <g:link class="link btn btn-success btn-ajax example_c item" texto="undd" controller="unidad" action="list">
+                        <i class="fa fa-underline fa-4x text-success"></i>
+                        <br/> Unidad
+                    </g:link>
+                    <g:link class="link btn btn-success btn-ajax example_c item" texto="trnp" controller="transporte" action="list">
+                        <i class="fa fa-truck fa-4x text-success"></i>
+                        <br/> Transporte
+                    </g:link>
+                    <g:link class="link btn btn-success btn-ajax example_c item" texto="dire" controller="direccion" action="list">
+                        <i class="fa fa-id-card fa-4x text-success"></i>
+                        <br/> Direcciones del Personal
+                    </g:link>
+                    <g:link class="link btn btn-success btn-ajax example_c item disabled" texto="ddlb" controller="diaLaborable" action="calendario">
+                        <i class="fa fa-building fa-4x"></i>
+                        <br/> Días Laborables
+                    </g:link>
+                    <g:link class="link btn btn-success btn-ajax example_c item disabled" texto="iva" controller="diaLaborable" action="calendario">
+                        <i class="fa fa-building fa-4x"></i>
+                        <br/> Iva
+                    </g:link>
+                </p>
             </div>
-
-            <div class="row">
-                <div class="col-md-12 col-xs-5">
-                    <p>
-                        <g:link class="link btn btn-success btn-ajax example_c item" texto="dpto" controller="transporte" action="list">
-                            <i class="fa fa-building fa-4x"></i>
-                            <br/> Coordinación del Personal
-                        </g:link>
-                        <g:link class="link btn btn-success btn-ajax example_c item" texto="func" controller="funcion" action="list">
-                            <i class="fa fa-building fa-4x"></i>
-                            <br/> Funciones del Personal
-                        </g:link>
-                        <g:link class="link btn btn-success btn-ajax example_c item" texto="tptr" controller="tipoTramite" action="list">
-                            <i class="fa fa-building fa-4x"></i>
-                            <br/> Tipo de Trámite
-                        </g:link>
-                        <g:link class="link btn btn-success btn-ajax example_c item" texto="rltr" controller="rolTramite" action="list">
-                            <i class="fa fa-building fa-4x"></i>
-                            <br/> Rol de la persona en el Trámite
-                        </g:link>
-                        <g:link class="link btn btn-success btn-ajax example_c item" texto="ddlb" controller="diaLaborable" action="calendario">
-                            <i class="fa fa-building fa-4x"></i>
-                            <br/> Días Laborables
-                        </g:link>
-                        <g:link class="link btn btn-success btn-ajax example_c item" texto="iva" controller="diaLaborable" action="calendario">
-                            <i class="fa fa-building fa-4x"></i>
-                            <br/> Iva
-                        </g:link>
-                    </p>
-                </div>
-            </div>
-
-            <div id="tool" style="margin-left: 350px; width: 300px; height: 150px; display: none;padding:25px;"
-                 class="ui-widget-content ui-corner-all mensaje">
-            </div>
-
         </div>
 
-        %{--        <div class="generales right pull-right">--}%
-        %{--        </div>--}%
-    </div>
+        <div class="row">
+            <div class="col-md-12 col-xs-5">
+                <p>
+                    <g:link class="link btn btn-success btn-ajax example_c item disabled" texto="dpto" controller="transporte" action="list">
+                        <i class="fa fa-building fa-4x"></i>
+                        <br/> Coordinación del Personal
+                    </g:link>
+                    <g:link class="link btn btn-success btn-ajax example_c item disabled" texto="func" controller="funcion" action="list">
+                        <i class="fa fa-building fa-4x"></i>
+                        <br/> Funciones del Personal
+                    </g:link>
+                    <g:link class="link btn btn-success btn-ajax example_c item disabled" texto="tptr" controller="tipoTramite" action="list">
+                        <i class="fa fa-building fa-4x"></i>
+                        <br/> Tipo de Trámite
+                    </g:link>
+                    <g:link class="link btn btn-success btn-ajax example_c item disabled" texto="rltr" controller="rolTramite" action="list">
+                        <i class="fa fa-building fa-4x"></i>
+                        <br/> Rol de la persona en el Trámite
+                    </g:link>
+                    <g:link class="link btn btn-success btn-ajax example_c item" texto="rltr" controller="parametros" action="cargarDatos">
+                        <i class="fa fa-upload fa-4x"></i>
+                        <br/> Cargar Datos
+                    </g:link>
 
-    <div class="tab-pane" id="obra">
-        <div class="">
-            <div class="row">
-                <div class="col-md-12 col-xs-5">
-                    <p>
-                        <g:link class="link btn btn-success btn-ajax example_c item" texto="admn" controller="administracion" action="list">
-                            <i class="fa fa-building fa-4x"></i>
-                            <br/> Administración
-                        </g:link>
-
-                        <g:link class="link btn btn-info btn-ajax example_c item" texto="grgf"  controller="canton" action="arbol">
-                            <i class="fa fa-building fa-4x"></i>
-                            <br/> Divisi&oacute;n geogr&aacute;fica del Pa&iacute;s
-                        </g:link>
-
-                        <g:link class="link btn btn-success btn-ajax example_c item" texto="tpit" controller="tipoItem" action="list">
-                            <i class="fa fa-building fa-4x"></i>
-                            <br/> Tipo de Item
-                        </g:link>
-
-                        <g:link class="link btn btn-success btn-ajax example_c item" texto="undd" controller="unidad" action="list">
-                            <i class="fa fa-building fa-4x"></i>
-                            <br/> Unidad
-                        </g:link>
-                        <g:link class="link btn btn-success btn-ajax example_c item" texto="trnp" controller="transporte" action="list">
-                            <i class="fa fa-building fa-4x"></i>
-                            <br/> Transporte
-                        </g:link>
-                        <g:link class="link btn btn-success btn-ajax example_c item" texto="dire" controller="transporte" action="list">
-                            <i class="fa fa-building fa-4x"></i>
-                            <br/> Direcciones del Personal
-                        </g:link>
-
-                    </p>
-                </div>
+                </p>
             </div>
-
-            <div class="row">
-                <div class="col-md-12 col-xs-5">
-                    <p>
-                        <g:link class="link btn btn-success btn-ajax example_c item" texto="dpto" controller="transporte" action="list">
-                            <i class="fa fa-building fa-4x"></i>
-                            <br/> Coordinación del Personal
-                        </g:link>
-                        <g:link class="link btn btn-success btn-ajax example_c item" texto="func" controller="funcion" action="list">
-                            <i class="fa fa-building fa-4x"></i>
-                            <br/> Funciones del Personal
-                        </g:link>
-                        <g:link class="link btn btn-success btn-ajax example_c item" texto="tptr" controller="tipoTramite" action="list">
-                            <i class="fa fa-building fa-4x"></i>
-                            <br/> Tipo de Trámite
-                        </g:link>
-                        <g:link class="link btn btn-success btn-ajax example_c item" texto="rltr" controller="rolTramite" action="list">
-                            <i class="fa fa-building fa-4x"></i>
-                            <br/> Rol de la persona en el Trámite
-                        </g:link>
-                        <g:link class="link btn btn-success btn-ajax example_c item" texto="ddlb" controller="diaLaborable" action="calendario">
-                            <i class="fa fa-building fa-4x"></i>
-                            <br/> Días Laborables
-                        </g:link>
-                        <g:link class="link btn btn-success btn-ajax example_c item" texto="iva" controller="diaLaborable" action="calendario">
-                            <i class="fa fa-building fa-4x"></i>
-                            <br/> Iva
-                        </g:link>
-                    </p>
-                </div>
-            </div>
-
-            <div id="tool" style="margin-left: 350px; width: 300px; height: 150px; display: none;padding:25px;"
-                 class="ui-widget-content ui-corner-all mensaje">
-            </div>
-
         </div>
-
-        %{--        <div class="generales right pull-right">--}%
-        %{--        </div>--}%
     </div>
+
+    <div id="obra" class="tab-pane fade">
+
+        <div class="row">
+            <div class="col-md-12 col-xs-5">
+                <p>
+                    <g:link class="link btn btn-success btn-ajax example_c item disabled" texto="tpob" controller="tipoObra" action="list">
+                        <i class="fa fa-building fa-4x"></i>
+                        <br/> Tipo de Obras
+                    </g:link>
+
+                    <g:link class="link btn btn-info btn-ajax example_c item disabled" texto="prsp"  controller="presupuesto" action="list">
+                        <i class="fa fa-building fa-4x"></i>
+                        <br/> Partida Presupuestaria
+                    </g:link>
+
+                    <g:link class="link btn btn-success btn-ajax example_c item disabled" texto="auxl" controller="auxiliar" action="textosFijos">
+                        <i class="fa fa-building fa-4x"></i>
+                        <br/> Textos Fijos
+                    </g:link>
+                    <g:link class="link btn btn-success btn-ajax example_c item disabled" texto="anio" controller="anio" action="list">
+                        <i class="fa fa-building fa-4x"></i>
+                        <br/> Ingreso de Años
+                    </g:link>
+                    <g:link class="link btn btn-success btn-ajax example_c item disabled" texto="anua" controller="valoresAnulaes" action="list">
+                        <i class="fa fa-building fa-4x"></i>
+                        <br/> Valores Anuales
+                    </g:link>
+                    <g:link class="link btn btn-success btn-ajax example_c item disabled" texto="listas" controller="tipoLista" action="list">
+                        <i class="fa fa-building fa-4x"></i>
+                        <br/> Tipo de listas de precios
+                    </g:link>
+
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-xs-5">
+                <p>
+                    <g:link class="link btn btn-success btn-ajax example_c item" texto="prog" controller="programacion" action="list">
+                        <i class="fa fa-stopwatch fa-4x text-success"></i>
+                        <br/> Programacion
+                    </g:link>
+                    <g:link class="link btn btn-success btn-ajax example_c item" texto="adqu" controller="tipoAdquisicion" action="list">
+                        <i class="fa fa-cubes fa-4x text-success"></i>
+                        <br/> Tipo de Adquisición
+                    </g:link>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div id="cont" class="tab-pane fade">
+        <div class="row">
+            <div class="col-md-12 col-xs-5">
+                <p>
+                    <g:link class="link btn btn-success btn-ajax example_c item disabled" texto="tpgr" controller="tipoGarantia" action="list">
+                        <i class="fa fa-building fa-4x"></i>
+                        <br/>Tipo de Garantía
+                    </g:link>
+                    <g:link class="link btn btn-success btn-ajax example_c item disabled" texto="tdgr" controller="tipoDocumentoGarantia" action="list">
+                        <i class="fa fa-building fa-4x"></i>
+                        <br/> Tipo de documento de garantía
+                    </g:link>
+                    <g:link class="link btn btn-success btn-ajax example_c item disabled" texto="edgr" controller="estadoGarantia" action="list">
+                        <i class="fa fa-building fa-4x"></i>
+                        <br/> Estado de la garantía
+                    </g:link>
+                    <g:link class="link btn btn-success btn-ajax example_c item disabled" texto="asgr" controller="aseguradora" action="list">
+                        <i class="fa fa-building fa-4x"></i>
+                        <br/> Aseguradora
+                    </g:link>
+                    <g:link class="link btn btn-success btn-ajax example_c item disabled" texto="tpas" controller="tipoAseguradora" action="calendario">
+                        <i class="fa fa-building fa-4x"></i>
+                        <br/> Tipo de aseguradora
+                    </g:link>
+                    <g:link class="link btn btn-success btn-ajax example_c item disabled" texto="itun" controller="unidadIncop" action="calendario">
+                        <i class="fa fa-building fa-4x"></i>
+                        <br/> Unidad del Item
+                    </g:link>
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-xs-5">
+                <p>
+                    <g:link class="link btn btn-success btn-ajax example_c item disabled" texto="tppt" controller="tipoProcedimiento" action="list">
+                        <i class="fa fa-building fa-4x"></i>
+                        <br/>Tipo de procedimiento
+                    </g:link>
+                    <g:link class="link btn btn-success btn-ajax example_c item disabled" texto="tpcp" controller="tipoCompra" action="list">
+                        <i class="fa fa-building fa-4x"></i>
+                        <br/> Tipo de compra
+                    </g:link>
+                    <g:link class="link btn btn-success btn-ajax example_c item disabled" texto="fnfn" controller="fuenteFinanciamiento" action="list">
+                        <i class="fa fa-building fa-4x"></i>
+                        <br/> Fuente de Financiamiento
+                    </g:link>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div id="tool" style="margin-left: 350px; width: 300px; height: 160px; display: none;padding:25px;"
+         class="ui-widget-content ui-corner-all mensaje">
+    </div>
+
 </div>
-
-
-
-
-%{--<div class="container ui-corner-all " style="">--}%
-%{--    <div style="float:left; width:600px;">--}%
-%{--        <div id="info">--}%
-<!-- Tab panes -->
-%{--<div class="tab-content ui-corner-bottom">--}%
-%{--    <div class="tab-pane active" id="gnrl">--}%
-%{--        <div class="left pull-left">--}%
-
-%{--            <ul id="info-nav">--}%
-%{--                <li><a href="#gnrl">Generales</a></li>--}%
-%{--                <li><a href="#obra">Obras</a></li>--}%
-%{--                <li><a href="#cntr">Contratación</a></li>--}%
-%{--                <li><a href="#ejec">Ejecución</a></li>--}%
-%{--            </ul>--}%
-
-%{--            <div id="gnrl" class="ui-widget-content" style="height: 580px">--}%
-%{--                <div class="item" texto="admn">--}%
-%{--                    <g:link controller="administracion" action="list">Administración</g:link> del GADPP, autoridad principal.--}%
-%{--                </div><br>--}%
-%{--                <div class="item" texto="grgf">--}%
-%{--                    <g:link controller="canton"--}%
-%{--                            action="arbol">Divisi&oacute;n geogr&aacute;fica del Pa&iacute;s</g:link> en cantones, parroquias y comunidades.--}%
-%{--                </div><br>--}%
-
-%{--                <div class="item" texto="tpit">--}%
-%{--                    <g:link controller="tipoItem"--}%
-%{--                            action="list">Tipo de ítem</g:link> para diferenciar entre ítems y rubros.--}%
-%{--                </div><br>--}%
-
-%{--                <div class="item" texto="undd">--}%
-%{--                    <g:link controller="unidad"--}%
-%{--                            action="list">Unidades</g:link> de medida para los materiales, mano de obra y equipos.--}%
-%{--                </div><br>--}%
-
-%{--                <div class="item" texto="grpo">--}%
-%{--                    <g:link controller="grupo"--}%
-%{--                            action="list">Grupos de Rubros</g:link> para clasificar los distintos análisis de precios.--}%
-%{--                </div><br>--}%
-
-%{--                <div class="item" texto="trnp">--}%
-%{--                    <g:link controller="transporte"--}%
-%{--                            action="list">Transporte</g:link> para diferenciar los ítems que participan en el transporte.--}%
-%{--                </div><br>--}%
-
-%{--                <div class="item" texto="dire">--}%
-%{--                    <g:link controller="direccion"--}%
-%{--                            action="list">Direcciones del personal</g:link> para la organización de los usuarios.--}%
-%{--                    Organigrama: Nivel de Secretarías--}%
-%{--                </div><br>--}%
-%{--                <div class="item" texto="dpto">--}%
-%{--                    <g:link controller="departamento"--}%
-%{--                            action="list">Coordinación del personal</g:link> para la organización de los usuarios.--}%
-%{--                    Organigrama: Nivel de Gestiones--}%
-%{--                </div><br>--}%
-
-%{--                <div class="item" texto="func">--}%
-%{--                    <g:link controller="funcion"--}%
-%{--                            action="list">Funciones del personal</g:link> que pueden desempeñar en la construcción de la obra--}%
-%{--                    o en los  distintos momentos de la contratación y ejecución de obras.--}%
-%{--                </div><br>--}%
-
-%{--                <div class="item" texto="tptr">--}%
-%{--                    <g:link controller="tipoTramite" action="list">Tipo de Trámite</g:link> para la gestión de procesos y flujo de trabajo--}%
-%{--                </div><br>--}%
-%{--                <div class="item" texto="rltr">--}%
-%{--                    <g:link controller="rolTramite" action="list">Rol de la persona en el Trámite</g:link>, por ejemplo, quien envía,--}%
-%{--                    quien recibe o si recibe una copia del documento.--}%
-%{--                </div><br>--}%
-%{--                <div class="item" texto="ddlb">--}%
-%{--                    <g:link controller="diaLaborable" action="calendario">Días laborables</g:link> permite definir los días laborables--}%
-%{--                    en un calendario anual.--}%
-%{--                </div><br>--}%
-%{--                <div class="item" texto="iva">--}%
-%{--                    --}%%{--<g:link controller="obra" action="cambiarIva" id="ivaPar" >IVA </g:link> permite cambiar el valor del IVA--}%
-%{--                    <a href="#" class="" id="btnCambiarIva" title="Cambiar Iva"--}%
-%{--                       style="margin-top: -10px;"> IVA - permite cambiar el valor del IVA--}%
-
-%{--                    </a>--}%
-%{--                </div><br>--}%
-%{--            </div>--}%
-%{--        </div>--}%
-
-%{--            <div id="obra" class="ui-widget-content" style="height: 560px">--}%
-%{--                <div class="item" texto="tpob">--}%
-%{--                    <g:link controller="tipoObra" action="list">Tipo de Obras</g:link> a ejecutarse en un proyecto.--}%
-%{--                </div><br>--}%
-
-%{--                <div class="item" texto="csob">--}%
-%{--                    <g:link controller="claseObra"--}%
-%{--                            action="list">Clase de Obra</g:link> para distinguir entre varios clases de obra civiles y viales.--}%
-%{--                </div><br>--}%
-
-%{--                --}%%{----}%
-%{--                                <div class="item" texto="prsp">--}%
-%{--                                    <g:link controller="presupuesto"--}%
-%{--                                            action="list">Partida Presupuestaria</g:link> con la cual se financia o construye a obra.--}%
-%{--                                </div><br>--}%
-%{--                --}%
-
-%{--                <div class="item" texto="edob">--}%
-%{--                    <g:link controller="estadoObra"--}%
-%{--                            action="list">Estado de la Obra</g:link> que distingue las distintas fases de contratación y ejecución de la obra.--}%
-%{--                </div><br>--}%
-
-%{--                <div class="item" texto="prog">--}%
-%{--                    <g:link controller="programacion" action="list">Programa</g:link> del cual forma parte una obra .--}%
-%{--                </div><br>--}%
-
-%{--                <div class="item" texto="auxl">--}%
-%{--                    <g:link controller="auxiliar"--}%
-%{--                            action="textosFijos">Textos fijos</g:link> para la generación de los documentos precontractuales.--}%
-%{--                </div><br>--}%
-
-%{--                <div class="item" texto="tpfp">--}%
-%{--                    <g:link controller="tipoFormulaPolinomica" action="list">Tipo de fórmula polinómica</g:link> de reajuste de--}%
-%{--                    precios que puede tener un contrato.--}%
-%{--                </div><br>--}%
-
-%{--                <div class="item" texto="var">--}%
-%{--                    <g:link controller="inicio" action="variables">Valores de costos indirectos y transporte</g:link> valores por defecto que se usan en las obras.--}%
-%{--                </div><br>--}%
-
-%{--                <div class="item" texto="anio">--}%
-%{--                    <g:link controller="anio" action="list">Ingreso de Años</g:link> para el registro de periodos de los índices.--}%
-%{--                </div><br>--}%
-
-%{--                <div class="item" texto="anua">--}%
-%{--                    <g:link controller="valoresAnuales" action="list">Valores Anuales</g:link>--}%
-%{--                </div><br>--}%
-
-%{--                <div class="item" texto="listas">--}%
-%{--                    <g:link controller="tipoLista" action="list">Tipo de Listas de precios</g:link>--}%
-%{--                </div><br>--}%
-%{--            </div>--}%
-
-%{--            <div id="cntr" class="ui-widget-content" style="height: 560px">--}%
-%{--                <div class="item" texto="tpcr">--}%
-%{--                    <g:link controller="tipoContrato"--}%
-%{--                            action="list">Tipo de contrato</g:link> que puede registrarse en el sistema para--}%
-%{--                    la ejecución de una Obra.--}%
-%{--                </div><br>--}%
-
-%{--                <div class="item" texto="tpgr">--}%
-%{--                    <g:link controller="tipoGarantia" action="list">Tipo de Garantía</g:link> que se puede recibir--}%
-%{--                    en un contrato.--}%
-%{--                </div><br>--}%
-
-%{--                <div class="item" texto="tdgr">--}%
-%{--                    <g:link controller="tipoDocumentoGarantia" action="list">Tipo de documento de garantía</g:link>--}%
-%{--                    que se puede recibir para garantizar las distintas estipulaciones de una contrato.--}%
-%{--                </div><br>--}%
-
-%{--                <div class="item" texto="edgr">--}%
-%{--                    <g:link controller="estadoGarantia" action="list">Estado de la garantía</g:link>--}%
-%{--                    dentro del período contractual.--}%
-%{--                </div><br>--}%
-
-%{--                <div class="item" texto="mnda">--}%
-%{--                    <g:link controller="moneda" action="list">Moneda</g:link>--}%
-%{--                    en la cual se recibe la garantía.--}%
-%{--                </div><br>--}%
-
-%{--                <div class="item" texto="tpas">--}%
-%{--                    <g:link controller="tipoAseguradora" action="list">Tipo de aseguradora</g:link>--}%
-%{--                    que emite la garantía.--}%
-%{--                </div><br>--}%
-
-%{--                <div class="item" texto="asgr">--}%
-%{--                    <g:link controller="aseguradora" action="list">Aseguradora</g:link>--}%
-%{--                    o institución bancaria que emite la garantía.--}%
-%{--                </div><br>--}%
-
-%{--                <div class="item" texto="itun">--}%
-%{--                    <g:link controller="unidadIncop" action="list">Unidad del Item</g:link>--}%
-%{--                    Unidades que se emplean en el INCOP--}%
-%{--                </div><br>--}%
-
-%{--                <div class="item" texto="tppt">--}%
-%{--                    <g:link controller="tipoProcedimiento" action="list">Tipo de Procedimiento</g:link>--}%
-%{--                    de contratación, se diferencian según el monto a contratar--}%
-%{--                </div><br>--}%
-%{--                <div class="item" texto="tpcp">--}%
-%{--                    <g:link controller="tipoCompra" action="list">Tipo de Compra</g:link>--}%
-%{--                    Bien, Obra o Servicio a adquirir--}%
-%{--                </div><br>--}%
-%{--                <div class="item" texto="fnfn">--}%
-%{--                    <g:link controller="fuenteFinanciamiento" action="list">Fuente de financiamiento</g:link>--}%
-%{--                    Entidad que financia la adquisición o construcción.--}%
-%{--                </div><br>--}%
-%{--                <div class="item" texto="espc">--}%
-%{--                    <g:link controller="especialidadProveedor" action="list">Especialidad del Proveedor o Contratista</g:link>--}%
-%{--                    Experiencia o especialidad en los servicios que presta--}%
-%{--                </div><br>--}%
-
-
-%{--            </div>--}%
-
-%{--            <div id="ejec" class="ui-widget-content" style="height: 560px">--}%
-%{--                <div class="item" texto="edpl">--}%
-%{--                    <g:link controller="estadoPlanilla" action="list">Estado de la planilla</g:link> que puede--}%
-%{--                    tener dentro del proceso de ejecución de la obra: ingresada, pagada, anulada.--}%
-%{--                </div><br>--}%
-
-%{--                <div class="item" texto="tppl">--}%
-%{--                    <g:link controller="tipoPlanilla" action="list">Tipo de planilla</g:link> que puede--}%
-%{--                    tener el proceso de ejecución de la obra: anticipo, liquidación, avance de obra, reajuste,--}%
-%{--                    etc.--}%
-%{--                </div><br>--}%
-%{--            </div>--}%
-%{--        </div>--}%
-
-
-%{--    <div id="tool" style="float:left; width: 160px; height: 300px; margin: 30px; display: none; padding:25px;"--}%
-%{--         class="ui-widget-content ui-corner-all">--}%
-%{--    </div>--}%
-
-%{--</div>--}%
 
 <div id="admn" style="display:none">
     <h3>Autoridad del GADPP</h3><br>
