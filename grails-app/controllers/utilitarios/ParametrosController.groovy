@@ -5,6 +5,8 @@ import org.apache.poi.xssf.usermodel.XSSFRow
 import org.apache.poi.xssf.usermodel.XSSFSheet
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import org.springframework.dao.DataIntegrityViolationException
+import seguridad.ParametrosAux
+
 //import jxl.Cell
 //import jxl.Sheet
 //import jxl.Workbook
@@ -25,6 +27,24 @@ class ParametrosController {
 
     def list () {
 
+    }
+
+    def formIva_ajax(){
+
+    }
+
+    def guardarIva_ajax() {
+//        println("params gi " + params)
+
+        def parametros = ParametrosAux.findByIdIsNotNull()
+        parametros.iva = params.iva.toDouble()
+
+        if(!parametros.save(flush: true)){
+            println("error al guardar el iva en parametros aux" + parametros.errors)
+            render "no"
+        }else{
+            render "ok"
+        }
     }
 
 

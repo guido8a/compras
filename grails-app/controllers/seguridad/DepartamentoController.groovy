@@ -262,8 +262,7 @@ class DepartamentoController {
 
         if (id == "#") {
             //root
-//            def hh = Departamento.countByPadreIsNull([sort: "nombre"])
-            def hh = Departamento.countByPadreIsNull()
+            def hh = Direccion.countByIdIsNotNull()
             if (hh > 0) {
                 clase = "hasChildren jstree-closed"
             }
@@ -275,15 +274,25 @@ class DepartamentoController {
                 tree = ""
             }
         } else if (id == "root") {
-            hijos = Departamento.findAllByPadreIsNull()
-        } else {
+            hijos = Direccion.findAllByIdIsNotNull([sort: 'nombre'])
+        }
+        else {
             def parts = id.split("_")
             def node_id = parts[1].toLong()
-            padre = Departamento.get(node_id)
-            if (padre) {
-                hijos = []
+
+            if(parts[0] == 'lidir'){
+                padre = Direccion.get(node_id)
+                if (padre) {
+                    hijos = []
+                    hijos += Departamento.findAllByDireccion(padre, [sort: 'nombre'])
+                }
+            }else{
+                padre = Departamento.get(node_id)
+                if (padre) {
+                    hijos = []
                 hijos += Persona.findAllByDepartamento(padre, [sort: params.sort, order: params.order])
-                hijos += Departamento.findAllByPadre(padre, [sort: "nombre"])
+
+                }
             }
         }
 
@@ -295,17 +304,35 @@ class DepartamentoController {
                 def tp = ""
                 def data = ""
                 def ico = ""
-                if (hijo instanceof Departamento) {
+//                if (hijo instanceof Departamento) {
+                if (hijo instanceof Direccion) {
                     lbl = hijo.nombre
-//                    if (hijo.codigo) {
-//                        lbl += " (${hijo.codigo})"
-//                    }
+                    tp = "dir"
+                    def hijosH = []
+                        rel = "principal"
+                        rel += "Activo"
+                    hijosH += Departamento.findAllByDireccion(hijo, [sort: "nombre"])
+                    clase = (hijosH.size() > 0) ? "jstree-closed hasChildren" : ""
+                    if (hijosH.size() > 0) {
+                        clase += " ocupado "
+                    }
+
+                    ico = ", \"icon\":\"fa fa-landmark text-success\""
+
+                    tree += "<li id='li${tp}_" + hijo.id + "' class='" + clase + "' ${data} data-jstree='{\"type\":\"${rel}\" ${ico}}' >"
+                    tree += "<a href='#' class='label_arbol'>" + lbl + "</a>"
+                    tree += "</li>"
+
+
+                } else if (hijo instanceof Departamento) {
+
+                    lbl = hijo.nombre
                     tp = "dep"
                     def hijosH = Departamento.findAllByPadre(hijo, [sort: "nombre"])
                     if (hijo.padre) {
                         rel = (hijosH.size() > 0) ? "unidadPadre" : "unidadHijo"
                     } else {
-                        rel = "principal"
+                    rel = "principal"
                     }
 
                     if (hijo.padre) {
@@ -316,7 +343,14 @@ class DepartamentoController {
                     if (hijosH.size() > 0) {
                         clase += " ocupado "
                     }
-                } else if (hijo instanceof Persona) {
+
+                    ico = ", \"icon\":\"fa fa-store-alt text-warning\""
+
+                    tree += "<li id='li${tp}_" + hijo.id + "' class='" + clase + "' ${data} data-jstree='{\"type\":\"${rel}\" ${ico}}' >"
+                    tree += "<a href='#' class='label_arbol'>" + lbl + "</a>"
+                    tree += "</li>"
+
+                }else if (hijo instanceof Persona) {
                     switch (params.sort) {
                         case 'apellido':
                             lbl = "${hijo.apellido} ${hijo.nombre} ${hijo.login ? '(' + hijo.login + ')' : ''}"
@@ -345,18 +379,136 @@ class DepartamentoController {
                     } else {
                         rel += "Inactivo"
                     }
+
+
+                    tree += "<li id='li${tp}_" + hijo.id + "' class='" + clase + "' ${data} data-jstree='{\"type\":\"${rel}\" ${ico}}' >"
+                    tree += "<a href='#' class='label_arbol'>" + lbl + "</a>"
+                    tree += "</li>"
+
+
                 }
 
-                tree += "<li id='li${tp}_" + hijo.id + "' class='" + clase + "' ${data} data-jstree='{\"type\":\"${rel}\" ${ico}}' >"
-                tree += "<a href='#' class='label_arbol'>" + lbl + "</a>"
-                tree += "</li>"
+
             }
 
             tree += "</ul>"
         }
-//        println "arbol: $tree"
         return tree
     }
+
+
+//    def makeTreeNode(params) {
+////        println "makeTreeNode.. $params"
+//        def id = params.id
+//        if (!params.sort) {
+//            params.sort = "apellido"
+//        }
+//        if (!params.order) {
+//            params.order = "asc"
+//        }
+//        String tree = "", clase = "", rel = ""
+//        def padre
+//        def hijos = []
+//
+//        if (id == "#") {
+//            def hh = Departamento.countByPadreIsNull()
+//            if (hh > 0) {
+//                clase = "hasChildren jstree-closed"
+//            }
+//
+//            tree = "<li id='root' class='root ${clase}' data-jstree='{\"type\":\"root\"}' data-level='0' >" +
+//                    "<a href='#' class='label_arbol'>Estructura Principal</a>" +
+//                    "</li>"
+//            if (clase == "") {
+//                tree = ""
+//            }
+//        } else if (id == "root") {
+//            hijos = Departamento.findAllByPadreIsNull()
+//        } else {
+//            def parts = id.split("_")
+//            def node_id = parts[1].toLong()
+//            padre = Departamento.get(node_id)
+//            if (padre) {
+//                hijos = []
+//                hijos += Persona.findAllByDepartamento(padre, [sort: params.sort, order: params.order])
+//                hijos += Departamento.findAllByPadre(padre, [sort: "nombre"])
+//            }
+//        }
+//
+//        if (tree == "" && (padre || hijos.size() > 0)) {
+//            tree += "<ul>"
+//            def lbl = ""
+//
+//            hijos.each { hijo ->
+//                def tp = ""
+//                def data = ""
+//                def ico = ""
+//                if (hijo instanceof Departamento) {
+//                    lbl = hijo.nombre
+//
+//                    tp = "dep"
+//                    def hijosH = Departamento.findAllByPadre(hijo, [sort: "nombre"])
+//                    if (hijo.padre) {
+//                        rel = (hijosH.size() > 0) ? "unidadPadre" : "unidadHijo"
+//                    } else {
+//                        rel = "principal"
+//                    }
+//
+//                    if (hijo.padre) {
+//                        rel += hijo.activo ? "Activo" : "Inactivo"
+//                    }
+//                    hijosH += Persona.findAllByDepartamento(hijo, [sort: "apellido"])
+//                    clase = (hijosH.size() > 0) ? "jstree-closed hasChildren" : ""
+//                    if (hijosH.size() > 0) {
+//                        clase += " ocupado "
+//                    }
+//                } else if (hijo instanceof Persona) {
+//                    switch (params.sort) {
+//                        case 'apellido':
+//                            lbl = "${hijo.apellido} ${hijo.nombre} ${hijo.login ? '(' + hijo.login + ')' : ''}"
+//                            break;
+//                        case 'nombre':
+//                            lbl = "${hijo.nombre} ${hijo.apellido} ${hijo.login ? '(' + hijo.login + ')' : ''}"
+//                            break;
+//                        default:
+//                            lbl = "${hijo.apellido} ${hijo.nombre} ${hijo.login ? '(' + hijo.login + ')' : ''}"
+//                    }
+//
+//                    if (hijo.esDirector) {
+//                        ico = ", \"icon\":\"fa fa-user-secret text-warning\""
+//                    } else if (hijo.esGerente) {
+//                        ico = ", \"icon\":\"fa fa-user-secret text-danger\""
+//                    }
+//
+//                    tp = "usu"
+//                    rel = "usuario"
+//                    clase = "usuario"
+//
+//                    data += "data-usuario='${hijo.login}'"
+//
+//                    if (hijo.estaActivo == true) {
+//                        rel += "Activo"
+//                    } else {
+//                        rel += "Inactivo"
+//                    }
+//                }
+//
+//                tree += "<li id='li${tp}_" + hijo.id + "' class='" + clase + "' ${data} data-jstree='{\"type\":\"${rel}\" ${ico}}' >"
+//                tree += "<a href='#' class='label_arbol'>" + lbl + "</a>"
+//                tree += "</li>"
+//            }
+//
+//            tree += "</ul>"
+//        }
+//        return tree
+//    }
+
+
+
+
+
+
+
 
 
     def arbol_asg() {

@@ -110,8 +110,8 @@
         <div class="row">
             <div class="col-md-12 col-xs-5">
                 <p>
-                    <g:link class="link btn btn-success btn-ajax example_c item disabled" texto="admn" controller="administracion" action="list">
-                        <i class="fa fa-building fa-4x"></i>
+                    <g:link class="link btn btn-success btn-ajax example_c item " texto="admn" controller="administracion" action="list">
+                        <i class="fa fa-crown fa-4x text-success"></i>
                         <br/> Administración
                     </g:link>
 
@@ -135,10 +135,10 @@
                         <i class="fa fa-building fa-4x"></i>
                         <br/> Días Laborables
                     </g:link>
-                    <g:link class="link btn btn-success btn-ajax example_c item disabled" texto="iva" controller="diaLaborable" action="calendario">
-                        <i class="fa fa-building fa-4x"></i>
+                    <a href="#" class="btn btn-success bt-ajax example_c item" texto="iva" id="btnIva">
+                        <i class="fa fa-file-invoice-dollar fa-4x text-success"></i>
                         <br/> Iva
-                    </g:link>
+                    </a>
                 </p>
             </div>
         </div>
@@ -146,8 +146,8 @@
         <div class="row">
             <div class="col-md-12 col-xs-5">
                 <p>
-                    <g:link class="link btn btn-success btn-ajax example_c item disabled" texto="dpto" controller="transporte" action="list">
-                        <i class="fa fa-building fa-4x"></i>
+                    <g:link class="link btn btn-success btn-ajax example_c item" texto="dpto" controller="departamento" action="arbol">
+                        <i class="fa fa-building fa-4x text-success"></i>
                         <br/> Coordinación del Personal
                     </g:link>
                     <g:link class="link btn btn-success btn-ajax example_c item disabled" texto="func" controller="funcion" action="list">
@@ -495,37 +495,63 @@
     laborables, en el se debe corregir para que solo aparezcan señalados los días que no son laborables.
     </p>
 </div>
-%{--<div id="tppo" style="display:none">--}%
-%{--<h3>Tipo de prórroga</h3><br>--}%
-%{--<p>Tipo de prórroga que se pueda aplicar a una obra, puede ser ampliación o suspensión.</p>--}%
-%{--</div>--}%
-
-
-
-
-
-
-
-%{--<div class="modal hide fade mediumModal" id="modal-TipoObra" style=";overflow: hidden;">--}%
-%{--    <div class="modal-header btn-primary">--}%
-%{--        <button type="button" class="close" data-dismiss="modal">×</button>--}%
-
-%{--        <h3 id="modalTitle_tipo">--}%
-%{--        </h3>--}%
-%{--    </div>--}%
-
-%{--    <div class="modal-body" id="modalBody_tipo">--}%
-
-%{--    </div>--}%
-
-%{--    <div class="modal-footer" id="modalFooter_tipo">--}%
-%{--    </div>--}%
-%{--</div>--}%
 
 
 
 
 <script type="text/javascript">
+
+    $("#btnIva").click(function () {
+         $.ajax({
+             type: 'POST',
+             url: '${createLink(controller: 'parametros', action: 'formIva_ajax')}',
+             data:{
+             },
+             success: function (msg) {
+                 var b = bootbox.dialog({
+                     id    : "dlgIva",
+                     title : "Iva",
+                     message : msg,
+                     buttons : {
+                         cancelar : {
+                             label     : "Cancelar",
+                             className : "btn-primary",
+                             callback  : function () {
+                             }
+                         },
+                         guardar  : {
+                             id        : "btnSave",
+                             label     : "<i class='fa fa-save'></i> Guardar",
+                             className : "btn-success",
+                             callback  : function () {
+                                 guardarIva($("#ivaExi").val());
+                             } //callback
+                         } //guardar
+                     } //buttons
+                 }); //dialog
+             }
+         })
+    });
+
+
+
+    function  guardarIva(iva){
+        $.ajax({
+           type: 'POST',
+           url:'${createLink(controller: 'parametros', action: 'guardarIva_ajax')}',
+           data:{
+              iva:iva
+           },
+            success: function (msg) {
+               if(msg == 'ok'){
+                   log("Iva guardado correctamente", "success")
+               }else{
+                   log("Error al guardar el Iva","error")
+               }
+            }
+        });
+    }
+
 
     function prepare() {
         $(".fa-ul li span").each(function () {

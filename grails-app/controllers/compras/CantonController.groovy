@@ -504,7 +504,7 @@ class CantonController {
             if (clase == "") {
                 tree = ""
             }
-            println "clase: $clase, hh: $hh"
+//            println "clase: $clase, hh: $hh"
             hijos = Provincia.findAllByZonaIsNull().sort{it.nombre}
             def data = ""
             ico = ", \"icon\":\"fa fa-parking text-success\""
@@ -525,7 +525,7 @@ class CantonController {
                     hijos = Canton.findAllByProvincia(Provincia.get(id), [sort: params.sort])
                     liId = "cntn_"
 //                    println "tipo: $tipo, ${hijos.size()}"
-                    ico = ", \"icon\":\"fa fa-parking text-success\""
+                    ico = ", \"icon\":\"fa fa-copyright text-info\""
                     hijos.each { h ->
 //                        println "procesa $h"
                         clase = Parroquia.findByCanton(h)? "jstree-closed hasChildren" : ""
@@ -538,7 +538,7 @@ class CantonController {
                     hijos = Parroquia.findAllByCanton(Canton.get(id), [sort: params.sort])
                     liId = "parr_"
 //                    println "tipo: $tipo, ${hijos.size()}"
-                    ico = ", \"icon\":\"fa fa-parking text-success\""
+                    ico = ", \"icon\":\"fa fa-registered text-danger\""
                     hijos.each { h ->
 //                        println "procesa $h"
                         clase = Comunidad.findByParroquia(h)? "jstree-closed hasChildren" : ""
@@ -551,7 +551,7 @@ class CantonController {
                     hijos = Comunidad.findAllByParroquia(Parroquia.get(id), [sort: params.sort])
                     liId = "cmnd_"
 //                    println "tipo: $tipo, ${hijos.size()}"
-                    ico = ", \"icon\":\"fa fa-parking text-success\""
+                    ico = ", \"icon\":\"fa fa-info-circle text-warning\""
                     hijos.each { h ->
 //                        println "procesa $h"
                         clase = ""

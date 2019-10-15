@@ -2,11 +2,7 @@
 <html>
 <head>
     <meta name="layout" content="main">
-    <title>Estructura de la Empresa</title>
-
-    %{--        <script src="${resource(dir: 'js/plugins/jstree-3.0.8/dist', file: 'jstree.min.js')}"></script>--}%
-    %{--        <link href="${resource(dir: 'js/plugins/jstree-3.0.8/dist/themes/default', file: 'style.min.css')}" rel="stylesheet">--}%
-    %{--        <link href="${resource(dir: 'css/custom', file: 'jstree-context.css')}" rel="stylesheet">--}%
+    <title>Departamentos</title>
 
     <asset:javascript src="/jstree-3.0.8/dist/jstree.min.js"/>
     <asset:stylesheet src="/jstree-3.0.8/dist/themes/default/style.min.css"/>
@@ -35,6 +31,15 @@
 </div>
 
 <div class="row" style="margin-bottom: 10px;">
+
+    <div class="btn-toolbar toolbar">
+        <div class="btn-group">
+            <g:link controller="parametros" action="list" class="btn btn-info">
+                <i class="fa fa-arrow-left"></i> Parámetros
+            </g:link>
+        </div>
+    </div>
+
     <div class="col-md-2">
         <div class="input-group input-group-sm">
             <g:textField name="searchArbol" class="form-control input-sm" placeholder="Buscador"/>
@@ -75,10 +80,10 @@
         </div>
     </div>
 
-    <div class="col-md-4 text-right pull-right">
+    <div class="col-md-4 text-right pull-right" style="font-size: 14px">
+        <i class="fa fa-landmark text-success"></i> Dirección
+        <i class="fa fa-store-alt  text-warning"></i> Area de Gestión
         <i class="fa fa-user text-info"></i> Usuario
-        <i class="fa fa-user-secret text-warning"></i> Director
-        <i class="fa fa-user-secret text-danger"></i> Gerente
     </div>
 </div>
 
@@ -661,7 +666,7 @@
                 root                : {
                     icon : "fa fa-sitemap text-info"
                 },
-                yachay              : {
+                lidir              : {
                     icon : "fa fa-building text-info"
                 },
                 unidadPadreActivo   : {
