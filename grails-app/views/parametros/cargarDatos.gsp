@@ -61,7 +61,7 @@
     </div>
 </div>
 
-<div class="col-md-6" style="margin-top: 10px">
+<div class="col-md-12" style="margin-top: 10px">
     <g:uploadForm action="validar" method="post" name="frmaArchivo">
         <div class="panel panel-primary">
             <div class="panel-heading">Seleccionar el archivo a cargar</div>
@@ -69,15 +69,25 @@
             <div class="panel-body">
 
                 <div class="panel-body col-md-2">
-                    <label>Archivo</label>
+                    <label>Archivo (Excel xlsx)</label>
                 </div>
 
-                <span class="btn btn-info fileinput-button col-md-8" style="position: relative">
+                <span class="btn btn-info fileinput-button col-md-6" style="position: relative">
                     <input type="file" name="file" multiple="" id="archivo" class="archivo col-md-12">
-                    <input type="hidden" name="tipoTabla" id="tipoTabla" value="">
                 </span>
+
+                <label for="padre" class="col-md-2 control-label">
+                    Magnitud a cargar:
+                </label>
+
+                <div class="col-md-4">
+                    <g:select id="magnitud" name="magnitud" from="${magnitud}" optionKey="magn__id" optionValue="nombre"
+                              value="${magn__id}" class="many-to-one form-control input-sm"
+                              noSelection="['null': '']"/>
+                </div>
+
                 <div class="col-md-1"></div>
-                <div class="col-md-4" id="spinner">
+                <div class="col-md-3" id="spinner">
                 </div>
             </div>
         </div>
@@ -88,7 +98,6 @@
 <script type="text/javascript">
     $("#cargarDatos").click(function () {
         if($("#archivo").val()!=""){
-            $("#tipoTabla").val($("#tabla").val());
             var dialog = cargarLoader("Cargando...");
             $("#frmaArchivo").submit();
         }else{

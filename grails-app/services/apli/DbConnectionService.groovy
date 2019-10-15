@@ -7,7 +7,7 @@ class DbConnectionService {
     boolean transactional = false
 
     def dataSource
-    def dataSource_oferentes
+    def dataSource_visor
 
     public init(){
     }
@@ -19,6 +19,11 @@ class DbConnectionService {
     def getConnection(){
 
         Sql sql = new Sql(dataSource)
+        return sql
+    }
+
+    def getConnectionVisor(){
+        Sql sql = new Sql(dataSource_visor)
         return sql
     }
 

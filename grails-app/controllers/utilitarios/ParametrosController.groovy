@@ -9,6 +9,7 @@ import org.springframework.dao.DataIntegrityViolationException
 //import jxl.Sheet
 //import jxl.Workbook
 //import jxl.WorkbookSettings
+import java.text.DecimalFormat
 
 
 
@@ -28,18 +29,29 @@ class ParametrosController {
 
 
     def cargarDatos () {
+        def cn = dbConnectionService.getConnectionVisor()
+        def sql = ""
+        def data = []
+
+        sql = "select magn__id, magnnmbr||'('||magnabrv||')' nombre from magn order by magnnmbr"
+        data = cn.rows(sql.toString())
+
+        [magnitud: data]
 
     }
 
     def validar() {
         println "cargaArchivo.. $params"
         def contador = 0
-        def tipo = params.tipoTabla
-        def univ = params.universidad
-        def prdo = params.periodo
-        def cn = dbConnectionService.getConnection()
+        def cn = dbConnectionService.getConnectionVisor()
         def path = servletContext.getRealPath("/") + "xlsData/"   //web-app/archivos
         new File(path).mkdirs()
+
+        def estc
+        def vrbl = params.magnitud
+        def cont = 0
+        def repetidos = 0
+        def inserta
 
         def f = request.getFile('file')  //archivo = name del input type file
         if (f && !f.empty) {
@@ -91,12 +103,13 @@ class ParametrosController {
                     ij++
                 }
 
-                f.transferTo(new File(pathFile))
+//                println "---- $pathFile"
 
-                InputStream ExcelFileToRead = new FileInputStream(pathFile);
+//                f.transferTo(new File(pathFile))
+
+//                InputStream ExcelFileToRead = new FileInputStream(pathFile);
+                InputStream ExcelFileToRead = new FileInputStream('/home/guido/proyectos/visor/SO2.xlsx');
                 XSSFWorkbook wb = new XSSFWorkbook(ExcelFileToRead);
-
-                XSSFWorkbook test = new XSSFWorkbook();
 
                 XSSFSheet sheet = wb.getSheetAt(0);
                 XSSFRow row;
@@ -109,21 +122,30 @@ class ParametrosController {
                     Iterator cells = row.cellIterator()
 //                    def rgst = cells.toList()
                     def rgst = []
-//                    while (cells.hasNext()) {
-//                        cell = (XSSFCell) cells.next()
-//                        if(cell.getCellType() == XSSFCell.CELL_TYPE_NUMERIC) {
-//                            rgst.add( new DecimalFormat('#').format(cell.getNumericCellValue()))
-//                        } else {
-//                            rgst.add(cell.getStringCellValue())
-//                        }
-//                    }
+                    while (cells.hasNext()) {
+                        cell = (XSSFCell) cells.next()
+//                        println "cell: $cell tipo: --> ${cell.getCellType()}"
 
+                        if(cell.getCellType() == XSSFCell.CELL_TYPE_NUMERIC) {
+                            if(cell.toString().contains('-')) {
+                                rgst.add(cell.getDateCellValue())
+                            } else
+//                            rgst.add( new DecimalFormat('#.##').format(cell.getNumericCellValue()))
+                            rgst.add(cell.getNumericCellValue())
+                        } else {
+                            rgst.add(cell.getStringCellValue())
+                        }
+                    }
 
-                    def col1 = row[0].toString().trim()
-                    def col4 = row[3].toString().trim()
-                    println("1 -> " + col1)
-                    println("4 -> " + col4)
-
+                    if(rgst[0] == "FECHA") {
+                        estc = datosEstaciones(rgst)
+                        println "estaciones: $estc"
+                    } else if(rgst[0]){
+                        println "---> Registro: $rgst"
+                        inserta = cargarLecturas (vrbl, estc, rgst)
+                        cont += inserta.insertados
+                        repetidos += inserta.repetidos
+                    }
 
 
 //                    def cont = 0
@@ -136,63 +158,10 @@ class ParametrosController {
 //                        println("cell " + row.getCell(1) + "")
 //                    }
 
-//                    switch (tipo) {
-//                        case 'Facultades':
-//                            def rslt = cargarDatosFacultades(univ, rgst)
-//                            errores += rslt.errores
-//                            contador += rslt.cnta
-//                            break
-//                        case 'Escuelas':
-//                            def rslt = cargarDatosEscuelas(rgst)
-//                            errores += rslt.errores
-//                            contador += rslt.cnta
-//                            break
-//                        case 'Profesores':
-//                            def rslt = cargarDatosProfesor(rgst)
-//                            errores += rslt.errores
-//                            contador += rslt.cnta
-//                            break
-//                        case 'Estudiantes':
-//                            def rslt = cargarDatosEstudiante(rgst)
-//                            errores += rslt.errores
-//                            contador += rslt.cnta
-//                            break
-//                        case 'Materias':
-//                            def rslt = cargarDatosMaterias(rgst)
-//                            errores += rslt.errores
-//                            contador += rslt.cnta
-//                            break
-//                        case 'Cursos':
-//                            def rslt = cargarDatosCursos(rgst)
-//                            errores += rslt.errores
-//                            contador += rslt.cnta
-//                            break
-//                        case 'Materias que se dictan':
-//                            def rslt = cargarDatosDictan(rgst, params.periodo)
-//                            errores += rslt.errores
-//                            contador += rslt.cnta
-//                            break
-//                        case 'Matriculados por materia':
-//                            def rslt = cargarDatosMatriculados(rgst, params.periodo)
-//                            errores += rslt.errores
-//                            contador += rslt.cnta
-//                            break
-//                        case 'Todo':
-//                            def rslt = cargaDatos(univ, rgst, prdo)
-//                            errores += rslt.errores
-//                            contador += rslt.cnta
-//                            break
-//                    }
                 } //sheet ! hidden
 //                println "...$errores"
 //                println "...$contador"
-                htmlInfo += "<p>Se han procesado $contador registros</p>"
-
-                if (contador > 0) {
-                    doneHtml = "<div class='alert alert-success'>Se ha verificado correctamente $contador registros</div>"
-                    doneHtml += "<p>Existen $cntanmro registros con código repetido y, </p>"
-                    doneHtml += "<p>existen $cntadscr registros con nombre repetido</p>"
-                }
+                flash.message = "Se ha cargado ${cont} datos, y han existido ${repetidos} valores repetidos"
 
                 def str = htmlInfo
                 str += doneHtml
@@ -214,4 +183,72 @@ class ParametrosController {
             redirect(action: 'cargarDatos')
         }
     }
+
+    def cargarLecturas (vrbl, estc, rgst) {
+        def errores = ""
+        def cnta = 0
+        def insertados = 0
+        def repetidos = 0
+        def fcha
+        def cn = dbConnectionService.getConnectionVisor()
+        def sql = ""
+
+//        println "inicia cargado de datos para mag: $vrbl, .... $rgst"
+        fcha = rgst[0]
+        rgst.removeAt(0)  // elimina la fecha y quedan solo lecturas
+
+        cnta = 0
+        rgst.each() { rg ->
+//            println "--> estación: ${estc[cnta]}, valor: $rg, tipo: ${rg.class}, ${rg.size()}"
+            if(rg.toString().size() > 0 ){
+                println "--> estación: ${estc[cnta]}, valor: $rg"
+                sql = "insert into lctr(lctr__id, magn__id, estc__id, lctrvlor, lctrfcha, lctrvlda) " +
+                        "values(default, ${vrbl}, ${estc[cnta]}, ${rg.toDouble()}, '${fcha.format('yyyy-MM-dd HH:mm')}', 'V')"
+//                println "sql: $sql"
+                try {
+//                    println "inserta: $inserta"
+                    cn.execute(sql.toString())
+                    insertados++
+/*
+                    if(cn.execute(sql.toString()) > 0){
+                        cnta++
+                    }
+*/
+                } catch (Exception ex) {
+                    repetidos++
+                    println "Error al insertar $ex"
+                }
+                cnta++
+            }
+
+        }
+
+        return [errores: errores, insertados: insertados, repetidos: repetidos]
+    }
+
+    /**
+     * Busca los ID de las estaciones
+     * **/
+    def datosEstaciones( rgst ) {
+        def cn = dbConnectionService.getConnectionVisor()
+        def sql = ""
+        def estc = []
+
+        if(rgst[0] == 'FECHA'){
+            rgst.removeAt(0)
+            rgst.each() {rg ->
+                sql = "select estc__id from estc where estcnmbr ilike '%${rg}%'"
+//                println "sql: $sql"
+                def resp = cn.rows(sql.toString())
+//                println "---> $resp"
+                def estc__id = cn.rows(sql.toString())[0]?.estc__id
+                println "---> $rg, id: ${estc__id}"
+//                estc[rg] = estc__id
+                estc.add(estc__id)
+            }
+        }
+
+        return estc
+    }
+
 }
