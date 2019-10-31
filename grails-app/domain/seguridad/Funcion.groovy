@@ -1,6 +1,6 @@
 package seguridad
 
-class Funcion implements Serializable {
+class  Funcion implements Serializable {
     String codigo
     String descripcion
     static auditable = true

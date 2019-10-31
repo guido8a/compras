@@ -36,6 +36,8 @@ class ProvinciaController {
 
         def provinciaInstance
 
+        params.nombre = params.nombre.toUpperCase()
+
         if(params.id) {
             provinciaInstance = Provincia.get(params.id)
             if(!provinciaInstance) {

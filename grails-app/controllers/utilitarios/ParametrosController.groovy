@@ -128,7 +128,7 @@ class ParametrosController {
 //                f.transferTo(new File(pathFile))
 
 //                InputStream ExcelFileToRead = new FileInputStream(pathFile);
-                InputStream ExcelFileToRead = new FileInputStream('/home/guido/proyectos/visor/SO2.xlsx');
+                InputStream ExcelFileToRead = new FileInputStream('/home/fabricio/SO2.xlsx');
                 XSSFWorkbook wb = new XSSFWorkbook(ExcelFileToRead);
 
                 XSSFSheet sheet = wb.getSheetAt(0);

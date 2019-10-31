@@ -100,7 +100,12 @@ class DepartamentoController {
             }
         }
         departamentoInstance.properties = params
-        return [departamentoInstance: departamentoInstance]
+        def padre
+
+        if(params.padre){
+            padre = Direccion.get(params.padre)
+        }
+        return [departamentoInstance: departamentoInstance, padre: padre ]
     } //form para cargar con ajax en un dialog
 
     /**
@@ -108,21 +113,28 @@ class DepartamentoController {
      * @render ERROR*[mensaje] cuando no se pudo grabar correctamente, SUCCESS*[mensaje] cuando se grabó correctamente
      */
     def save_ajax() {
-        def DepartamentoInstance = new Departamento()
-        if (params.id) {
-            DepartamentoInstance = Departamento.get(params.id)
-            if (!DepartamentoInstance) {
-                render "ERROR*No se encontró Departamento."
-                return
-            }
+
+//        println("params save " + params)
+
+        params.nombre = params.nombre.toUpperCase();
+        params.codigo = params.codigo.toUpperCase();
+
+        def departamento
+
+        if(params.id){
+            departamento = Departamento.get(params.id)
+        }else{
+            departamento = new Departamento()
         }
-        DepartamentoInstance.properties = params
-        if (!DepartamentoInstance.save(flush: true)) {
-            render "ERROR*Ha ocurrido un error al guardar Departamento: " + renderErrors(bean: DepartamentoInstance)
-            return
+
+        departamento.properties = params
+
+        if(!departamento.save(flush: true)){
+            println("Error al guardar el departamento " + departamento.errors)
+            render "no"
+        }else{
+            render "ok"
         }
-        render "SUCCESS*${params.id ? 'Actualización' : 'Creación'} de Departamento exitosa."
-        return
     } //save para grabar desde ajax
 
     /**
@@ -309,8 +321,8 @@ class DepartamentoController {
                     lbl = hijo.nombre
                     tp = "dir"
                     def hijosH = []
-                        rel = "principal"
-                        rel += "Activo"
+                        rel = "direccion"
+//                        rel += "Activo"
                     hijosH += Departamento.findAllByDireccion(hijo, [sort: "nombre"])
                     clase = (hijosH.size() > 0) ? "jstree-closed hasChildren" : ""
                     if (hijosH.size() > 0) {
@@ -335,6 +347,13 @@ class DepartamentoController {
                     rel = "principal"
                     }
 
+
+                    if (hijo.estaActivo) {
+                        rel += "Activo"
+                    } else {
+                        rel += "Inactivo"
+                    }
+
                     if (hijo.padre) {
                         rel += hijo.activo ? "Activo" : "Inactivo"
                     }
@@ -344,7 +363,7 @@ class DepartamentoController {
                         clase += " ocupado "
                     }
 
-                    ico = ", \"icon\":\"fa fa-store-alt text-warning\""
+//                    ico = ", \"icon\":\"fa fa-store-alt text-warning\""
 
                     tree += "<li id='li${tp}_" + hijo.id + "' class='" + clase + "' ${data} data-jstree='{\"type\":\"${rel}\" ${ico}}' >"
                     tree += "<a href='#' class='label_arbol'>" + lbl + "</a>"
@@ -374,21 +393,17 @@ class DepartamentoController {
 
                     data += "data-usuario='${hijo.login}'"
 
-                    if (hijo.estaActivo == true) {
+                    if (hijo.estaActivo) {
                         rel += "Activo"
                     } else {
                         rel += "Inactivo"
                     }
 
-
                     tree += "<li id='li${tp}_" + hijo.id + "' class='" + clase + "' ${data} data-jstree='{\"type\":\"${rel}\" ${ico}}' >"
                     tree += "<a href='#' class='label_arbol'>" + lbl + "</a>"
                     tree += "</li>"
 
-
                 }
-
-
             }
 
             tree += "</ul>"

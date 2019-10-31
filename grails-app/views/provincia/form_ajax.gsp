@@ -23,7 +23,7 @@
                 Nombre
             </label>
             <div class="col-md-8">
-                <g:textField name="nombre" maxlength="63" class="form-control required" value="${provinciaInstance?.nombre}"/>
+                <g:textField name="nombre" maxlength="63" class="form-control required text-uppercase" value="${provinciaInstance?.nombre}"/>
                 <p class="help-block ui-helper-hidden"></p>
             </div>
         </span>

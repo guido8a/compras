@@ -37,8 +37,6 @@
             <i class="fa fa-arrow-left"></i> Parámetros
         </g:link>
     </div>
-
-
     <div class="btn-group">
         <a href="#" class="btn btn-primary btnCrear">
             <i class="fa fa-file"></i> Nuevo Unidad

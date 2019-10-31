@@ -41,8 +41,9 @@ class Departamento {
         nombre(size: 1..127, blank: false, attributes: [title: 'descripcion'])
         telefono(size: 1..62, blank: true, nullable: true, attributes: [title: 'telefono'])
         extension(maxSize: 7, blank: true, nullable: true, attributes: [title: 'extension'])
-        direccion(maxSize: 255, blank: true, nullable: true, attributes: [title: 'direccion'])
+        direccion(blank: false, nullable: false, attributes: [title: 'direccion'])
         estado(blank: true, nullable: true, size: 1..1)
+        localizacion(blank: true, nullable: true)
     }
 
     String toString() {

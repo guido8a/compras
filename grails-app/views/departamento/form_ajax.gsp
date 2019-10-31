@@ -11,6 +11,21 @@
         <g:form class="form-horizontal" name="frmDepartamento" role="form" action="save_ajax" method="POST">
             <g:hiddenField name="id" value="${departamentoInstance?.id}"/>
 
+
+            <div class="form-group keeptogether ${hasErrors(bean: departamentoInstance, field: 'padre', 'error')} ">
+                <span class="grupo">
+                    <label for="direccion" class="col-md-2 control-label">
+                        Depende de
+                    </label>
+
+                    <div class="col-md-8">
+                        <g:select id="direccion" name="direccion" from="${seguridad.Direccion.list()}" optionKey="id"
+                                  value="${padre?.id}" disabled="" class="many-to-one form-control input-sm"
+                                  noSelection="['null': '']"/>
+                    </div>
+                </span>
+            </div>
+
             <div class="form-group keeptogether ${hasErrors(bean: departamentoInstance, field: 'nombre', 'error')} required">
                 <span class="grupo">
                     <label for="nombre" class="col-md-2 control-label">
@@ -18,47 +33,19 @@
                     </label>
 
                     <div class="col-md-10">
-                        <g:textField name="nombre" maxlength="127" required="" class="form-control input-sm required" value="${departamentoInstance?.nombre}"/>
+                        <g:textField name="nombre" maxlength="127" required="" class="form-control input-sm required text-uppercase" value="${departamentoInstance?.nombre}"/>
                     </div>
                 </span>
             </div>
 
-            <div class="form-group keeptogether ${hasErrors(bean: departamentoInstance, field: 'padre', 'error')} ">
+            <div class="form-group keeptogether ${hasErrors(bean: departamentoInstance, field: 'localizacion', 'error')} required">
                 <span class="grupo">
-                    <label for="padre" class="col-md-2 control-label">
-                        Depende de
+                    <label for="localizacion" class="col-md-2 control-label">
+                        Localización
                     </label>
-
-                    <div class="col-md-4">
-                        <g:select id="padre" name="padre.id" from="${seguridad.Departamento.list()}" optionKey="id"
-                                  value="${departamentoInstance?.padre?.id}" class="many-to-one form-control input-sm"
-                                  noSelection="['null': '']"/>
-                    </div>
-
-                </span>
-                <span class="grupo">
-                    <label for="orden" class="col-md-1 control-label" style="margin-left: 30px">
-                        Orden
-                    </label>
-
-                    <div class="col-md-1">
-                        <g:field name="orden" type="number" min="0"  step="1" value="${departamentoInstance.orden}"
-                                 class="digits form-control input-sm required" required="" style="width: 60px;" />
-                    </div>
-                </span>
-            </div>
-
-            <div class="form-group keeptogether ${hasErrors(bean: departamentoInstance, field: 'direccion', 'error')} ">
-                <span class="grupo">
-                    <label for="direccion" class="col-md-2 control-label">
-                        Ubicación
-                    </label>
-
                     <div class="col-md-10">
-                        <g:textArea name="direccion" maxlength="127" class="form-control input-sm" value="${departamentoInstance?.direccion}"
-                                    style="height: 40px; resize: none"/>
+                        <g:textArea name="localizacion" maxlength="255" placeholder="Escriba la dirección física donde se encuentra el área de gestión " class="form-control input-sm" style="resize: none;" value="${departamentoInstance?.localizacion}"/>
                     </div>
-
                 </span>
             </div>
 
@@ -95,12 +82,11 @@
                         </label>
 
                         <div class="col-md-2">
-                            <g:textField name="codigo" maxlength="6" class="form-control input-sm unique noEspacios allCaps required"
+                            <g:textField name="codigo" maxlength="6" class="form-control input-sm unique noEspacios allCaps required text-uppercase"
                                          value="${departamentoInstance?.codigo}" style="width: 80px"/>
                         </div>
                     </span>
                 </div>
-
             </div>
 
             <div class="form-group keeptogether ${hasErrors(bean: departamentoInstance, field: 'telefono',
@@ -115,6 +101,16 @@
                             <g:select name="activo" value="${departamentoInstance.activo}"
                                       class="form-control input-sm required" required=""
                                       from="${[1: 'Sí', 0: 'No']}" optionKey="key" optionValue="value"/>
+                        </div>
+                    </span>
+                    <span class="grupo">
+                        <label for="orden" class="col-md-1 control-label" style="margin-left: 30px">
+                            Orden
+                        </label>
+
+                        <div class="col-md-1">
+                            <g:field name="orden" type="number" min="0"  step="1" value="${departamentoInstance.orden}"
+                                     class="digits form-control input-sm required" required="" style="width: 60px;" />
                         </div>
                     </span>
                 </div>

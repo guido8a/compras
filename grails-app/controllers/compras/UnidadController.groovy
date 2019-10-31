@@ -11,7 +11,6 @@ class UnidadController {
         respond unidadService.list(params), model:[unidadCount: unidadService.count()]
     }
 
-
     def list () {
 
     }

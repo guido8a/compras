@@ -128,17 +128,13 @@
                         <br/> Transporte
                     </g:link>
                     <g:link class="link btn btn-success btn-ajax example_c item" texto="dire" controller="direccion" action="list">
-                        <i class="fa fa-id-card fa-4x text-success"></i>
+                        <i class="fa fa-list fa-4x text-success"></i>
                         <br/> Direcciones del Personal
                     </g:link>
-                    <g:link class="link btn btn-success btn-ajax example_c item disabled" texto="ddlb" controller="diaLaborable" action="calendario">
-                        <i class="fa fa-building fa-4x"></i>
-                        <br/> Días Laborables
+                    <g:link class="link btn btn-success btn-ajax example_c item" texto="dpto" controller="departamento" action="arbol">
+                        <i class="fa fa-building fa-4x text-success"></i>
+                        <br/> Coordinación del Personal
                     </g:link>
-                    <a href="#" class="btn btn-success bt-ajax example_c item" texto="iva" id="btnIva">
-                        <i class="fa fa-file-invoice-dollar fa-4x text-success"></i>
-                        <br/> Iva
-                    </a>
                 </p>
             </div>
         </div>
@@ -146,13 +142,17 @@
         <div class="row">
             <div class="col-md-12 col-xs-5">
                 <p>
-                    <g:link class="link btn btn-success btn-ajax example_c item" texto="dpto" controller="departamento" action="arbol">
-                        <i class="fa fa-building fa-4x text-success"></i>
-                        <br/> Coordinación del Personal
-                    </g:link>
-                    <g:link class="link btn btn-success btn-ajax example_c item disabled" texto="func" controller="funcion" action="list">
-                        <i class="fa fa-building fa-4x"></i>
+                    <g:link class="link btn btn-success btn-ajax example_c item" texto="func" controller="funcion" action="list">
+                        <i class="fa fa-id-badge fa-4x text-success"></i>
                         <br/> Funciones del Personal
+                    </g:link>
+                    <g:link class="link btn btn-success btn-ajax example_c item" texto="ddlb" controller="diaLaborable" action="calendario">
+                        <i class="fa fa-calendar-day fa-4x text-success"></i>
+                        <br/> Días Laborables
+                    </g:link>
+                    <g:link class="link btn btn-success btn-ajax example_c item" texto="anio" controller="anio" action="list">
+                        <i class="fab fa-amilia fa-4x text-success"></i>
+                        <br/> Ingreso de Años
                     </g:link>
                     <g:link class="link btn btn-success btn-ajax example_c item disabled" texto="tptr" controller="tipoTramite" action="list">
                         <i class="fa fa-building fa-4x"></i>
@@ -162,11 +162,14 @@
                         <i class="fa fa-building fa-4x"></i>
                         <br/> Rol de la persona en el Trámite
                     </g:link>
-                    <g:link class="link btn btn-success btn-ajax example_c item" texto="rltr" controller="parametros" action="cargarDatos">
-                        <i class="fa fa-upload fa-4x"></i>
-                        <br/> Cargar Datos
-                    </g:link>
-
+                    <a href="#" class="btn btn-success bt-ajax example_c item" texto="iva" id="btnIva">
+                        <i class="fa fa-file-invoice-dollar fa-4x text-success"></i>
+                        <br/> Iva
+                    </a>
+%{--                    <g:link class="link btn btn-success btn-ajax example_c item" texto="rltr" controller="parametros" action="cargarDatos">--}%
+%{--                        <i class="fa fa-upload fa-4x"></i>--}%
+%{--                        <br/> Cargar Datos--}%
+%{--                    </g:link>--}%
                 </p>
             </div>
         </div>
@@ -177,8 +180,8 @@
         <div class="row">
             <div class="col-md-12 col-xs-5">
                 <p>
-                    <g:link class="link btn btn-success btn-ajax example_c item disabled" texto="tpob" controller="tipoObra" action="list">
-                        <i class="fa fa-building fa-4x"></i>
+                    <g:link class="link btn btn-success btn-ajax example_c item" texto="tpob" controller="tipoObra" action="list">
+                        <i class="fa fa-list-alt fa-4x text-success"></i>
                         <br/> Tipo de Obras
                     </g:link>
 
@@ -191,19 +194,18 @@
                         <i class="fa fa-building fa-4x"></i>
                         <br/> Textos Fijos
                     </g:link>
-                    <g:link class="link btn btn-success btn-ajax example_c item disabled" texto="anio" controller="anio" action="list">
-                        <i class="fa fa-building fa-4x"></i>
-                        <br/> Ingreso de Años
-                    </g:link>
-                    <g:link class="link btn btn-success btn-ajax example_c item disabled" texto="anua" controller="valoresAnulaes" action="list">
-                        <i class="fa fa-building fa-4x"></i>
+                    <g:link class="link btn btn-success btn-ajax example_c item" texto="anua" controller="valoresAnuales" action="list">
+                        <i class="fa fa-search-dollar fa-4x text-success"></i>
                         <br/> Valores Anuales
                     </g:link>
-                    <g:link class="link btn btn-success btn-ajax example_c item disabled" texto="listas" controller="tipoLista" action="list">
-                        <i class="fa fa-building fa-4x"></i>
+                    <g:link class="link btn btn-success btn-ajax example_c item" texto="listas" controller="tipoLista" action="list">
+                        <i class="fa fa-list-alt fa-4x text-success"></i>
                         <br/> Tipo de listas de precios
                     </g:link>
-
+                    <g:link class="link btn btn-success btn-ajax example_c item" texto="adqu" controller="tipoAdquisicion" action="list">
+                        <i class="fa fa-cubes fa-4x text-success"></i>
+                        <br/> Tipo de Adquisición
+                    </g:link>
                 </p>
             </div>
         </div>
@@ -214,10 +216,7 @@
                         <i class="fa fa-stopwatch fa-4x text-success"></i>
                         <br/> Programacion
                     </g:link>
-                    <g:link class="link btn btn-success btn-ajax example_c item" texto="adqu" controller="tipoAdquisicion" action="list">
-                        <i class="fa fa-cubes fa-4x text-success"></i>
-                        <br/> Tipo de Adquisición
-                    </g:link>
+
                 </p>
             </div>
         </div>
@@ -227,24 +226,24 @@
         <div class="row">
             <div class="col-md-12 col-xs-5">
                 <p>
-                    <g:link class="link btn btn-success btn-ajax example_c item disabled" texto="tpgr" controller="tipoGarantia" action="list">
-                        <i class="fa fa-building fa-4x"></i>
+                    <g:link class="link btn btn-success btn-ajax example_c item" texto="tpgr" controller="tipoGarantia" action="list">
+                        <i class="fab fa-gofore fa-4x text-success"></i>
                         <br/>Tipo de Garantía
                     </g:link>
-                    <g:link class="link btn btn-success btn-ajax example_c item disabled" texto="tdgr" controller="tipoDocumentoGarantia" action="list">
-                        <i class="fa fa-building fa-4x"></i>
+                    <g:link class="link btn btn-success btn-ajax example_c item" texto="tdgr" controller="tipoDocumentoGarantia" action="list">
+                        <i class="fab fa-gofore fa-4x text-success"></i>
                         <br/> Tipo de documento de garantía
                     </g:link>
-                    <g:link class="link btn btn-success btn-ajax example_c item disabled" texto="edgr" controller="estadoGarantia" action="list">
-                        <i class="fa fa-building fa-4x"></i>
+                    <g:link class="link btn btn-success btn-ajax example_c item" texto="edgr" controller="estadoGarantia" action="list">
+                        <i class="fab fa-gofore fa-4x text-success"></i>
                         <br/> Estado de la garantía
                     </g:link>
-                    <g:link class="link btn btn-success btn-ajax example_c item disabled" texto="asgr" controller="aseguradora" action="list">
-                        <i class="fa fa-building fa-4x"></i>
+                    <g:link class="link btn btn-success btn-ajax example_c item" texto="asgr" controller="aseguradora" action="list">
+                        <i class="fab fa-adn fa-4x text-success"></i>
                         <br/> Aseguradora
                     </g:link>
-                    <g:link class="link btn btn-success btn-ajax example_c item disabled" texto="tpas" controller="tipoAseguradora" action="calendario">
-                        <i class="fa fa-building fa-4x"></i>
+                    <g:link class="link btn btn-success btn-ajax example_c item" texto="tpas" controller="tipoAseguradora" action="list">
+                        <i class="fab fa-adn fa-4x text-success"></i>
                         <br/> Tipo de aseguradora
                     </g:link>
                     <g:link class="link btn btn-success btn-ajax example_c item disabled" texto="itun" controller="unidadIncop" action="calendario">
@@ -257,16 +256,16 @@
         <div class="row">
             <div class="col-md-12 col-xs-5">
                 <p>
-                    <g:link class="link btn btn-success btn-ajax example_c item disabled" texto="tppt" controller="tipoProcedimiento" action="list">
-                        <i class="fa fa-building fa-4x"></i>
+                    <g:link class="link btn btn-success btn-ajax example_c item" texto="tppt" controller="tipoProcedimiento" action="list">
+                        <i class="fa fa-file-powerpoint fa-4x text-success"></i>
                         <br/>Tipo de procedimiento
                     </g:link>
-                    <g:link class="link btn btn-success btn-ajax example_c item disabled" texto="tpcp" controller="tipoCompra" action="list">
-                        <i class="fa fa-building fa-4x"></i>
+                    <g:link class="link btn btn-success btn-ajax example_c item" texto="tpcp" controller="tipoCompra" action="list">
+                        <i class="fa fa-cash-register fa-4x text-success"></i>
                         <br/> Tipo de compra
                     </g:link>
-                    <g:link class="link btn btn-success btn-ajax example_c item disabled" texto="fnfn" controller="fuenteFinanciamiento" action="list">
-                        <i class="fa fa-building fa-4x"></i>
+                    <g:link class="link btn btn-success btn-ajax example_c item" texto="fnfn" controller="fuenteFinanciamiento" action="list">
+                        <i class="fa fa-hand-holding-usd fa-4x  text-success"></i>
                         <br/> Fuente de Financiamiento
                     </g:link>
                 </p>

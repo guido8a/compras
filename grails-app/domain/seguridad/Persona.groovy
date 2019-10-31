@@ -20,6 +20,7 @@ class Persona implements Auditable{
     String autorizacion
     int activo
     String cargo
+    String cedula
 
     static hasMany = [perfiles: Sesn]
 
@@ -48,6 +49,7 @@ class Persona implements Auditable{
             autorizacion column: 'prsnatrz'
             activo column: 'prsnactv'
             cargo column: 'prsncrgo'
+            cedula column: 'prsncdla'
         }
     }
     static constraints = {
@@ -64,6 +66,7 @@ class Persona implements Auditable{
         fechaInicio(blank: true, nullable: true, attributes: [title: 'Fecha de inicio'])
         fechaFin(blank: true, nullable: true, attributes: [title: 'Fecha de finalización'])
         cargo(blank: true, nullable: true, size: 1..255, attributes: [mensaje: 'Cargo'])
+        cedula(blank: true, nullable: true)
     }
 
     String toString() {

@@ -99,9 +99,9 @@
     function submitFormUnidad() {
         var $form = $("#frmDepartamento");
         var $btn = $("#dlgCreateEdit").find("#btnSave");
+        $("#direccion").attr("disabled", false);
         if ($form.valid()) {
             $btn.replaceWith(spinner);
-            // openLoader("Guardando Entidad");
             var dialog = cargarLoader("Guardando...");
             $.ajax({
                 type    : "POST",
@@ -109,16 +109,14 @@
                 data    : $form.serialize(),
                 success : function (msg) {
                     dialog.modal('hide');
-                    var parts = msg.split("*");
-                    log(parts[1], parts[0] == "SUCCESS" ? "success" : "error"); // log(msg, type, title, hide)
-                    setTimeout(function () {
-                        if (parts[0] == "SUCCESS") {
-                            location.reload(true);
-                        } else {
-                            spinner.replaceWith($btn);
-                            return false;
-                        }
-                    }, 1000);
+                    if(msg == 'ok'){
+                        log("Area de gestión guardada correctamente","success");
+                        setTimeout(function () {
+                                location.reload(true);
+                        }, 1000);
+                    }else{
+                        log("Error al guardar el área de gestión","error")
+                    }
                 }
             });
         } else {
@@ -203,6 +201,76 @@
             return false;
         } //else
     }
+
+    function createEditDireccion(id) {
+        var title = id ? "Editar" : "Crear";
+        var data = id ? {id : id} : {};
+        $.ajax({
+            type    : "POST",
+            url     : "${createLink(controller: 'direccion', action:'form_ajax')}",
+            data    : data,
+            success : function (msg) {
+                var b = bootbox.dialog({
+                    id    : "dlgCreateEditDireccion",
+                    title : title + " Dirección",
+                    // class : "modal-lg",
+                    message : msg,
+                    buttons : {
+                        cancelar : {
+                            label     : "Cancelar",
+                            className : "btn-primary",
+                            callback  : function () {
+                            }
+                        },
+                        guardar  : {
+                            id        : "btnSave",
+                            label     : "<i class='fa fa-save'></i> Guardar",
+                            className : "btn-success",
+                            callback  : function () {
+                                return submitFormDireccion();
+                            } //callback
+                        } //guardar
+                    } //buttons
+                }); //dialog
+                setTimeout(function () {
+                    b.find(".form-control").first().focus()
+                }, 500);
+            } //success
+        }); //ajax
+    } //createEdit
+
+    function submitFormDireccion() {
+        var $form = $("#frmSaveDireccion");
+        var $btn = $("#dlgCreateEditDireccion").find("#btnSave");
+        if ($form.valid()) {
+            var data = $form.serialize();
+            $btn.replaceWith(spinner);
+            var dialog = cargarLoader("Guardando...");
+            $.ajax({
+                type    : "POST",
+                url     : $form.attr("action"),
+                data    : data,
+                success : function (msg) {
+                    dialog.modal('hide');
+                    var parts = msg.split("_");
+                    if(parts[0] == 'ok'){
+                        log(parts[1], "success");
+                        setTimeout(function () {
+                            location.reload(true);
+                        }, 1000);
+                    }else{
+                        // bootbox.alert('<i class="fa fa-exclamation-triangle text-danger fa-3x"></i> ' + '<strong style="font-size: 14px">' + parts[1] + '</strong>');
+                        // return false;
+                        log(parts[1],"error");
+                        return false;
+                    }
+                }
+            });
+        } else {
+            return false;
+        }
+    }
+
 
      function createEditPersona(id, unidadId) {
         var title = id ? "Editar" : "Agregar";
@@ -407,61 +475,90 @@
         var nodeText = $node.children("a").first().text();
 
         var esRoot = nodeType == "root";
-        var esPrincipal = nodeType == "principal";
+        var esPrincipal = nodeType.contains("principal");
         var esUnidad = nodeType.contains("unidad");
         var esUsuario = nodeType.contains("usuario");
+        var esDireccion = nodeType.contains("direccion");
+
+        var deparInactivo = nodeType == 'principalInactivo'
+        var usuInactivo = nodeType == 'usuarioInactivo'
 
         var items = {};
 
         var agregarEntidad = {
             label  : "Agregar área de gestión",
-            icon   : "fa fa-home text-success",
+            icon   : "fa fa-store-alt text-warning",
+            action : function () {
+                createEditUnidad(null, $node.parent().parent().children()[1].id.split("_")[1]);
+            }
+        };
+
+        var agregarEntidad2 = {
+            label  : "Agregar área de gestión",
+            icon   : "fa fa-store-alt text-warning",
             action : function () {
                 createEditUnidad(null, nodeId);
             }
         };
 
-        var reporteUsuarios = {
-            label  : "Reporte Usuarios y Perfiles",
-            icon   : "fa fa-print",
+        var agregarDireccion = {
+            label  : "Agregar Dirección",
+            icon   : "fa fa-landmark text-success",
             action : function () {
-                location.href =   "${createLink(controller: 'reportes', action: 'reporteUsuariosPerfiles')}";
+                createEditDireccion(null);
             }
         };
 
-
-        var docsEntidad = {
-            label           : "Documentos área de gestión",
-            icon            : "fa fa-file-word",
-            separator_after : true,
-            action          : function () {
-                $.ajax({
-                    type    : "POST",
-                    url     : "${createLink(controller: 'documento', action:'listUnidad_ajax')}",
-                    data    : {
-                        id : nodeId
-                    },
-                    success : function (msg) {
-                        bootbox.dialog({
-                            title   : "Documentos",
-                            class   : "modal-lg",
-                            message : msg,
-                            buttons : {
-                                ok : {
-                                    label     : "Aceptar",
-                                    className : "btn-primary",
-                                    callback  : function () {
-                                    }
-                                }
-                            }
-                        });
-                    }
-                });
+        var editarDireccion = {
+            label  : "Editar Dirección",
+            icon   : "fa fa-pen text-success",
+            action : function () {
+                createEditDireccion(nodeId);
             }
         };
+
+        %{--var reporteUsuarios = {--}%
+        %{--    label  : "Reporte Usuarios y Perfiles",--}%
+        %{--    icon   : "fa fa-print",--}%
+        %{--    action : function () {--}%
+        %{--        location.href =   "${createLink(controller: 'reportes', action: 'reporteUsuariosPerfiles')}";--}%
+        %{--    }--}%
+        %{--};--}%
+
+
+        %{--var docsEntidad = {--}%
+        %{--    label           : "Documentos área de gestión",--}%
+        %{--    icon            : "fa fa-file-word",--}%
+        %{--    separator_after : true,--}%
+        %{--    action          : function () {--}%
+        %{--        $.ajax({--}%
+        %{--            type    : "POST",--}%
+        %{--            url     : "${createLink(controller: 'documento', action:'listUnidad_ajax')}",--}%
+        %{--            data    : {--}%
+        %{--                id : nodeId--}%
+        %{--            },--}%
+        %{--            success : function (msg) {--}%
+        %{--                bootbox.dialog({--}%
+        %{--                    title   : "Documentos",--}%
+        %{--                    class   : "modal-lg",--}%
+        %{--                    message : msg,--}%
+        %{--                    buttons : {--}%
+        %{--                        ok : {--}%
+        %{--                            label     : "Aceptar",--}%
+        %{--                            className : "btn-primary",--}%
+        %{--                            callback  : function () {--}%
+        %{--                            }--}%
+        %{--                        }--}%
+        %{--                    }--}%
+        %{--                });--}%
+        %{--            }--}%
+        %{--        });--}%
+        %{--    }--}%
+        %{--};--}%
+
         var agregarUsu = {
             label           : "Agregar usuario",
-            icon            : "fa fa-user text-success",
+            icon            : "fa fa-user text-info",
             separator_after : true,
             action          : function () {
                 createEditPersona(null, nodeId);
@@ -470,7 +567,7 @@
 
         var verEntidad = {
             label            : "Ver datos del área de gestión",
-            icon             : "fa fa-laptop text-info",
+            icon             : "fa fa-laptop text-warning",
             separator_before : true,
             action           : function () {
                 $.ajax({
@@ -499,9 +596,9 @@
 
         var editarEntidad = {
             label  : "Editar datos del área de gestión",
-            icon   : "fa fa-pen text-info",
+            icon   : "fa fa-pen text-warning",
             action : function () {
-                createEditUnidad(nodeId, null);
+                createEditUnidad(nodeId, $node.parent().parent().children()[1].id.split("_")[1]);
             }
         };
 
@@ -558,30 +655,33 @@
             }
         };
 
-        // console.log("es root:", esRoot, "es principal", esPrincipal, "es unidad:", esUnidad)
-
         if (esRoot) {
-            items.agregarEntidad = agregarEntidad;
-        } else if (esPrincipal) {
-            items.agregarEntidad = agregarEntidad;
-            // items.documentos = docsEntidad;
-            items.agregarUsuario = agregarUsu;
-            items.ver = verEntidad;
+            items.agregarDireccion = agregarDireccion;
+        }else if (esDireccion){
+            items.agregarEntidad = agregarEntidad2;
+            items.editarDireccion = editarDireccion;
+        }else if (esPrincipal) {
+            if(!deparInactivo){
+                items.agregarUsuario = agregarUsu;
+                items.agregarEntidad = agregarEntidad;
+                items.ver = verEntidad;
+            }
             items.editar = editarEntidad;
-            // items.reporte = reporteUsuarios;
         } else if (esUnidad) {
             items.agregarEntidad = agregarEntidad;
-            // items.documentos = docsEntidad;
             items.agregarUsuario = agregarUsu;
             items.ver = verEntidad;
             items.editar = editarEntidad;
         } else if (esUsuario) {
             items.ver = verUsuario;
             items.editar = editarUsuario;
-            items.editarPass = editarPass;
-            if (nodeId == "${session.usuario.id}") {
-                items.editarAuth = editarAuth;
+            if(!usuInactivo){
+                items.editarPass = editarPass;
             }
+
+            %{--if (nodeId == "${session.usuario.id}") {--}%
+            %{--    items.editarAuth = editarAuth;--}%
+            %{--}--}%
         }
         return items;
     }
@@ -686,6 +786,12 @@
                 },
                 usuarioInactivo     : {
                     icon : "fa fa-user text-muted"
+                },
+                principalActivo    :{
+                    icon : "fa fa-store-alt text-warning"
+                },
+                principalInactivo   :{
+                    icon : "fa fa-store-alt text-muted"
                 }
             }
         });
@@ -694,8 +800,6 @@
             $treeContainer.jstree("open_all");
             scrollToRoot();
             return false;
-
-
         });
 
         $("#btnCollapseAll").click(function () {

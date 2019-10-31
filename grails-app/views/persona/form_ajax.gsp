@@ -8,20 +8,20 @@
     <div class="modal-contenido">
         <g:form class="form-horizontal" name="frmPersona" role="form" action="save_ajax" method="POST">
             <div class="form-group keeptogether ${hasErrors(bean: personaInstance, field: 'sexo', 'error')} ${hasErrors(bean: personaInstance, field: 'sexo', 'error')} required">
-            <g:hiddenField name="id" value="${personaInstance?.id}"/>
+                <g:hiddenField name="id" value="${personaInstance?.id}"/>
 
-            <div class="col-md-6">
-                <span class="grupo">
-                    <label for="login" class="col-md-4 control-label">
-                        Usuario
-                    </label>
-                </span>
-                <div class="col-md-8">
-                    <g:textField name="login" maxlength="15" class="form-control input-sm unique noEspacios required" value="${personaInstance?.login}" style="width: 160px"/>
+                <div class="col-md-6">
+                    <span class="grupo">
+                        <label for="login" class="col-md-4 control-label">
+                            Usuario
+                        </label>
+                    </span>
+                    <div class="col-md-8">
+                        <g:textField name="login" maxlength="15" class="form-control input-sm unique noEspacios required" value="${personaInstance?.login}" style="width: 160px"/>
+                    </div>
                 </div>
-            </div>
 
-            <div class="col-md-6">
+                <div class="col-md-6">
                     <span class="grupo">
                         <label for="sexo" class="col-md-4 control-label">
                             Sexo
@@ -55,6 +55,20 @@
 
                         <div class="col-md-8">
                             <g:textField name="apellido" maxlength="40" required="" class="form-control input-sm required" value="${personaInstance?.apellido}"/>
+                        </div>
+                    </span>
+                </div>
+            </div>
+
+            <div class="form-group keeptogether ${hasErrors(bean: personaInstance, field: 'cedula', 'error')}">
+                <div class="col-md-6">
+                    <span class="grupo">
+                        <label for="cedula" class="col-md-4 control-label">
+                            Cédula
+                        </label>
+
+                        <div class="col-md-8">
+                            <g:textField name="cedula" maxlength="10" class="form-control input-sm" value="${personaInstance?.cedula}"/>
                         </div>
                     </span>
                 </div>
@@ -141,49 +155,49 @@
                     </span>
                 </div>
             </div>
-%{--            <div class="form-group keeptogether ${hasErrors(bean: personaInstance, field: 'perfil', 'error')} ">--}%
-%{--                <div class="col-md-12">--}%
-%{--                    <span class="grupo">--}%
-%{--                        <label for="perfil" class="col-md-2 control-label">--}%
-%{--                            Perfiles--}%
-%{--                        </label>--}%
+        %{--            <div class="form-group keeptogether ${hasErrors(bean: personaInstance, field: 'perfil', 'error')} ">--}%
+        %{--                <div class="col-md-12">--}%
+        %{--                    <span class="grupo">--}%
+        %{--                        <label for="perfil" class="col-md-2 control-label">--}%
+        %{--                            Perfiles--}%
+        %{--                        </label>--}%
 
-%{--                        <div class="col-md-10">--}%
-%{--                            <div class="row">--}%
-%{--                                    <div class="col-md-8">--}%
-%{--                                        <g:select name="perfil" from="${Prfl.list([sort: 'nombre'])}" class="form-control input-sm"--}%
-%{--                                                  optionKey="id" optionValue="nombre"/>--}%
-%{--                                    </div>--}%
+        %{--                        <div class="col-md-10">--}%
+        %{--                            <div class="row">--}%
+        %{--                                    <div class="col-md-8">--}%
+        %{--                                        <g:select name="perfil" from="${Prfl.list([sort: 'nombre'])}" class="form-control input-sm"--}%
+        %{--                                                  optionKey="id" optionValue="nombre"/>--}%
+        %{--                                    </div>--}%
 
-%{--                                    <div class="col-md-2">--}%
-%{--                                        <a href="#" class="btn btn-success btn-sm" id="btn-addPerfil" title="Agregar perfil">--}%
-%{--                                            <i class="fa fa-plus"></i> Agregar perfil--}%
-%{--                                        </a>--}%
-%{--                                    </div>--}%
-%{--                            </div>--}%
+        %{--                                    <div class="col-md-2">--}%
+        %{--                                        <a href="#" class="btn btn-success btn-sm" id="btn-addPerfil" title="Agregar perfil">--}%
+        %{--                                            <i class="fa fa-plus"></i> Agregar perfil--}%
+        %{--                                        </a>--}%
+        %{--                                    </div>--}%
+        %{--                            </div>--}%
 
-%{--                            <div class="row" style="margin-top: 5px">--}%
-%{--                                <div class="col-md-6">--}%
-%{--                                    <table id="tblPerfiles" class="table table-hover table-bordered table-condensed">--}%
-%{--                                        <g:each in="${perfiles.perfil}" var="perfil">--}%
-%{--                                            <tr class="perfiles" data-id="${perfil.id}">--}%
-%{--                                                <td>--}%
-%{--                                                    ${perfil?.nombre}--}%
-%{--                                                </td>--}%
-%{--                                                <td width="35">--}%
-%{--                                                    <a href="#" class="btn btn-danger btn-xs btn-deletePerfil">--}%
-%{--                                                        <i class="fa fa-trash"></i>--}%
-%{--                                                    </a>--}%
-%{--                                                </td>--}%
-%{--                                            </tr>--}%
-%{--                                        </g:each>--}%
-%{--                                    </table>--}%
-%{--                                </div>--}%
-%{--                            </div>--}%
-%{--                        </div>--}%
-%{--                    </span>--}%
-%{--                </div>--}%
-%{--            </div>--}%
+        %{--                            <div class="row" style="margin-top: 5px">--}%
+        %{--                                <div class="col-md-6">--}%
+        %{--                                    <table id="tblPerfiles" class="table table-hover table-bordered table-condensed">--}%
+        %{--                                        <g:each in="${perfiles.perfil}" var="perfil">--}%
+        %{--                                            <tr class="perfiles" data-id="${perfil.id}">--}%
+        %{--                                                <td>--}%
+        %{--                                                    ${perfil?.nombre}--}%
+        %{--                                                </td>--}%
+        %{--                                                <td width="35">--}%
+        %{--                                                    <a href="#" class="btn btn-danger btn-xs btn-deletePerfil">--}%
+        %{--                                                        <i class="fa fa-trash"></i>--}%
+        %{--                                                    </a>--}%
+        %{--                                                </td>--}%
+        %{--                                            </tr>--}%
+        %{--                                        </g:each>--}%
+        %{--                                    </table>--}%
+        %{--                                </div>--}%
+        %{--                            </div>--}%
+        %{--                        </div>--}%
+        %{--                    </span>--}%
+        %{--                </div>--}%
+        %{--            </div>--}%
         </g:form>
     </div>
 

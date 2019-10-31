@@ -1,9 +1,10 @@
-package utilitarios
+package compras
 
 class Anio {
+
+    String anio
+    int estado=0
     static auditable = true
-    String numero
-    Integer estado          //1-> activo, 0-> no activo
     static mapping = {
         table 'anio'
         cache usage: 'read-write', include: 'non-lazy'
@@ -12,11 +13,16 @@ class Anio {
         version false
         columns {
             id column: 'anio__id'
-            numero column: 'anionmro'
+            anio column: 'anionmro'
             estado column: 'anioetdo'
         }
     }
     static constraints = {
-        numero(maxSize: 4, blank: false, attributes: [title: 'numero'])
+        anio(nullable: true,blank: true,size: 1..4)
+    }
+
+    String toString() {
+        anio
     }
 }
+

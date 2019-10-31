@@ -22,19 +22,19 @@
 
             <div class="btn-group">
                 <g:link controller="prfl" action="modulos" id="1" class="aPrfl btn btn-primary">
-                    Gestionar Permisos y Módulos (Menú)
+                   Gestionar Permisos y Módulos(Menú)
                 </g:link>
             </div>
             <div class="btn-group">
                 <g:link controller="prfl" action="permisos" id="1" class="aPrfl btn btn-warning">
-                    Gestionar Permisos de Acceso
+                    <i class="fa fa-users-cog"></i> Gestionar Permisos de Acceso
                 </g:link>
             </div>
 
             <div class="btn-group">
-                <a href="#" id="cargaCtrl" class="btn btn-info">Cargar Controladores</a>
+                <a href="#" id="cargaCtrl" class="btn btn-info"><i class="fa fa-cogs"></i> Cargar Controladores</a>
 
-                <a href="#" id="cargaAccn" class="btn btn-info">Cargar Acciones</a>
+                <a href="#" id="cargaAccn" class="btn btn-info"><i class="fa fa-cog"></i> Cargar Acciones</a>
             </div>
         </div>
 
@@ -66,35 +66,44 @@
                 });
 
                 $("#cargaCtrl").click(function () {
-                    bootbox.confirm("Cargar controladores desde Grails?", function (result) {
-                        if (result) {
-                            openLoader();
-                            $.ajax({
-                                type    : "POST", url : "${createLink(controller:'acciones', action:'cargarControladores')}",
-                                success : function (msg) {
-                                    closeLoader();
-                                    bootbox.alert(msg);
-                                }
-                            });
+                    bootbox.confirm({
+                        class : "modal-sm",
+                        message: '<i class="fa fa-exclamation-circle text-success fa-3x"></i> <strong style="font-size: 12px">Cargar controladores desde Grails?</strong>',
+                        callback: function(result){
+                            if (result) {
+                                var dialog = cargarLoader("Procesando...");
+                                $.ajax({
+                                    type    : "POST", url : "${createLink(controller:'acciones', action:'cargarControladores')}",
+                                    success : function (msg) {
+                                        dialog.modal('hide');
+                                        bootbox.alert(msg);
+                                    }
+                                });
+                            }
                         }
                     });
                 });
+
                 $("#cargaAccn").click(function () {
-                    //alert("crear un perfil");
-                    bootbox.confirm("Cargar acciones desde Grails?", function (result) {
-                        if (result) {
-                            openLoader();
-                            $.ajax({
-                                type    : "POST", url : "${createLink(controller:'acciones', action:'cargarAcciones')}",
-                                data    : "",
-                                success : function (msg) {
-                                    closeLoader();
-                                    bootbox.alert(msg);
-                                }
-                            });
+                    bootbox.confirm({
+                        class : "modal-sm",
+                        message: '<i class="fa fa-exclamation-circle text-success fa-3x"></i> <strong style="font-size: 12px">Cargar acciones desde Grails?</strong>',
+                        callback: function(result){
+                            if (result) {
+                                var dialog = cargarLoader("Procesando...");
+                                $.ajax({
+                                    type    : "POST", url : "${createLink(controller:'acciones', action:'cargarAcciones')}",
+                                    data    : "",
+                                    success : function (msg) {
+                                        dialog.modal('hide');
+                                        bootbox.alert(msg);
+                                    }
+                                });
+                            }
                         }
                     });
                 });
+
                 $(".modulo").click(function () {
                     setTimeout(function () {
                         $.ajax({

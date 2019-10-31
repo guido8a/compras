@@ -387,6 +387,7 @@ class PersonaController {
             println "....1 autoriz: ${persona.autorizacion}"
             if (params.tipo == "pass") {
                 persona.password = params.input2.encodeAsMD5()
+                persona.save(flush: true)
             } else {
                 if (persona.autorizacion == params.input1.trim().encodeAsMD5() || !persona.autorizacion) {
                     persona.autorizacion = params.input2.encodeAsMD5()
