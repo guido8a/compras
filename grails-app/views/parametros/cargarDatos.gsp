@@ -59,10 +59,35 @@
             Cargar datos
         </a>
     </div>
+    <div class="btn-group">
+        <a href="#" class="btn col-md-12 btn-success" id="datosMinutos"><i class="fa fa-file-excel"></i>
+            Cargar datos Minutos
+        </a>
+    </div>
+    <div class="btn-group">
+        <a href="#" class="btn col-md-12 btn-success" id="prueba"><i class="fa fa-file-excel"></i>
+            Prueba Minutos
+        </a>
+    </div>
+    <div class="btn-group">
+        <a href="#" class="btn col-md-12 btn-success" id="calcular"><i class="fa fa-pen"></i>
+            Calcular datos derivados
+        </a>
+    </div>
+    <div class="btn-group">
+        <a href="#" class="btn col-md-12 btn-success" id="calculaDir"><i class="fa fa-pen"></i>
+            Calcular dirección
+        </a>
+    </div>
+    <div class="btn-group">
+        <a href="#" class="btn col-md-12 btn-success" id="cargaIUV"><i class="fa fa-pen"></i>
+            Cargar IUV
+        </a>
+    </div>
 </div>
 
 <div class="col-md-12" style="margin-top: 10px">
-    <g:uploadForm action="validar" method="post" name="frmaArchivo">
+    <g:uploadForm action="leeCSV" method="post" name="frmaArchivo">
         <div class="panel panel-primary">
             <div class="panel-heading">Seleccionar el archivo a cargar</div>
 
@@ -74,6 +99,10 @@
 
                 <span class="btn btn-info fileinput-button col-md-6" style="position: relative">
                     <input type="file" name="file" multiple="" id="archivo" class="archivo col-md-12">
+                </span>
+
+                <span>
+                    <input type="hidden" name="tipo" id="tipo" value="">
                 </span>
 
                 <label for="padre" class="col-md-2 control-label">
@@ -104,6 +133,98 @@
             bootbox.alert("No ha ingresado ningún archivo para ser cargado")
         }
     });
+
+    $("#datosMinutos").click(function () {
+        if($("#archivo").val()!=""){
+            var dialog = cargarLoader("Cargando...");
+            $("#tipo").val("Minuto")
+            $("#frmaArchivo").submit();
+        }else{
+            bootbox.alert("No ha ingresado ningún archivo para ser cargado")
+        }
+    });
+
+    $("#prueba").click(function () {
+        if($("#archivo").val()!=""){
+            var dialog = cargarLoader("Cargando...");
+            $("#tipo").val("Prueba")
+            $("#frmaArchivo").submit();
+        }else{
+            bootbox.alert("No ha ingresado ningún archivo para ser cargado")
+        }
+    });
+
+    $("#calcular").click(function () {
+        var dialog = cargarLoader("Procesando datos de 10m. 1h, 8h, 24h y 72h...");
+        $.ajax({
+            type: 'POST',
+            url:'${createLink(controller: 'parametros', action: 'calcular')}',
+            data:{
+                valor: 'valores'
+            },
+            success: function (msg) {
+                if(msg == 'ok'){
+                    location.reload()
+                }else{
+                    log("Error al guardar el Iva","error")
+                }
+            }
+        });
+    });
+
+    $("#calculaDir").click(function () {
+        var dialog = cargarLoader("Procesando datos dirección de 10m. 1h, 8h, 24h y 72h...");
+        $.ajax({
+            type: 'POST',
+            url:'${createLink(controller: 'parametros', action: 'calcularDir')}',
+            data:{
+                valor: 'valores'
+            },
+            success: function (msg) {
+                if(msg == 'ok'){
+                    location.reload()
+                }else{
+                    log("Error al guardar el Iva","error")
+                }
+            }
+        });
+    });
+
+    $("#cargaIUV").click(function () {
+        var dialog = cargarLoader("Cargando datos de IUV...");
+        $.ajax({
+            type: 'POST',
+            url:'${createLink(controller: 'parametros', action: 'cargaIUV')}',
+            data:{
+                valor: 'valores'
+            },
+            success: function (msg) {
+                if(msg == 'ok'){
+                    location.reload()
+                }else{
+                    log("Error al guardar el Iva","error")
+                }
+            }
+        });
+    });
+
+    $("#viento").click(function () {
+        $.ajax({
+            type: 'POST',
+            url:'${createLink(controller: 'parametros', action: 'calcular')}',
+            data:{
+                valor: 'viento'
+            },
+            success: function (msg) {
+                if(msg == 'ok'){
+                    location.reload()
+                }else{
+                    log("Error")
+                }
+            }
+        });
+    });
+
 
 </script>
 
