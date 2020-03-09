@@ -114,12 +114,12 @@ dataSource:
     username: postgres
     password: 'postgres'
 
-dataSource_visor:
-    pooled: true
-    jmxExport: true
-    driverClassName: org.postgresql.Driver
-    username: postgres
-    password: 'megan1963@'
+#dataSource_visor:
+#    pooled: true
+#    jmxExport: true
+#    driverClassName: org.postgresql.Driver
+#    username: postgres
+#    password: 'megan1963@'
 
 environments:
     development:
@@ -129,24 +129,17 @@ environments:
             username: postgres
             password: 'postgres'
 
-        dataSource_visor:
-            pooled: true
-            jmxExport: true
-            driverClassName: org.postgresql.Driver
-#            username: postgres
-#            password: 'megan1963@'
-            dbCreate: update
-#            url: jdbc:postgresql://127.0.0.1:5432/visordev
-            url: jdbc:postgresql://127.0.0.1:5432/visorprod
-#            url: jdbc:postgresql://50.116.33.232:5432/visorprod
+#        dataSource_visor:
+#            pooled: true
+#            jmxExport: true
+#            driverClassName: org.postgresql.Driver
+#            dbCreate: update
+#            url: jdbc:postgresql://127.0.0.1:5432/visorprod
 
-        dataSources:
-            visor:
-                dbCreate: update
-#                url: jdbc:postgresql://192.168.100.9:5432/visor
-#                url: jdbc:postgresql://127.0.0.1:5432/visordev
-                url: jdbc:postgresql://127.0.0.1:5432/visorprod
-#                url: jdbc:postgresql://50.116.33.232:5432/visorprod
+#        dataSources:
+#            visor:
+#                dbCreate: update
+#                url: jdbc:postgresql://127.0.0.1:5432/visorprod
         grails:
 #            serverURL: http://localhost:8080
             #especificar una direccion IP para poder acceder desde otra computadora de la red
