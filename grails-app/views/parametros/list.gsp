@@ -154,18 +154,14 @@
                         <i class="fab fa-amilia fa-4x text-success"></i>
                         <br/> Ingreso de Años
                     </g:link>
-                    <g:link class="link btn btn-success btn-ajax example_c item disabled" texto="tptr" controller="tipoTramite" action="list">
-                        <i class="fa fa-building fa-4x"></i>
-                        <br/> Tipo de Trámite
-                    </g:link>
-                    <g:link class="link btn btn-success btn-ajax example_c item disabled" texto="rltr" controller="rolTramite" action="list">
-                        <i class="fa fa-building fa-4x"></i>
-                        <br/> Rol de la persona en el Trámite
-                    </g:link>
                     <a href="#" class="btn btn-success bt-ajax example_c item" texto="iva" id="btnIva">
                         <i class="fa fa-file-invoice-dollar fa-4x text-success"></i>
                         <br/> Iva
                     </a>
+                    <g:link class="link btn btn-success btn-ajax example_c item" texto="crit" controller="criterio" action="list">
+                        <i class="fa fa-hand-point-up fa-4x text-success"></i>
+                        <br/> Criterio
+                    </g:link>
 %{--                    <g:link class="link btn btn-success btn-ajax example_c item" texto="rltr" controller="parametros" action="cargarDatos">--}%
 %{--                        <i class="fa fa-upload fa-4x"></i>--}%
 %{--                        <br/> Cargar Datos--}%
@@ -180,9 +176,9 @@
         <div class="row">
             <div class="col-md-12 col-xs-5">
                 <p>
-                    <g:link class="link btn btn-success btn-ajax example_c item" texto="tpob" controller="tipoObra" action="list">
+                    <g:link class="link btn btn-success btn-ajax example_c item" texto="tpob" controller="tipoProyecto" action="list">
                         <i class="fa fa-list-alt fa-4x text-success"></i>
-                        <br/> Tipo de Obras
+                        <br/> Tipo de Proyecto
                     </g:link>
 
                     <g:link class="link btn btn-info btn-ajax example_c item disabled" texto="prsp"  controller="presupuesto" action="list">
@@ -216,7 +212,10 @@
                         <i class="fa fa-stopwatch fa-4x text-success"></i>
                         <br/> Programacion
                     </g:link>
-
+                    <g:link class="link btn btn-success btn-ajax example_c item" texto="prof" controller="proforma" action="proforma">
+                        <i class="fa fa-file-export fa-4x text-success"></i>
+                        <br/> Proforma
+                    </g:link>
                 </p>
             </div>
         </div>
@@ -336,6 +335,16 @@
 <div id="iva" style="display:none">
     <h3>IVA</h3><br>
     <p>Permite cambiar el valor del IVA </p>
+</div>
+
+<div id="crit" style="display:none">
+    <h3>Criterios de selección</h3><br>
+    <p>Criterios de selección de precios unitarios </p>
+</div>
+
+<div id="prof" style="display:none">
+    <h3>Proforma</h3><br>
+    <p>Proforma</p>
 </div>
 
 %{--

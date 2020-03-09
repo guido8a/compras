@@ -27,9 +27,10 @@ class Proforma {
         }
     }
     static constraints = {
-        descripcion(size: 1..255, blank: false, attributes: [title: 'descripcion'])
-        calificacion(blank: true, nullable: true, attributes: [title: 'calificacion'])
-        observaciones(blank: true, nullable: true, attributes: [title: 'observacion'])
+        descripcion(size: 1..255, blank: false, nullable: false, attributes: [title: 'descripcion'])
+        calificacion(size: 1..40, blank: true, nullable: true, attributes: [title: 'calificacion'])
+        observaciones(size: 1..127, blank: true, nullable: true, attributes: [title: 'observacion'])
+        proveedor(blank: false, nullable: false)
     }
     String toString() {
         descripcion

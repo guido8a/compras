@@ -23,13 +23,10 @@ th, td {
 
 <div class="" style="width: 99.7%;height: 360px; overflow-y: auto;float: right; margin-top: -20px">
     <table class="table-bordered table-condensed table-hover" style="width: 100%">
-        <g:each in="${lista}" var="tipoObra" status="z">
-            <tr data-id="${tipoObra.id}">
-                <td style="width: 20%">
-                    ${tipoObra?.codigo}
-                </td>
-                <td style="width: 80%">
-                    ${tipoObra?.descripcion}
+        <g:each in="${lista}" var="tipoProyecto" status="z">
+            <tr data-id="${tipoProyecto.id}">
+                <td style="width: 100%">
+                    ${tipoProyecto?.descripcion}
                 </td>
             </tr>
         </g:each>

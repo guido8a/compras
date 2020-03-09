@@ -68,7 +68,8 @@
             url: "${createLink(controller: 'codigoComprasPublicas', action: 'tablaCodigosCompras')}",
             data:{
                 codigo: $("#buscarCodigo").val(),
-                nombre: $("#buscarNombre").val()
+                nombre: $("#buscarNombre").val(),
+                tipo: ${tipo}
             },
             success: function (msg) {
                 $("#tablaCodigos").html(msg);

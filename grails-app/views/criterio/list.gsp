@@ -9,7 +9,7 @@
 <html>
 <head>
     <meta name="layout" content="main">
-    <title>Tipo de Obra</title>
+    <title>Criterios de selección de precios</title>
 
     <style type="text/css">
 
@@ -17,17 +17,11 @@
         text-align: center !important;
     }
 
-    #buscar {
-        width: 400px;
-        border-color: #0c6cc2;
-    }
     </style>
 
 </head>
 
 <body>
-
-<elm:flashMessage tipo="${flash.tipo}" clase="${flash.clase}">${flash.message}</elm:flashMessage>
 
 <!-- botones -->
 <div class="btn-toolbar toolbar">
@@ -38,67 +32,61 @@
         </g:link>
     </div>
 
-
     <div class="btn-group">
         <a href="#" class="btn btn-primary btnCrear">
-            <i class="fa fa-file"></i> Nuevo Tipo de Obra
+            <i class="fa fa-file"></i> Nuevo Criterio
         </a>
-
     </div>
+
 </div>
 
-
-<div style="margin-top: 30px; min-height: 400px" class="vertical-container">
-    <p class="css-vertical-text">Tipo de Obra</p>
+<div style="margin-top: 30px; min-height: 430px" class="vertical-container">
+    <p class="css-vertical-text">Criterios</p>
 
     <div class="linea"></div>
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;background-color: #a39e9e">
         <thead>
         <tr>
-            <th class="alinear" style="width: 20%">Código</th>
-            <th class="alinear" style="width: 80%">Descripción</th>
+            <th class="alinear" style="width: 100%">Descripción</th>
         </tr>
         </thead>
     </table>
 
-    <div id="tablaTipoObra">
+    <div id="tablaCriterio">
     </div>
 </div>
-
 
 <script type="text/javascript">
 
     $(".btnCrear").click(function () {
-        createEditTipoObra(null)
+        createEditCriterio(null)
     });
 
-    cargarTablaTipoObra();
+    cargarTablaCriterio();
 
-    function cargarTablaTipoObra (){
+    function cargarTablaCriterio(){
         $.ajax({
             type: 'POST',
-            url: '${createLink(controller: 'tipoObra', action: 'tablaTipoObra')}',
+            url: '${createLink(controller: 'criterio', action: 'tablaCriterio')}',
             data:{
-
             },
             success: function (msg) {
-                $("#tablaTipoObra").html(msg)
+                $("#tablaCriterio").html(msg)
             }
         });
     }
 
-    function createEditTipoObra(id) {
+    function createEditCriterio(id) {
         var title = id ? "Editar" : "Crear";
         var data = id ? {id : id} : {};
         $.ajax({
             type    : "POST",
-            url     : "${createLink(controller: 'tipoObra', action:'form_ajax')}",
+            url     : "${createLink(controller: 'criterio', action:'form_ajax')}",
             data    : data,
             success : function (msg) {
                 var b = bootbox.dialog({
-                    id    : "dlgCreateEditTipoObra",
-                    title : title + " Tipo de Obra",
-                    // class : "modal-lg",
+                    id    : "dlgCreateEditCriterio",
+                    title : title + " Criterio",
                     message : msg,
                     buttons : {
                         cancelar : {
@@ -112,7 +100,7 @@
                             label     : "<i class='fa fa-save'></i> Guardar",
                             className : "btn-success",
                             callback  : function () {
-                                return submitFormTipoObra();
+                                return submitFormCriterio();
                             } //callback
                         } //guardar
                     } //buttons
@@ -124,10 +112,9 @@
         }); //ajax
     } //createEdit
 
-
-    function submitFormTipoObra() {
-        var $form = $("#frmSaveTipoObra");
-        var $btn = $("#dlgCreateEditTipoObra").find("#btnSave");
+    function submitFormCriterio() {
+        var $form = $("#frmSaveCriterio");
+        var $btn = $("#dlgCreateEditCriterio").find("#btnSave");
         if ($form.valid()) {
             var data = $form.serialize();
             $btn.replaceWith(spinner);
@@ -142,7 +129,7 @@
                     if(parts[0] == 'ok'){
                         log(parts[1], "success");
                         setTimeout(function () {
-                            cargarTablaTipoObra()
+                            cargarTablaCriterio()
                         }, 1000);
                     }else{
                         bootbox.alert('<i class="fa fa-exclamation-triangle text-danger fa-3x"></i> ' + '<strong style="font-size: 14px">' + parts[1] + '</strong>');
@@ -170,18 +157,18 @@
             label: 'Editar',
             icon: "fa fa-pen text-info",
             action : function () {
-                createEditTipoObra(id);
+                createEditCriterio(id);
             }
         };
 
-        var borrarTipoObra = {
+        var borrarCriterio= {
             label            : "Borrar",
             icon             : "fa fa-trash text-danger",
             separator_before : true,
             action           : function () {
                 bootbox.confirm({
-                    title: "Borrar Tipo de Obra",
-                    message: "Está seguro de borrar este Tipo de Obra? Esta acción no puede deshacerse.",
+                    title: "Borrar Criterio",
+                    message: "Está seguro de borrar este criterio? Esta acción no puede deshacerse.",
                     buttons: {
                         cancel: {
                             label: '<i class="fa fa-times"></i> Cancelar',
@@ -197,19 +184,19 @@
                             var dialog = cargarLoader("Borrando...");
                             $.ajax({
                                 type: 'POST',
-                                url: '${createLink(controller: 'tipoObra', action: 'borrarTipoObra_ajax')}',
+                                url: '${createLink(controller: 'criterio', action: 'borrarCriterio_ajax')}',
                                 data:{
                                     id: id
                                 },
                                 success: function (msg) {
                                     dialog.modal('hide');
                                     if(msg == 'ok'){
-                                        log("Tipo de Obra borrada correctamente","success");
+                                        log("Criterio borrado correctamente","success");
                                         setTimeout(function () {
-                                            cargarTablaTipoObra();
+                                            cargarTablaCriterio();
                                         }, 1000);
                                     }else{
-                                        log("Error al borrar el Tipo de Obra", "error")
+                                        log("Error al borrar el criterio", "error")
                                     }
                                 }
                             });
@@ -220,7 +207,7 @@
         };
 
         items.editar = editar;
-        items.borrar = borrarTipoObra;
+        items.borrar = borrarCriterio;
 
         return items
     }

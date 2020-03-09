@@ -104,20 +104,18 @@
         </div>
         </a>
 
-        <a href= "${createLink(controller:'mantenimientoItems', action: 'precios')}" style="text-decoration: none">
+        <a href= "${createLink(controller:'proyecto', action: 'registroProyecto')}" style="text-decoration: none">
         <div class="ui-corner-all item fuera">
             <div class="ui-corner-all item">
                 <div class="imagen">
                     <asset:image src="apli/agenda.png" alt="Buscar en la Base de Conocimiento" width="100%" height="100%"/>
-%{--                    <img src="${resource(dir: 'images', file: 'agenda.png')}" width="100%" height="100%"/>--}%
                 </div>
-
                 <div class="texto">
-                    <span class="text-success"><strong>Precios</strong></span></div>
+                    <span class="text-success"><strong>Proyectos</strong></span>
+                </div>
             </div>
         </div>
         </a>
-
 
         <a href= "${createLink(controller:'canton', action: 'arbol')}" style="text-decoration: none">
             <div class="ui-corner-all item2 fuera">

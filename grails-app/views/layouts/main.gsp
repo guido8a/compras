@@ -47,8 +47,6 @@
 
 %{--    <asset:javascript src="/jquery/bootstrap-datepicker.js"/>--}%
 %{--    <asset:javascript src="/jquery/bootstrap-datepicker.es.js"/>--}%
-
-
 %{--    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment.min.js"></script>--}%
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js"></script>

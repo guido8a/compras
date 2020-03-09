@@ -46,11 +46,22 @@ th, td {
         var id = $(this).data("id");
         var nombre = $(this).data("nombre");
         var codigo = $(this).data("cod");
-        $("#codigoComprasPublicas").val(id);
-        $("#codigoComprasPublicasNombre").val(codigo + " - " + nombre);
-        var dialog = $("#dlgTablaCPC");
-        dialog.modal('hide');
-        $("#dlgCreateEditItem").modal('hide')
+
+        if(${tipo == '1'}){
+            $("#codigoComprasPublicas").val(id);
+            $("#codigoComprasPublicasNombre").val(codigo + " - " + nombre);
+            var dialog = $("#dlgTablaCPC");
+            dialog.modal('hide');
+            $(".dlgCreateEditItem").modal('hide')
+        }else{
+            $("#codigoComprasPublicas").val(id);
+            $("#categoriaCPC").val(codigo + " - " + nombre);
+            $('.bootbox.modal').modal('hide')
+        }
+
+
+
+
     });
 
 </script>

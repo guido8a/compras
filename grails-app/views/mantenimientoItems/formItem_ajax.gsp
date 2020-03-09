@@ -166,10 +166,16 @@
     });
 
     $("#btnBuscarCPC").click(function () {
+        cargarBuscarCodigo(1)
+    });
+
+    function cargarBuscarCodigo(tipo) {
         $.ajax({
             type    : "POST",
             url     : "${createLink(controller: 'codigoComprasPublicas', action:'buscarCodigo')}",
-            data    : { },
+            data    : {
+                tipo: tipo
+            },
             success : function (msg) {
                 bootbox.dialog({
                     id    : 'dlgTablaCPC',
@@ -187,6 +193,6 @@
                 }); //dialog
             } //success
         }); //ajax
-    });
+    }
 
 </script>
